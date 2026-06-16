@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root{
       --bg:#F7F8FA; --bg2:#FFF; --bg3:#F0F2F5; --border:#E2E6ED;
@@ -507,6 +509,22 @@
     </div>
   </div>
 
+  <!-- TRUST MAP -->
+  <div class="card" style="margin-bottom:20px;overflow:hidden">
+    <div class="card-hd">
+      <span class="card-ttl">🗺️ India Facility Trust Map</span>
+      <span class="badge b-teal" id="map-count">Loading...</span>
+    </div>
+    <div id="trust-map" style="height:480px;background:#1a1a2e;border-radius:0 0 12px 12px"></div>
+    <div style="padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--t3)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#059669;margin-right:4px"></span>High Trust</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0D9488;margin-right:4px"></span>Moderate</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#B45309;margin-right:4px"></span>Low Trust</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#DC2626;margin-right:4px"></span>Unreliable</span>
+      <span style="margin-left:auto;color:var(--t4)">Click any facility to open Deep Dive</span>
+    </div>
+  </div>
+
   <!-- ARCHETYPE STRIP -->
   <div class="arch-strip" id="arch-strip"></div>
 
@@ -715,6 +733,74 @@ function showPage(name){
 async function loadCmd(){
   window._kl=true;
   await Promise.all([loadKPIs(),loadStates(),loadFac()]);
+  loadMap(); // async, don't block
+}
+
+/* TRUST MAP */
+var trustMap = null;
+async function loadMap(){
+  try {
+    if(trustMap) return;
+    // Initialize Leaflet map centered on India
+    trustMap = L.map('trust-map', {
+      center: [22.5, 79],
+      zoom: 5,
+      zoomControl: true,
+      attributionControl: false,
+      scrollWheelZoom: true,
+    });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 18,
+    }).addTo(trustMap);
+
+    // Fetch map data
+    const res = await fetch(API+'/api/map');
+    const json = await res.json();
+    if(!json.ok) return;
+    const data = json.data;
+    
+    document.getElementById('map-count').textContent = data.length.toLocaleString('en-IN') + ' facilities mapped';
+    
+    const trustColors = {
+      'High Trust': '#059669',
+      'Moderate Trust': '#0D9488',
+      'Low Trust': '#B45309',
+      'Unreliable': '#DC2626',
+    };
+    
+    // Add circle markers
+    data.forEach(f => {
+      if(!f.lat || !f.lng) return;
+      const color = trustColors[f.trust_band] || '#6B7280';
+      const marker = L.circleMarker([f.lat, f.lng], {
+        radius: f.archetype === 'Hidden Gem' ? 6 : f.archetype === 'Ghost Facility' ? 5 : 4,
+        fillColor: color,
+        color: color,
+        weight: 0.5,
+        opacity: 0.9,
+        fillOpacity: 0.7,
+      }).addTo(trustMap);
+      
+      marker.bindPopup(`
+        <div style="font-family:Inter,sans-serif;min-width:200px">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px">${f.name}</div>
+          <div style="font-size:11px;color:#666;margin-bottom:6px">${f.city||''}, ${f.state||''}</div>
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:${color}22;color:${color};font-weight:600">${f.trust_band}</span>
+            <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#f0f0f0;font-weight:600">${f.archetype}</span>
+          </div>
+          <div style="font-size:11px;color:#888">🤥 Pinocchio: ${f.pinocchio_score}/100 · ${f.facility_type}</div>
+          <button onclick="loadDV('${f.id}')" style="margin-top:8px;width:100%;padding:6px;border:none;background:#0D9488;color:#fff;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Open Deep Dive →</button>
+        </div>
+      `, { maxWidth: 280 });
+    });
+    
+    // Invalidate size after render
+    setTimeout(() => trustMap.invalidateSize(), 200);
+  } catch(e) {
+    console.error('Map error:', e);
+    document.getElementById('map-count').textContent = 'Map unavailable';
+  }
 }
 
 async function loadKPIs(){

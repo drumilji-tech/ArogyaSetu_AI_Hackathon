@@ -1,0 +1,1536 @@
+{
+  "generated_at": "2026-06-15T17:25:44.651Z",
+  "queries": {
+    "table_counts": {
+      "facility_count": 10088,
+      "pincode_count": 165627,
+      "nfhs_count": 706
+    },
+    "specialty_distribution": [
+      {
+        "specialty_count": 50,
+        "facility_count": 2884
+      },
+      {
+        "specialty_count": 49,
+        "facility_count": 56
+      },
+      {
+        "specialty_count": 48,
+        "facility_count": 56
+      },
+      {
+        "specialty_count": 47,
+        "facility_count": 55
+      },
+      {
+        "specialty_count": 46,
+        "facility_count": 52
+      },
+      {
+        "specialty_count": 45,
+        "facility_count": 57
+      },
+      {
+        "specialty_count": 44,
+        "facility_count": 61
+      },
+      {
+        "specialty_count": 43,
+        "facility_count": 55
+      },
+      {
+        "specialty_count": 42,
+        "facility_count": 58
+      },
+      {
+        "specialty_count": 41,
+        "facility_count": 83
+      },
+      {
+        "specialty_count": 40,
+        "facility_count": 50
+      },
+      {
+        "specialty_count": 39,
+        "facility_count": 78
+      },
+      {
+        "specialty_count": 38,
+        "facility_count": 82
+      },
+      {
+        "specialty_count": 37,
+        "facility_count": 70
+      },
+      {
+        "specialty_count": 36,
+        "facility_count": 78
+      },
+      {
+        "specialty_count": 35,
+        "facility_count": 93
+      },
+      {
+        "specialty_count": 34,
+        "facility_count": 82
+      },
+      {
+        "specialty_count": 33,
+        "facility_count": 75
+      },
+      {
+        "specialty_count": 32,
+        "facility_count": 99
+      },
+      {
+        "specialty_count": 31,
+        "facility_count": 110
+      }
+    ],
+    "facility_type_distribution": [
+      {
+        "facilityTypeId": "hospital",
+        "count": 5637
+      },
+      {
+        "facilityTypeId": "clinic",
+        "count": 3782
+      },
+      {
+        "facilityTypeId": "dentist",
+        "count": 490
+      },
+      {
+        "facilityTypeId": null,
+        "count": 67
+      },
+      {
+        "facilityTypeId": "null",
+        "count": 59
+      },
+      {
+        "facilityTypeId": "doctor",
+        "count": 21
+      },
+      {
+        "facilityTypeId": "farmacy",
+        "count": 10
+      },
+      {
+        "facilityTypeId": "pharmacy",
+        "count": 2
+      },
+      {
+        "facilityTypeId": "85.15049743652344",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://mediniz.com/public/feeds/Top-10-Best-Dental-Clinics-in-Patna\",\"https://www.indiamart.com/green-dental-care-patna/\",\"https://www.justdial.com/Patna/Green-Dental-Care-Opp-Saket-Galaxy-Boring-Road/0612PX612-X612-170425174643-M9T2_BZDET\",\"https://www.justvisitonline.com/listing/Patna/dental-clinic-in-boring-road\",\"https://www.mappls.com/place-green+dental+care+best+dentists-b-150-near+saket+galaxy-sri+ram+path-west+boring+canal+road-patna-bihar-800013-OXR1MX@zdata=MjUuNjIwNTM5Kzg1LjEyMTY2OSsxNytPWFIxTVgrKw==ed\",\"http://www.greendentalcare.in/\",\"https://www.facebook.com/613645765451688\",\"https://happysmiledentalcare.in/12-popular-cosmetic-dental-procedures-available-in-patna-your-complete-guide-to-a-perfect-smile/\",\"https://www.eka.care/clinic/green-dental-care-328-77925758\",null]",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "23.013490676879883",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "nursing_home",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "kie",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "{\"coordinates\":[80.99068450927734,26.885332107543945],\"type\":\"Point\"}",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://venkateswaradiagnosticcentre.com/\",\"https://www.medindia.net/directories/labs/venkateswara-diagnostic-centre-chennai-tamil-nadu-40958-1.htm\",\"https://www.mediyaar.com/chennai/labs/kcl-diagonstic-centre-tondiarpet.html\",\"https://www.diagnosticcentres.in/diagnostic-centres/tamil-nadu/chennai/venkateswara-diagnostic-center-perumbakkam.html\",\"https://www.facebook.com/112564788328363\",\"https://www.diagnosticcentres.in/diagnostic-centres/tamil-nadu/chennai/venkateswara-diagnostic-centre.html\",\"https://www.facebook.com/VenkateswaraDiagnosticCentre1/\",\"https://www.facebook.com/110654166238127\",\"https://www.facebook.com/682318155304977\",null,null]",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://www.manoramahospitex.org/about/manorama-hospitex\",\"https://www.manoramahospitex.org/\",\"https://www.manoramahospitex.org/doctor-details/dr-krishanu-banik\",\"https://www.manoramahospitex.org/doctor-details/dr-pradipta-guha\",\"http://www.manoramahospitex.org/\",\"https://www.manoramahospitex.org/about/from-the-desk-of-medical-super\",\"https://www.manoramahospitex.org/contact\",\"https://www.zoominfo.com/c/manorama-hospitex-pvt-ltd/397568994\",\"https://www.indiamart.com/manorama-hospitex-pvt-ltd/aboutus.html\",\"https://www.justdial.com/Chakdah/24-Hours-Dentists/nct-10000372\",\"https://www.facebook.com/549081398608476\",\"https://tracxn.com/d/legal-entities/india/manorama-hospitex-private-limited/__phsyVlJwm-44vLQMw8BbuabPf2B6Xkubt2X9AWDsgRE\",\"https://www.justdial.com/Bongaon/Private-Hospitals/nct-10390288\",\"https://www.manoramahospitex.org/diagnostic-centre-in-nadia\",\"https://shg.wbscl.in/home/hospital_list/SS8xTEFYQS9ET3kvSmVMbVBYNU5JVHZuM1BUSnFNQkduNU9sL1F1Q1F5SlYweTJNanNmOWdDZ0ovRVJDOTZleUo0dmFjakRkdjAvRmVpQ3M3MC82eVE9PQ==/5\",\"https://shg.wbscl.in/home/hospital_list\",\"https://wbxpress.com/list-of-class-i-hospitals-under-west-bengal-health-scheme/\",\"https://shg.wbscl.in/home/hospital_list/UWNjSTMzTEw5UUVEMGIzQXVwUC9DdVlPeE5TVE9FellQMVhWWVNBbjkyTTNWNjZTZ3RvZmUzbTk1SVBzSGRMVmxOMXdaeXpYbDdrVjh6TVVTc1dvUlE9PQ==/3\",null]",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "\"\"cataractAndAnteriorSegmentSurgery\"\"",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "08f3d32534cd998d03b0bda3b1839e82",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "75.75413513183594",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "08f3da5d5e468b2a03d47c01e6c4c057",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "08f6189259aa5742032b548fbd63f818",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "21.083206176757812",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "85.7743911743164",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "08f60b0952d93041035b12518be4088c",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "6",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://www.drvaibhavjoshi.com/\",\"https://www.drvaibhavjoshi.com/our-team.html\",\"http://www.drvaibhavjoshi.com/\",\"https://www.facebook.com/378237392213592\",\"https://www.proptiger.com/ghaziabad/raj-bagh-51282/hospitals\",null]",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://www.drbasdentalcare.com/\",\"https://www.justdial.com/Nagercoil/Dr-bas-Dental-Care-Meenakshipuram/9999P4652-4652-240814200308-Y4F4_BZDET\",\"https://www.tabletbox.com/hospital/dr.basdentalcare/468\",\"https://www.justdial.com/Nagercoil/Dr-bas-Dental-Care-Meenakshipuram/9999P4652-4652-240814200308-Y4F4_BZDET/reviews\",\"https://www.facebook.com/61562214740500\",\"https://fayumi.in/viewdoctor/71889\",\"https://drbasdentalcare.in/contact/\",null]",
+        "count": 1
+      },
+      {
+        "facilityTypeId": "[\"https://www.1mg.com/doctors/dr-sravanthi-dental-surgery-in-hyderabad/DR-3o38q\",\"https://eswardentalclinickphb.com/about-us/\",\"https://eswardentalclinickphb.com/\",\"https://www.facebook.com/440327963098033\",null]",
+        "count": 1
+      }
+    ],
+    "suspicious_247": {
+      "total_claiming_247": 3196,
+      "suspicious_lt3_doctors": 424,
+      "very_suspicious_lt2_doctors": 246
+    },
+    "suspicious_icu": {
+      "total_claiming_icu": 1298,
+      "suspicious_icu_lt2_doctors": 107,
+      "zero_doctor_icu": 2
+    },
+    "hidden_gems": [
+      {
+        "name": "Vijaya Diagnostic Centre - Main Road Gopalapatnam, Visakhapatnam",
+        "address_city": "Visakhapatnam",
+        "address_stateOrRegion": "Andhra Pradesh",
+        "num_doctors": 3000,
+        "bed_capacity": null,
+        "followers": 15,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+918008755541",
+        "officialWebsite": "vijayadiagnostic.com",
+        "facebookLink": "https://www.facebook.com/164394077651345"
+      },
+      {
+        "name": "Megavision Diagnostic Centres, Pimpri",
+        "address_city": "Pimpri-chinchwad",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 3000,
+        "bed_capacity": null,
+        "followers": 33,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+918888861223",
+        "officialWebsite": "megavisionscan.com",
+        "facebookLink": "https://www.facebook.com/460317440985516"
+      },
+      {
+        "name": "Nova IVF Fertility",
+        "address_city": "Bengaluru",
+        "address_stateOrRegion": "Karnataka",
+        "num_doctors": 1500,
+        "bed_capacity": null,
+        "followers": 34,
+        "equipment_count": 23,
+        "specialty_count": 50,
+        "officialPhone": "+918527537384",
+        "officialWebsite": "novaivffertility.com",
+        "facebookLink": "https://www.facebook.com/101637868115421"
+      },
+      {
+        "name": "Dr DY Patil Medical College and Hospital, Pune, India",
+        "address_city": "Pune",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 1000,
+        "bed_capacity": 2011,
+        "followers": 73,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+912027805000",
+        "officialWebsite": "dpu.edu.in",
+        "facebookLink": "https://www.facebook.com/373206289792367"
+      },
+      {
+        "name": "Jehangir Hospital, Pune, Maharashtra, India",
+        "address_city": "Pune",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 759,
+        "bed_capacity": 350,
+        "followers": 14,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+918149990072",
+        "officialWebsite": "jehangirhospital.com",
+        "facebookLink": "https://www.facebook.com/619202448103580"
+      },
+      {
+        "name": "Ram Tej Hospital",
+        "address_city": "Agra",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "num_doctors": 500,
+        "bed_capacity": 500,
+        "followers": 0,
+        "equipment_count": 26,
+        "specialty_count": 50,
+        "officialPhone": "+915622332357",
+        "officialWebsite": "ramtejhospital.com",
+        "facebookLink": "https://www.facebook.com/2140545202660618"
+      },
+      {
+        "name": "Government ESI Medical College, Coimbatore",
+        "address_city": "Coimbatore",
+        "address_stateOrRegion": "Tamil Nadu",
+        "num_doctors": 332,
+        "bed_capacity": 1470,
+        "followers": 0,
+        "equipment_count": 24,
+        "specialty_count": 50,
+        "officialPhone": "null",
+        "officialWebsite": "martinhmc.edu.in",
+        "facebookLink": "https://www.facebook.com/105532858858265"
+      },
+      {
+        "name": "Katihar Medical College and Hospital, Katihar",
+        "address_city": "Katihar",
+        "address_stateOrRegion": "Bihar",
+        "num_doctors": 331,
+        "bed_capacity": 590,
+        "followers": 59,
+        "equipment_count": 29,
+        "specialty_count": 50,
+        "officialPhone": "+916452239202",
+        "officialWebsite": "kmckatihar.org",
+        "facebookLink": "https://www.facebook.com/284527204898110"
+      },
+      {
+        "name": "Partha Dental Vizag",
+        "address_city": "Vizag",
+        "address_stateOrRegion": "Andhra Pradesh",
+        "num_doctors": 300,
+        "bed_capacity": null,
+        "followers": 3,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+918500779000",
+        "officialWebsite": "parthadental.com",
+        "facebookLink": "https://www.facebook.com/105754285843357"
+      },
+      {
+        "name": "Yashoda Hospitals - Secunderabad",
+        "address_city": "Secunderabad",
+        "address_stateOrRegion": "Telangana",
+        "num_doctors": 241,
+        "bed_capacity": 810,
+        "followers": 72,
+        "equipment_count": 29,
+        "specialty_count": 50,
+        "officialPhone": "+914045674567",
+        "officialWebsite": "yashodahospitals.com",
+        "facebookLink": "null"
+      },
+      {
+        "name": "Paras Hospital",
+        "address_city": "Panchkula",
+        "address_stateOrRegion": "Haryana",
+        "num_doctors": 210,
+        "bed_capacity": 250,
+        "followers": 18,
+        "equipment_count": 47,
+        "specialty_count": 50,
+        "officialPhone": "+911244585555",
+        "officialWebsite": "parashospitals.com",
+        "facebookLink": "https://www.facebook.com/125137151363013"
+      },
+      {
+        "name": "Inamdar Multispecialty Hospital",
+        "address_city": "Pune",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 200,
+        "bed_capacity": 120,
+        "followers": 0,
+        "equipment_count": 21,
+        "specialty_count": 50,
+        "officialPhone": "+919090902222",
+        "officialWebsite": "inamdarhospital.com",
+        "facebookLink": "https://www.facebook.com/1771202866296422"
+      },
+      {
+        "name": "Holy Spirit Hospital Andheri",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 150,
+        "bed_capacity": 300,
+        "followers": 0,
+        "equipment_count": 49,
+        "specialty_count": 50,
+        "officialPhone": "+912242478888",
+        "officialWebsite": "holyspirithospital.org",
+        "facebookLink": "https://www.facebook.com/1920734684920565"
+      },
+      {
+        "name": "Fortis Hospital Anandapur",
+        "address_city": "Kolkata",
+        "address_stateOrRegion": "West Bengal",
+        "num_doctors": 105,
+        "bed_capacity": 437,
+        "followers": 74,
+        "equipment_count": 50,
+        "specialty_count": 50,
+        "officialPhone": "+918697708133",
+        "officialWebsite": "tmckolkata.com",
+        "facebookLink": "https://www.facebook.com/403696146338540"
+      },
+      {
+        "name": "Government Peripheral Hospital, Periyar Nagar, Chennai",
+        "address_city": "Chennai",
+        "address_stateOrRegion": "Tamil Nadu",
+        "num_doctors": 102,
+        "bed_capacity": 300,
+        "followers": 0,
+        "equipment_count": 27,
+        "specialty_count": 50,
+        "officialPhone": "null",
+        "officialWebsite": "null",
+        "facebookLink": "https://www.facebook.com/180550772651564"
+      }
+    ],
+    "confident_claimers": [
+      {
+        "name": "Shiromany Dental Care",
+        "address_city": "Agra",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "num_doctors": 2,
+        "bed_capacity": null,
+        "followers": 15000000,
+        "specialty_count": 22
+      },
+      {
+        "name": "Fortis Hospital",
+        "address_city": "Bangalore",
+        "address_stateOrRegion": "Karnataka",
+        "num_doctors": 1,
+        "bed_capacity": 276,
+        "followers": 4756342,
+        "specialty_count": 50
+      },
+      {
+        "name": "Richfeel Trichology Centre",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 3,
+        "bed_capacity": null,
+        "followers": 1582400,
+        "specialty_count": 50
+      },
+      {
+        "name": "Apollo Hospital, Bhubaneswar",
+        "address_city": "Bhubaneswar",
+        "address_stateOrRegion": "Odisha",
+        "num_doctors": 2,
+        "bed_capacity": 350,
+        "followers": 917947,
+        "specialty_count": 50
+      },
+      {
+        "name": "Nahar Medical Centre",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 7,
+        "bed_capacity": null,
+        "followers": 902000,
+        "specialty_count": 50
+      },
+      {
+        "name": "Harsh Hospital",
+        "address_city": "Surat",
+        "address_stateOrRegion": "Gujarat",
+        "num_doctors": 2,
+        "bed_capacity": 100,
+        "followers": 779570,
+        "specialty_count": 45
+      },
+      {
+        "name": "Newlife Fertility Centre – Siliguri",
+        "address_city": "Siliguri",
+        "address_stateOrRegion": "West Bengal",
+        "num_doctors": 4,
+        "bed_capacity": null,
+        "followers": 428000,
+        "specialty_count": 20
+      },
+      {
+        "name": "Jagdamba Baby Care",
+        "address_city": "Karnal",
+        "address_stateOrRegion": "Haryana",
+        "num_doctors": 1,
+        "bed_capacity": null,
+        "followers": 350000,
+        "specialty_count": 20
+      },
+      {
+        "name": "Santati Fertility Center",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "num_doctors": 1,
+        "bed_capacity": null,
+        "followers": 287000,
+        "specialty_count": 26
+      },
+      {
+        "name": "Olive Homoeopathy Clinic",
+        "address_city": "Malappuram",
+        "address_stateOrRegion": "Kerala",
+        "num_doctors": 9,
+        "bed_capacity": null,
+        "followers": 264000,
+        "specialty_count": 38
+      },
+      {
+        "name": "Fortis Hospitals",
+        "address_city": "Noida",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "num_doctors": 5,
+        "bed_capacity": null,
+        "followers": 240401,
+        "specialty_count": 50
+      },
+      {
+        "name": "Dr. Pravin Patel's Innovative Hospital & Research Center",
+        "address_city": "Vadodara",
+        "address_stateOrRegion": "Gujarat",
+        "num_doctors": 2,
+        "bed_capacity": null,
+        "followers": 186100,
+        "specialty_count": 50
+      },
+      {
+        "name": "Kify Hospital",
+        "address_city": "Rajahmundry",
+        "address_stateOrRegion": "Andhra Pradesh",
+        "num_doctors": 2,
+        "bed_capacity": null,
+        "followers": 178000,
+        "specialty_count": 12
+      },
+      {
+        "name": "Hegde Fertility",
+        "address_city": "Hyderabad",
+        "address_stateOrRegion": "Telangana",
+        "num_doctors": 8,
+        "bed_capacity": 25,
+        "followers": 112000,
+        "specialty_count": 21
+      },
+      {
+        "name": "Lyfstyle Wellness",
+        "address_city": "Satellite",
+        "address_stateOrRegion": "Gujarat",
+        "num_doctors": 1,
+        "bed_capacity": null,
+        "followers": 98000,
+        "specialty_count": 5
+      },
+      {
+        "name": "Brijmani Orthopaedic Hospital",
+        "address_city": "Ahmedabad",
+        "address_stateOrRegion": "Gujarat",
+        "num_doctors": 1,
+        "bed_capacity": null,
+        "followers": 96000,
+        "specialty_count": 49
+      },
+      {
+        "name": "Asian Institute of Medical Sciences – Faridabad (Delhi NCR)",
+        "address_city": "Faridabad",
+        "address_stateOrRegion": "Haryana",
+        "num_doctors": 1,
+        "bed_capacity": 425,
+        "followers": 87334,
+        "specialty_count": 50
+      },
+      {
+        "name": "Pace Hospitals",
+        "address_city": "Madhapur",
+        "address_stateOrRegion": "Telangana",
+        "num_doctors": 5,
+        "bed_capacity": 150,
+        "followers": 85654,
+        "specialty_count": 50
+      },
+      {
+        "name": "Rana Hospital",
+        "address_city": "Bahadurgarh",
+        "address_stateOrRegion": "Haryana",
+        "num_doctors": 2,
+        "bed_capacity": null,
+        "followers": 77768,
+        "specialty_count": 50
+      },
+      {
+        "name": "Aruna Memorial Hospital",
+        "address_city": "Kamrup Metro",
+        "address_stateOrRegion": "Assam",
+        "num_doctors": 1,
+        "bed_capacity": 30,
+        "followers": 77000,
+        "specialty_count": 50
+      }
+    ],
+    "cross_check": [
+      {
+        "name": "U. N. Mehta Institute of Cardiology & Research Centre",
+        "address_city": "Ahmedabad",
+        "address_stateOrRegion": "Gujarat",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 0
+      },
+      {
+        "name": "Dr. Jairaj's Hospital - 2nd Floor, Om Chanakya Complex, Sector 6, CBD Belapur, Navi Mumbai, Maharashtra 400614",
+        "address_city": "Navi Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 0
+      },
+      {
+        "name": "Tahiria Hospital",
+        "address_city": "North 24 Parganas",
+        "address_stateOrRegion": "West Bengal",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 0
+      },
+      {
+        "name": "Pills Hospital",
+        "address_city": "Coimbatore",
+        "address_stateOrRegion": "Tamil Nadu",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 0
+      },
+      {
+        "name": "Krishna Institute of Medical Sciences, Hyderabad",
+        "address_city": "Hyderabad",
+        "address_stateOrRegion": "Andhra Pradesh",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Sri Ramakrishna Hospital",
+        "address_city": "Coimbatore",
+        "address_stateOrRegion": "Tamil Nadu",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "United CIIGMA Hospital",
+        "address_city": "Aurangabad",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Care Institute of Medical Sciences, Ahmedabad",
+        "address_city": "Ahmedabad",
+        "address_stateOrRegion": "Gujarat",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Sanjeevani Hospital",
+        "address_city": "Unnao",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Ganesh Hospital",
+        "address_city": "Ghaziabad",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Orbit Eye Hospital",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": false,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Lilavati Hospital and Research Centre, Mumbai, India",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Sugam Hospitals",
+        "address_city": "Chennai",
+        "address_stateOrRegion": "Tamil Nadu",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Medanta The Medicity, Gurgaon, Haryana",
+        "address_city": "Gurgaon",
+        "address_stateOrRegion": "Haryana",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Life Care Hospital",
+        "address_city": "Nashik",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Breach Candy Hospital, Mumbai, India",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Alpha Superspeciality Hospital",
+        "address_city": "Wakad",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Deepam Hospital",
+        "address_city": "Nandivaram-guduvancheri",
+        "address_stateOrRegion": "Tamil Nadu",
+        "claims_cardiology": false,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Life Line Hospital Kanpur",
+        "address_city": "Kanpur",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Sanjeevani Hospital",
+        "address_city": "Pusegaon",
+        "address_stateOrRegion": "Satara District, Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Malkangiri District Headquarters Hospital",
+        "address_city": "Malkangiri",
+        "address_stateOrRegion": "Odisha",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Vedanta Hospital",
+        "address_city": "Kanpur",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Malar Hospital",
+        "address_city": "Rasipuram",
+        "address_stateOrRegion": "Namakkal",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Apollo Gleneagles Hospitals",
+        "address_city": "Kolkata",
+        "address_stateOrRegion": "West Bengal",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Morya Hospital",
+        "address_city": "Parola",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Alchemist Hospital",
+        "address_city": "Gurgaon",
+        "address_stateOrRegion": "Haryana",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": false,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Medicover Hospitals",
+        "address_city": "Hyderabad",
+        "address_stateOrRegion": "Telangana",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "NKP Salve Institute of Medical Sciences and Research Centre, Nagpur",
+        "address_city": "Nagpur",
+        "address_stateOrRegion": "Maharashtra",
+        "claims_cardiology": true,
+        "has_cardiac_equip": true,
+        "claims_oncology": true,
+        "has_onco_equip": true,
+        "num_doctors": 1
+      },
+      {
+        "name": "Bansal Hospital",
+        "address_city": "Barwala",
+        "address_stateOrRegion": "Haryana",
+        "claims_cardiology": true,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      },
+      {
+        "name": "Om Mother N Child Hospital",
+        "address_city": "Jaipur",
+        "address_stateOrRegion": "Rajasthan",
+        "claims_cardiology": false,
+        "has_cardiac_equip": false,
+        "claims_oncology": true,
+        "has_onco_equip": false,
+        "num_doctors": 1
+      }
+    ],
+    "state_distribution": [
+      {
+        "state": "Maharashtra",
+        "total_facilities": 1575,
+        "hospitals": 812,
+        "avg_followers": 13557.650782361308,
+        "ghost_facilities": 15
+      },
+      {
+        "state": "Gujarat",
+        "total_facilities": 981,
+        "hospitals": 583,
+        "avg_followers": 2899.170114942529,
+        "ghost_facilities": 21
+      },
+      {
+        "state": "Uttar Pradesh",
+        "total_facilities": 919,
+        "hospitals": 526,
+        "avg_followers": 19773.664277180407,
+        "ghost_facilities": 23
+      },
+      {
+        "state": "Tamil Nadu",
+        "total_facilities": 780,
+        "hospitals": 436,
+        "avg_followers": 1969.975,
+        "ghost_facilities": 14
+      },
+      {
+        "state": "Karnataka",
+        "total_facilities": 529,
+        "hospitals": 309,
+        "avg_followers": 32047.279914529914,
+        "ghost_facilities": 9
+      },
+      {
+        "state": "Kerala",
+        "total_facilities": 483,
+        "hospitals": 284,
+        "avg_followers": 4244.078886310905,
+        "ghost_facilities": 5
+      },
+      {
+        "state": "West Bengal",
+        "total_facilities": 477,
+        "hospitals": 220,
+        "avg_followers": 3387.2546296296296,
+        "ghost_facilities": 8
+      },
+      {
+        "state": "Punjab",
+        "total_facilities": 469,
+        "hospitals": 295,
+        "avg_followers": 3343.510843373494,
+        "ghost_facilities": 7
+      },
+      {
+        "state": "Haryana",
+        "total_facilities": 462,
+        "hospitals": 272,
+        "avg_followers": 3863.330049261084,
+        "ghost_facilities": 5
+      },
+      {
+        "state": "Telangana",
+        "total_facilities": 421,
+        "hospitals": 236,
+        "avg_followers": 3022.9728260869565,
+        "ghost_facilities": 4
+      },
+      {
+        "state": "Rajasthan",
+        "total_facilities": 407,
+        "hospitals": 265,
+        "avg_followers": 1764.731843575419,
+        "ghost_facilities": 5
+      },
+      {
+        "state": "Delhi",
+        "total_facilities": 337,
+        "hospitals": 111,
+        "avg_followers": 2455.8456375838928,
+        "ghost_facilities": 4
+      },
+      {
+        "state": "Andhra Pradesh",
+        "total_facilities": 329,
+        "hospitals": 234,
+        "avg_followers": 5021.505154639175,
+        "ghost_facilities": 8
+      },
+      {
+        "state": "Madhya Pradesh",
+        "total_facilities": 302,
+        "hospitals": 183,
+        "avg_followers": 1063.6461538461538,
+        "ghost_facilities": 3
+      },
+      {
+        "state": "Bihar",
+        "total_facilities": 258,
+        "hospitals": 168,
+        "avg_followers": 1552.9744680851063,
+        "ghost_facilities": 2
+      },
+      {
+        "state": "Jharkhand",
+        "total_facilities": 156,
+        "hospitals": 76,
+        "avg_followers": 1323.3037037037036,
+        "ghost_facilities": 0
+      },
+      {
+        "state": "Chhattisgarh",
+        "total_facilities": 140,
+        "hospitals": 80,
+        "avg_followers": 1583.944,
+        "ghost_facilities": 1
+      },
+      {
+        "state": "Uttarakhand",
+        "total_facilities": 124,
+        "hospitals": 60,
+        "avg_followers": 1232.2818181818182,
+        "ghost_facilities": 1
+      },
+      {
+        "state": "Assam",
+        "total_facilities": 117,
+        "hospitals": 72,
+        "avg_followers": 2350.740740740741,
+        "ghost_facilities": 1
+      },
+      {
+        "state": "Odisha",
+        "total_facilities": 111,
+        "hospitals": 54,
+        "avg_followers": 12531.095744680852,
+        "ghost_facilities": 3
+      }
+    ],
+    "top_followers": [
+      {
+        "name": "Shiromany Dental Care",
+        "address_city": "Agra",
+        "address_stateOrRegion": "Uttar Pradesh",
+        "followers": 15000000,
+        "doctors": 2,
+        "beds": null,
+        "specialty_count": 22,
+        "source_count": 10
+      },
+      {
+        "name": "J J Eye Hospital",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "followers": 15000000,
+        "doctors": 273,
+        "beds": 120,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Shankar Super Speciality Hospital",
+        "address_city": "Bangalore",
+        "address_stateOrRegion": "Karnataka",
+        "followers": 4756342,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 42,
+        "source_count": 8
+      },
+      {
+        "name": "Fortis Hospital",
+        "address_city": "Bangalore",
+        "address_stateOrRegion": "Karnataka",
+        "followers": 4756342,
+        "doctors": 1,
+        "beds": 276,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Kidwai Memorial Institute of Oncology",
+        "address_city": "Bengaluru",
+        "address_stateOrRegion": "Karnataka",
+        "followers": 4756342,
+        "doctors": 11,
+        "beds": 640,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Sher-I-Kashmir Institute of Medical Sciences",
+        "address_city": "Srinagar",
+        "address_stateOrRegion": "Jammu & Kashmir",
+        "followers": 1751900,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Primary Health Centre Trown",
+        "address_city": "Trown",
+        "address_stateOrRegion": "Jammu And Kashmir",
+        "followers": 1751900,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 44,
+        "source_count": 32
+      },
+      {
+        "name": "Richfeel Trichology Centre",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "followers": 1582400,
+        "doctors": 3,
+        "beds": null,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Apollo Hospital, Bhubaneswar",
+        "address_city": "Bhubaneswar",
+        "address_stateOrRegion": "Odisha",
+        "followers": 917947,
+        "doctors": 2,
+        "beds": 350,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Apollo Hospitals - Kakinada",
+        "address_city": "Kakinada",
+        "address_stateOrRegion": "Andhra Pradesh",
+        "followers": 917947,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 50,
+        "source_count": 38
+      },
+      {
+        "name": "Nahar Medical Centre",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "followers": 902000,
+        "doctors": 7,
+        "beds": null,
+        "specialty_count": 50,
+        "source_count": 17
+      },
+      {
+        "name": "Harsh Hospital",
+        "address_city": "Surat",
+        "address_stateOrRegion": "Gujarat",
+        "followers": 779570,
+        "doctors": 2,
+        "beds": 100,
+        "specialty_count": 45,
+        "source_count": 29
+      },
+      {
+        "name": "Handa Health Care Centre",
+        "address_city": "Ludhiana",
+        "address_stateOrRegion": "Punjab",
+        "followers": 647000,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 24,
+        "source_count": 9
+      },
+      {
+        "name": "Metro Umkal Hospital & Heart Institute",
+        "address_city": "Rewari",
+        "address_stateOrRegion": "Haryana",
+        "followers": 538813,
+        "doctors": 25,
+        "beds": 100,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "The Liver Unit and Monarch Liver Lab, Cochin Gastroenterology Group, Ernakulam Medical Centre, Kochi",
+        "address_city": "Kochi",
+        "address_stateOrRegion": "Kerala",
+        "followers": 430000,
+        "doctors": null,
+        "beds": 250,
+        "specialty_count": 50,
+        "source_count": 44
+      },
+      {
+        "name": "Newlife Fertility Centre – Siliguri",
+        "address_city": "Siliguri",
+        "address_stateOrRegion": "West Bengal",
+        "followers": 428000,
+        "doctors": 4,
+        "beds": null,
+        "specialty_count": 20,
+        "source_count": 8
+      },
+      {
+        "name": "Jagdamba Baby Care",
+        "address_city": "Karnal",
+        "address_stateOrRegion": "Haryana",
+        "followers": 350000,
+        "doctors": 1,
+        "beds": null,
+        "specialty_count": 20,
+        "source_count": 12
+      },
+      {
+        "name": "Aum Eye Hospital",
+        "address_city": "Jamnagar",
+        "address_stateOrRegion": "Gujarat",
+        "followers": 326553,
+        "doctors": null,
+        "beds": null,
+        "specialty_count": 50,
+        "source_count": 36
+      },
+      {
+        "name": "Rajagiri Hospital",
+        "address_city": "Kochi",
+        "address_stateOrRegion": "Kerala",
+        "followers": 314056,
+        "doctors": 200,
+        "beds": 576,
+        "specialty_count": 50,
+        "source_count": 50
+      },
+      {
+        "name": "Santati Fertility Center",
+        "address_city": "Mumbai",
+        "address_stateOrRegion": "Maharashtra",
+        "followers": 287000,
+        "doctors": 1,
+        "beds": null,
+        "specialty_count": 26,
+        "source_count": 11
+      }
+    ],
+    "nfhs_columns": [
+      "district_name",
+      "state_ut",
+      "households_surveyed",
+      "women_15_49_interviewed",
+      "men_15_54_interviewed",
+      "female_population_age_6_years_and_above_ever_schooled_pct",
+      "population_below_age_15_years_pct",
+      "sex_ratio_total_f_per_1000_m",
+      "sex_ratio_at_birth_5y_f_per_1000_m",
+      "child_u5_whose_birth_was_civil_reg_pct",
+      "deaths_in_the_last_3_years_civil_reg_pct",
+      "hh_electricity_pct",
+      "hh_improved_water_pct",
+      "hh_use_improved_sanitation_pct",
+      "households_using_clean_fuel_for_cooking_pct",
+      "households_using_iodized_salt_pct",
+      "hh_member_covered_health_insurance_pct",
+      "child_5y_who_attended_pre_primary_school_during_the_school_pct",
+      "women_age_15_49_who_are_literate_pct",
+      "women_age_15_49_with_10_or_more_years_of_schooling_pct",
+      "w20_24_married_before_age_18_years_pct",
+      "births_in_the_5_years_preceding_the_survey_that_are_birth_3_pct",
+      "w15_19_who_were_already_mothers_or_pregnant_at_the_time_of_pct",
+      "w15_24_who_use_menstrual_hygiene_pct",
+      "fp_cm_w15_49_any_method_pct",
+      "fp_cm_w15_49_modern_method_pct",
+      "fp_cm_w15_49_f_steril_pct",
+      "fp_cm_w15_49_m_steril_pct",
+      "fp_cm_w15_49_iud_pct",
+      "fp_cm_w15_49_pill_pct",
+      "fp_cm_w15_49_condom_pct",
+      "fp_cm_w15_49_injectables_pct",
+      "fp_unmet_total_cm_w15_49_7_pct",
+      "fp_unmet_spacing_cm_w15_49_7_pct",
+      "health_worker_ever_talked_to_female_non_users_about_family_pct",
+      "current_users_ever_told_about_side_effects_of_current_metho_pct",
+      "mothers_who_had_an_anc_visit_in_the_first_trimester_lb5y_pct",
+      "mothers_who_had_at_least_4_anc_visits_lb5y_pct",
+      "mothers_whose_last_birth_was_protected_against_neo_tetanus_pct",
+      "mothers_who_consumed_ifa_for_100_days_or_more_when_they_wer_pct",
+      "mothers_who_consumed_ifa_for_180_days_or_more_when_they_wer_pct",
+      "registered_pregnancies_for_which_the_mother_received_a_mcp_pct",
+      "mothers_who_received_pnc_from_a_doctor_nurse_lhv_anm_midwif_pct",
+      "average_out_of_pocket_expenditure_per_delivery_in_a_public_fac",
+      "children_born_at_home_who_were_taken_to_a_health_facility_f_pct",
+      "children_who_received_pnc_from_a_doctor_nurse_lhv_anm_midwi_pct",
+      "institutional_birth_5y_pct",
+      "institutional_birth_in_public_facility_5y_pct",
+      "home_birth_that_were_conducted_by_skilled_hp_5y_10_pct",
+      "births_attended_by_skilled_hp_5y_10_pct",
+      "births_delivered_by_csection_5y_pct",
+      "births_in_a_private_fac_that_were_delivered_by_csection_5y_pct",
+      "births_in_a_public_fac_that_were_delivered_by_csection_5y_pct",
+      "child_12_23m_fully_vaccinated_based_on_information_from_eit_pct",
+      "child_12_23m_fully_vaccinated_based_on_information_from_vax_pct",
+      "child_12_23m_who_have_received_bcg_pct",
+      "child_12_23m_who_have_received_3_doses_of_polio_vaccine_pct",
+      "child_12_23m_who_have_received_3_doses_of_penta_or_dpt_vacc_pct",
+      "child_12_23m_who_have_received_the_first_dose_of_mcv_mcv_pct",
+      "child_24_35m_who_have_received_a_second_dose_of_mcv_mcv_pct",
+      "child_12_23m_who_have_received_3_doses_of_rotavirus_vaccine_pct",
+      "child_12_23m_who_have_received_3_doses_of_penta_or_hepatiti_pct",
+      "child_9_35m_who_received_a_vit_a_in_the_last_6_months_pct",
+      "child_12_23m_who_received_most_of_their_vaccinations_in_a_p_pct",
+      "child_12_23m_who_received_most_of_their_vaccinations_in_a_2_pct",
+      "prev_diarrhoea_2wk_child_u5_pct",
+      "children_with_diarrhoea_2wk_who_received_oral_rehydration_s_pct",
+      "children_with_diarrhoea_2wk_who_received_zinc_child_u5_pct",
+      "children_with_diarrhoea_2wk_taken_to_a_health_facility_or_h_pct",
+      "children_prev_symptoms_of_acute_respiratory_infection_ari_2_pct",
+      "children_with_fever_or_symptoms_of_ari_2wk_taken_to_a_healt_pct",
+      "children_under_age_3_years_breastfed_within_one_hour_of_bir_pct",
+      "child_u6m_exclusively_breastfed_pct",
+      "child_6_8m_receiving_solid_or_semi_solid_food_and_breastmil_pct",
+      "breastfeeding_child_6_23m_receiving_an_adequate_diet16_17_pct",
+      "non_breastfeeding_child_6_23m_receiving_an_adequate_diet16_pct",
+      "total_child_6_23m_receiving_an_adequate_diet16_17_pct",
+      "child_u5_who_are_stunted_height_for_age_18_pct",
+      "child_u5_who_are_wasted_weight_for_height_18_pct",
+      "child_u5_who_are_severe_wasted_weight_for_height_19_pct",
+      "child_u5_who_are_underweight_weight_for_age_18_pct",
+      "child_u5_who_are_overweight_weight_for_height_20_pct",
+      "women_age_15_49_years_whose_bmi_bmi_is_underweight_bmi_lt_1_pct",
+      "women_age_15_49_years_who_are_overweight_obese_bmi_gte_25_0_pct",
+      "women_age_15_49_years_who_have_high_risk_whr_gte_0_85_pct",
+      "child_6_59m_who_are_anaemic_lt_11_0_g_dl_22_pct",
+      "non_pregnant_w15_49_who_are_anaemic_lt_12_0_g_dl_22_pct",
+      "pregnant_w15_49_who_are_anaemic_lt_11_0_g_dl_22_pct",
+      "all_w15_49_who_are_anaemic_pct",
+      "all_w15_19_who_are_anaemic_pct",
+      "women_age_15_years_and_above_with_high_141_160_mg_dl_blood_pct",
+      "w15_plus_with_very_high_gt_160_mg_dl_blood_sugar_pct",
+      "w15_plus_with_high_or_very_high_gt_140_mg_dl_blood_sugar_or_pct",
+      "m15_plus_with_high_141_160_mg_dl_blood_sugar_pct",
+      "men_age_15_years_and_above_with_very_high_gt_160_mg_dl_bloo_pct",
+      "m15_plus_with_high_or_very_high_gt_140_mg_dl_blood_sugar_or_pct",
+      "w15_plus_with_mildly_high_bp_sys_140_159_mmhg_and_or_dia_90_pct",
+      "w15_plus_with_moderately_or_severely_high_bp_sys_gte_160_mm_pct",
+      "w15_plus_with_high_bp_sys_gte_140_mmhg_and_or_dia_gte_90_mm_pct",
+      "m15_plus_with_mildly_high_bp_sys_140_159_mmhg_and_or_dia_90_pct",
+      "m15_plus_with_moderately_or_severely_high_bp_sys_gte_160_mm_pct",
+      "m15_plus_with_high_bp_sys_gte_140_mmhg_and_or_dia_gte_90_mm_pct",
+      "women_age_30_49_years_ever_undergone_a_cervical_screen_pct",
+      "women_age_30_49_years_ever_undergone_a_breast_exam_pct",
+      "women_age_30_49_years_ever_undergone_an_oral_cancer_exam_pct",
+      "w15_plus_who_use_any_kind_of_tobacco_pct",
+      "m15_plus_who_use_any_kind_of_tobacco_pct",
+      "w15_plus_who_consume_alcohol_pct",
+      "m15_plus_who_consume_alcohol_pct"
+    ],
+    "critical_districts": [
+      {
+        "district_name": "Pashchimi Singhbhum ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 990,
+        "women_15_49_interviewed": 1076
+      },
+      {
+        "district_name": "Fatehpur ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 989,
+        "women_15_49_interviewed": 1206
+      },
+      {
+        "district_name": "Kannauj ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 989,
+        "women_15_49_interviewed": 1317
+      },
+      {
+        "district_name": "Purbi Singhbhum ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 989,
+        "women_15_49_interviewed": 1133
+      },
+      {
+        "district_name": "Hanumangarh ",
+        "state_ut": "Rajasthan",
+        "households_surveyed": 989,
+        "women_15_49_interviewed": 1372
+      },
+      {
+        "district_name": "Namsai ",
+        "state_ut": "Arunachal Pradesh",
+        "households_surveyed": 989,
+        "women_15_49_interviewed": 1156
+      },
+      {
+        "district_name": "Upper Subansiri ",
+        "state_ut": "Arunachal Pradesh",
+        "households_surveyed": 988,
+        "women_15_49_interviewed": 1092
+      },
+      {
+        "district_name": "Simdega ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 988,
+        "women_15_49_interviewed": 1135
+      },
+      {
+        "district_name": "Khunti ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 987,
+        "women_15_49_interviewed": 1103
+      },
+      {
+        "district_name": "Lower Subansiri ",
+        "state_ut": "Arunachal Pradesh",
+        "households_surveyed": 986,
+        "women_15_49_interviewed": 1094
+      },
+      {
+        "district_name": "Gumla ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 986,
+        "women_15_49_interviewed": 1113
+      },
+      {
+        "district_name": "Nagaur ",
+        "state_ut": "Rajasthan",
+        "households_surveyed": 985,
+        "women_15_49_interviewed": 1601
+      },
+      {
+        "district_name": "Baran ",
+        "state_ut": "Rajasthan",
+        "households_surveyed": 985,
+        "women_15_49_interviewed": 1301
+      },
+      {
+        "district_name": "Rae Bareli ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 985,
+        "women_15_49_interviewed": 1258
+      },
+      {
+        "district_name": "Chitrakoot ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 985,
+        "women_15_49_interviewed": 1176
+      },
+      {
+        "district_name": "Ganganagar ",
+        "state_ut": "Rajasthan",
+        "households_surveyed": 985,
+        "women_15_49_interviewed": 1409
+      },
+      {
+        "district_name": "Unnao ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 984,
+        "women_15_49_interviewed": 1128
+      },
+      {
+        "district_name": "Jhansi ",
+        "state_ut": "Uttar Pradesh",
+        "households_surveyed": 984,
+        "women_15_49_interviewed": 1326
+      },
+      {
+        "district_name": "Saraikela-Kharsawan ",
+        "state_ut": "Jharkhand",
+        "households_surveyed": 984,
+        "women_15_49_interviewed": 1126
+      },
+      {
+        "district_name": "Bundi ",
+        "state_ut": "Rajasthan",
+        "households_surveyed": 984,
+        "women_15_49_interviewed": 1253
+      }
+    ],
+    "source_url_distribution": [
+      {
+        "source_count": 50,
+        "facilities": 1243
+      },
+      {
+        "source_count": 49,
+        "facilities": 31
+      },
+      {
+        "source_count": 48,
+        "facilities": 30
+      },
+      {
+        "source_count": 47,
+        "facilities": 27
+      },
+      {
+        "source_count": 46,
+        "facilities": 33
+      },
+      {
+        "source_count": 45,
+        "facilities": 28
+      },
+      {
+        "source_count": 44,
+        "facilities": 32
+      },
+      {
+        "source_count": 43,
+        "facilities": 34
+      },
+      {
+        "source_count": 42,
+        "facilities": 35
+      },
+      {
+        "source_count": 41,
+        "facilities": 34
+      },
+      {
+        "source_count": 40,
+        "facilities": 42
+      },
+      {
+        "source_count": 39,
+        "facilities": 33
+      },
+      {
+        "source_count": 38,
+        "facilities": 50
+      },
+      {
+        "source_count": 37,
+        "facilities": 42
+      },
+      {
+        "source_count": 36,
+        "facilities": 39
+      }
+    ]
+  }
+}

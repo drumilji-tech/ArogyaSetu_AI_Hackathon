@@ -1,0 +1,21 @@
+command:
+  - "gunicorn"
+  - "app:app"
+  - "--bind"
+  - "0.0.0.0:8000"
+  - "--workers"
+  - "2"
+  - "--timeout"
+  - "180"
+
+env:
+  - name: DATABRICKS_SERVER_HOSTNAME
+    value: "YOUR_HOSTNAME.cloud.databricks.com"
+  - name: DATABRICKS_HTTP_PATH
+    value: "/sql/1.0/warehouses/YOUR_WAREHOUSE_ID"
+  - name: DATABRICKS_TOKEN
+    value: "YOUR_DATABRICKS_TOKEN"
+  - name: DATABRICKS_CATALOG
+    value: "databricks_virtue_foundation_dataset_dais_2026"
+  - name: DATABRICKS_SCHEMA
+    value: "virtue_foundation_dataset"

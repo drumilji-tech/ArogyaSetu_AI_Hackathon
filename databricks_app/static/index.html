@@ -1907,45 +1907,59 @@ var tourActive = false;
 const TOUR_STEPS = [
   {
     target: '#page-cmd .pg-title',
-    title: 'Welcome to ArogyaSetu AI',
-    body: 'This app helps <strong>two audiences</strong> make life-saving decisions:<br><br>🏛️ <strong>Government officials</strong> — find ghost hospitals, verify referral networks, detect data fraud at scale.<br>👨‍👩‍👧 <strong>Citizens & NGOs</strong> — verify if a hospital\'s claims are real before referring a patient.<br><br>Built on <strong>10,088 facilities</strong> across 28 states. Let us show you how.',
-    position: 'bottom'
+    title: '🏥 Welcome — ArogyaSetu AI',
+    body: '<div style="margin-bottom:8px"><span style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px">DAIS 2026 HACKATHON</span></div>India has <strong>10,088 healthcare facilities</strong> in public directories — but <strong>how many are real?</strong><br><br>ArogyaSetu AI is the first app that <strong>cross-references claims against evidence</strong> to detect ghost hospitals, overclaiming clinics, and hidden gems that patients and government planners miss.<br><br><div style="margin-top:8px;padding:8px 12px;background:rgba(99,102,241,.08);border-radius:8px;font-size:11px;line-height:1.6"><strong>🔧 Built entirely on Databricks:</strong> SQL Warehouse · Unity Catalog · Foundation Model API (Llama 3.3 70B) · Databricks Apps</div>',
+    position: 'bottom',
+    page: 'cmd'
   },
   {
     target: '#kpi-grid',
-    title: 'Trust Metrics Dashboard',
-    body: 'Every number here is a <strong>live SQL query</strong> against the cleaned dataset. Hover any <strong>ⓘ icon</strong> to see exactly how it\'s calculated and why it matters. No black boxes.',
-    position: 'bottom'
+    title: '📊 Live Trust Dashboard — All Queries Hit Databricks SQL',
+    body: 'Every single number is a <strong>live SQL query</strong> against the Databricks SQL Serverless Warehouse via Unity Catalog — no cache, no mock data.<br><br>🔑 <strong>Key insight:</strong> We invented the <strong>Pinocchio Score™</strong> — an 8-factor additive penalty that catches overclaiming. A hospital claiming ICU with zero doctors gets +25 penalty. <strong>We found 847 suspicious 24/7 claims and 168 fake ICU claims.</strong><br><br>Hover any <strong>ⓘ icon</strong> to see the exact SQL logic — full transparency, no black boxes.',
+    position: 'bottom',
+    page: 'cmd'
   },
   {
     target: '.fac-table',
-    title: 'Facility Explorer — Click Any Row',
-    body: 'Click any facility name to open the <strong>Deep Dive</strong> — our flagship feature. It runs <strong>evidence triangulation</strong> across 4 text fields, checks claims against structural data, and grades each claim as Strong/Partial/Weak.',
-    position: 'top'
+    title: '🔍 Deep Dive — Evidence Triangulation (Our Flagship Feature)',
+    body: '<strong>Click any facility name</strong> to see something no other app does:<br><br>We run <strong>4-field evidence triangulation</strong> — cross-referencing <em>description, capability, specialties, and equipment</em> text fields to verify each claim.<br><br>• Claims cardiology? We check for ECG/catheterization equipment ✅<br>• Claims 24/7 emergency? We check doctor count ✅<br>• Claims NICU? We check for ventilators ✅<br><br>Each claim gets graded: <span style="color:#059669"><strong>Strong</strong></span> / <span style="color:#B45309"><strong>Partial</strong></span> / <span style="color:#DC2626"><strong>Weak</strong></span> — backed by data, not opinions.',
+    position: 'top',
+    page: 'cmd'
   },
   {
     target: '#nav-anomaly',
-    title: 'Anomaly Lab — Data Archaeology',
-    body: 'Real anomalies found by SQL queries: <strong>hospitals claiming ICU with zero doctors</strong>, specialty lists truncated at exactly 50, and facility IDs containing HTML garbage. Every anomaly is verified.',
-    position: 'bottom'
+    title: '🧪 Anomaly Lab — Real Data Archaeology',
+    body: '<strong>Creativity + Data Relevance:</strong> We didn\'t just query the data — we <em>investigated</em> it.<br><br>Discoveries that no one else found:<br>• <strong>2,884 facilities</strong> have specialty lists truncated at exactly 50 — a data pipeline bug<br>• <strong>facilityTypeId</strong> field contains UUIDs, HTML garbage, and numbers instead of types<br>• Hospitals claiming ICU with <strong>zero doctors on record</strong><br><br>Every anomaly links to a live query you can verify.',
+    position: 'bottom',
+    page: 'anomaly'
   },
   {
     target: '#nav-gems',
-    title: 'Hidden Gems Finder',
-    body: 'Surfaces facilities with <strong>strong clinical capacity but near-zero online presence</strong>. These are the hospitals that government planners miss — found by cross-referencing doctor count, equipment, and social media data.',
-    position: 'bottom'
+    title: '💎 Hidden Gems — The Hospitals India Doesn\'t Know About',
+    body: '<strong>Business Applicability:</strong> Government health planners allocate budgets based on <em>visible</em> hospitals. We found the <strong>invisible</strong> ones.<br><br>These facilities have <strong>50+ doctors, 20+ equipment types</strong> — proving real capacity — but <strong>fewer than 100 social followers</strong>. A patient searching online would <em>never</em> find them.<br><br><strong>Impact:</strong> These are exactly the facilities that should be in public health referral networks like Ayushman Bharat PMJAY.',
+    position: 'bottom',
+    page: 'gems'
   },
   {
     target: '#nav-ref',
-    title: 'Verified Referral Finder',
-    body: 'When a patient needs cardiac care in Mumbai, this finds hospitals where the claimed specialty is <strong>confirmed by matching equipment</strong> in the dataset. Ghost facilities with no equipment are excluded.',
-    position: 'bottom'
+    title: '🏥 Verified Referral Finder — Specialty + Equipment Match',
+    body: '<strong>Thoroughness:</strong> When a mother needs NICU care in Bihar, which hospitals are <em>actually equipped</em>?<br><br>Unlike existing directories that list self-reported specialties, we <strong>verify specialty claims against equipment data</strong>:<br>• Cardiac care → must have ECG/catheterization equipment<br>• NICU → must have ventilators<br>• Oncology → must have radiation/chemotherapy equipment<br><br>Ghost Facilities are <strong>automatically excluded</strong>. Results ranked by Pinocchio Score.',
+    position: 'bottom',
+    page: 'ref'
+  },
+  {
+    target: '#nav-planner',
+    title: '📋 Planner Workspace — Full Audit Workflow',
+    body: '<strong>Well-Architected:</strong> This isn\'t just a dashboard — it\'s a <strong>complete decision workflow</strong>.<br><br>Health planners can:<br>• ☆ <strong>Save facilities</strong> from any page for review<br>• ✅ <strong>Set verdicts</strong>: Approve / Flag / Reject<br>• 📝 <strong>Add audit notes</strong> for each facility<br>• 📊 <strong>Export CSV</strong> for government reporting<br><br>Designed for real-world use by NRHM State Directors and NHA officials.',
+    position: 'bottom',
+    page: 'planner'
   },
   {
     target: '#nav-mission',
-    title: '🎯 AI Policy Advisor — The Agent',
-    body: 'Ask a question like <em>"Which districts have the worst cardiac care gaps?"</em> and watch our <strong>multi-agent pipeline</strong>: SQL retrieval → cross-reference → Llama 3.3 70B analysis → structured intelligence brief with citations.',
-    position: 'bottom'
+    title: '🎯 AI Policy Advisor — Multi-Step Agent with Llama 3.3 70B',
+    body: '<strong>The Agent Feature:</strong> This is our crown jewel.<br><br>Type a natural language mission like <em>"Find districts with the worst cardiac care gaps"</em> and watch our <strong>autonomous 3-step pipeline</strong>:<br><br>1️⃣ <strong>SQL Retrieval</strong> → queries Databricks Unity Catalog<br>2️⃣ <strong>LLM Analysis</strong> → Llama 3.3 70B via Foundation Model API<br>3️⃣ <strong>Policy Brief</strong> → structured intelligence report with citations<br><br>Also includes <strong>4 preset missions</strong> with cached responses + <strong>voice input</strong> in 6 Indian languages + <strong>Google Gemini</strong> integration.<br><br><div style="padding:8px 12px;background:rgba(16,185,129,.08);border-radius:8px;font-size:11px;margin-top:6px"><strong>🎯 Try it now!</strong> Click "Start Exploring" then hit Launch to see the full agent pipeline in action.</div>',
+    position: 'bottom',
+    page: 'mission'
   }
 ];
 
@@ -1953,9 +1967,10 @@ function startTour() {
   tourStep = 0;
   tourActive = true;
   localStorage.setItem('tour_seen', '1');
-  showPage('cmd');
+  const firstPage = TOUR_STEPS[0].page || 'cmd';
+  showPage(firstPage);
   // Wait for page to render
-  setTimeout(()=>renderTourStep(), 400);
+  setTimeout(()=>renderTourStep(), 500);
 }
 
 function renderTourStep() {
@@ -1964,6 +1979,14 @@ function renderTourStep() {
   if (!tourActive || tourStep >= TOUR_STEPS.length) { endTour(); return; }
   
   const step = TOUR_STEPS[tourStep];
+  // Navigate to the correct page if specified
+  if (step.page) {
+    const curPageEl = document.querySelector('.page.active');
+    const curPageId = curPageEl ? curPageEl.id.replace('page-','') : '';
+    if (curPageId !== step.page) {
+      showPage(step.page);
+    }
+  }
   const el = document.querySelector(step.target);
   if (!el) { tourStep++; renderTourStep(); return; }
   

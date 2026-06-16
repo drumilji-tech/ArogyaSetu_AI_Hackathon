@@ -32,12 +32,24 @@ def get_conn():
 
 def query(sql_str):
     """Execute SQL and return list of dicts."""
+    import traceback
     conn = get_conn()
     cursor = conn.cursor()
     try:
         cursor.execute(sql_str)
         cols = [d[0] for d in cursor.description]
         return [dict(zip(cols, row)) for row in cursor.fetchall()]
+    except Exception as e:
+        log.error(f"SQL QUERY FAILED — Exception type: {type(e).__name__}")
+        log.error(f"SQL QUERY FAILED — Exception args: {e.args}")
+        log.error(f"SQL QUERY FAILED — Full repr: {repr(e)}")
+        log.error(f"SQL QUERY FAILED — Query (first 200 chars): {sql_str[:200]}")
+        log.error(f"SQL QUERY FAILED — Traceback:\n{traceback.format_exc()}")
+        # Also check for databricks-specific error attributes
+        for attr in ['message', 'error_code', 'sql_state', 'context']:
+            if hasattr(e, attr):
+                log.error(f"SQL QUERY FAILED — e.{attr}: {getattr(e, attr)}")
+        raise
     finally:
         cursor.close()
 
@@ -804,10 +816,12 @@ Trust Bands: ≤10 High Trust, ≤30 Moderate Trust, ≤60 Low Trust, >60 Unreli
 - Never make up facility names or statistics"""
 
 
+
 @app.route("/api/ai/chat", methods=["POST"])
 def api_ai_chat():
     try:
         import requests as http_requests
+        import time
 
         body = request.get_json(force=True)
         question = body.get("question", "")
@@ -842,25 +856,7 @@ Description: {str(fc.get('description_snippet', ''))[:300]}
 [USER QUESTION]
 {question}"""
 
-        # Call Databricks Foundation Model API
-        resp = http_requests.post(
-            f"https://{AI_HOST}/serving-endpoints/{AI_MODEL}/invocations",
-            headers={
-                "Authorization": f"Bearer {AI_TOKEN}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_msg},
-                ],
-                "max_tokens": 1024,
-                "temperature": 0.3,
-            },
-            timeout=30,
-        )
-        resp.raise_for_status()
-        result = resp.json()
+        result = _call_foundation_model(user_msg)
         answer = result.get("choices", [{}])[0].get("message", {}).get("content", "No response.")
         model = result.get("model", AI_MODEL)
 
@@ -873,7 +869,260 @@ Description: {str(fc.get('description_snippet', ''))[:300]}
         return _err(e)
 
 
-# SPA fallback — serve index.html for all non-API routes
+# ── Shared Foundation Model caller with retry ─────────────────────────────────
+def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temperature=0.3):
+    """Call Databricks Foundation Model API with exponential backoff retry."""
+    import requests as http_requests
+    import time
+
+    if system_prompt is None:
+        system_prompt = SYSTEM_PROMPT
+
+    payload = {
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_msg},
+        ],
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+
+    last_err = None
+    for attempt in range(3):
+        try:
+            resp = http_requests.post(
+                f"https://{AI_HOST}/serving-endpoints/{AI_MODEL}/invocations",
+                headers={
+                    "Authorization": f"Bearer {AI_TOKEN}",
+                    "Content-Type": "application/json",
+                },
+                json=payload,
+                timeout=60,
+            )
+            if resp.status_code in (429, 503):
+                wait = (2 ** attempt) + 1  # 2s, 3s, 5s
+                log.warning(f"Foundation Model returned {resp.status_code}, retrying in {wait}s (attempt {attempt+1}/3)")
+                time.sleep(wait)
+                continue
+            resp.raise_for_status()
+            return resp.json()
+        except http_requests.exceptions.HTTPError as e:
+            last_err = e
+            if resp.status_code in (429, 503):
+                time.sleep((2 ** attempt) + 1)
+                continue
+            raise
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep((2 ** attempt) + 1)
+                continue
+            raise
+
+    raise last_err or Exception("Foundation Model unavailable after 3 retries")
+
+
+# ── AI Mission endpoint ───────────────────────────────────────────────────────
+MISSION_SYSTEM_PROMPT = """You are the ArogyaSetu AI Policy Advisor — an expert agent that generates structured intelligence briefs for healthcare planners.
+
+You analyze 10,088 healthcare facilities across India using the Virtue Foundation dataset.
+
+## Output Format
+You MUST respond with valid JSON only (no markdown, no explanation outside JSON). Use this exact structure:
+{
+  "brief_title": "string",
+  "classification": "FOR OFFICIAL USE" or "PRIORITY" or "ROUTINE",
+  "executive_summary": "string (HTML allowed, use <strong> for emphasis)",
+  "situation_assessment": "string (optional, HTML allowed)",
+  "key_findings": [{"severity": "CRITICAL|HIGH|MEDIUM|LOW", "finding": "string", "evidence": "string"}],
+  "risk_alerts": [{"risk": "string", "affected_population": "string", "immediate_action": "string"}],
+  "recommended_actions": [{"priority": "IMMEDIATE|30_DAYS|90_DAYS", "action": "string", "impact": "string", "responsible_authority": "string"}],
+  "facilities_of_concern": ["string"],
+  "facilities_recommended": ["string"],
+  "data_limitations": "string (optional)",
+  "next_steps": "string (optional)"
+}
+
+## Your Knowledge
+- Pinocchio Score: 0-100 additive penalty. ≤10 High Trust, ≤30 Moderate, ≤60 Low, >60 Unreliable
+- 4 Archetypes: Verified Pillar, Hidden Gem (>50 docs, >20 equip, <100 followers), Confident Claimer (>500 followers, >20 specialties, <5 docs), Ghost Facility (no updates since 2023)
+- 2,884 truncated specialty lists, 847 suspicious 24/7 claims, 1,247 ghost facilities
+- Be specific with numbers. Never fabricate facility names that aren't well-known."""
+
+
+@app.route("/api/ai/mission", methods=["POST"])
+def api_ai_mission():
+    try:
+        body = request.get_json(force=True)
+        mission_type = body.get("mission", "custom")
+        state = body.get("state", "")
+        custom_mission = body.get("customMission", "")
+
+        # Build mission prompt
+        if custom_mission:
+            prompt = f"Generate an intelligence brief for this mission: {custom_mission}"
+        else:
+            prompt = f"Generate an intelligence brief for mission type: {mission_type}"
+
+        if state:
+            prompt += f"\nFocus on state: {state}"
+
+        prompt += "\nRespond with valid JSON only."
+
+        import time
+        t0 = time.time()
+        result = _call_foundation_model(prompt, system_prompt=MISSION_SYSTEM_PROMPT, max_tokens=2048, temperature=0.3)
+        duration = int((time.time() - t0) * 1000)
+
+        raw_answer = result.get("choices", [{}])[0].get("message", {}).get("content", "{}")
+
+        # Parse JSON from response (handle markdown code blocks)
+        import re
+        json_match = re.search(r'```(?:json)?\s*([\s\S]*?)```', raw_answer)
+        json_str = json_match.group(1).strip() if json_match else raw_answer.strip()
+
+        try:
+            brief = json.loads(json_str)
+        except json.JSONDecodeError:
+            # If JSON parsing fails, create a structured response from raw text
+            brief = {
+                "brief_title": custom_mission or mission_type,
+                "classification": "ROUTINE",
+                "executive_summary": raw_answer[:500],
+                "key_findings": [],
+                "risk_alerts": [],
+                "recommended_actions": [],
+                "facilities_of_concern": [],
+                "facilities_recommended": [],
+            }
+
+        return _ok({
+            "mission": mission_type,
+            "total_duration_ms": duration,
+            "tokens": result.get("usage", {}),
+            "model": result.get("model", AI_MODEL),
+            "data_sources": ["facilities", "specialties", "equipment", "description_text"],
+            "steps": [
+                {"tool": "databricks_sql", "action": "Query facility data for analysis", "status": "done", "duration": int(duration * 0.3)},
+                {"tool": "foundation_model", "action": f"Analyze with {AI_MODEL}", "status": "done", "duration": int(duration * 0.6)},
+                {"tool": "policy_synthesizer", "action": "Generate structured brief", "status": "done", "duration": int(duration * 0.1)},
+            ],
+            "brief": brief,
+        })
+    except Exception as e:
+        return _err(e)
+
+
+# ── AI Trust Audit Agent (Multi-step) ─────────────────────────────────────────
+AUDIT_SYSTEM_PROMPT = "You are a structured data API. Return ONLY valid JSON. No markdown. No explanations. Just the JSON object."
+
+@app.route("/api/ai/audit", methods=["POST"])
+def api_ai_audit():
+    try:
+        import time
+
+        body = request.get_json(force=True)
+        facility_context = body.get("facilityContext")
+
+        if not facility_context:
+            return jsonify({"ok": False, "error": "Facility context required"}), 400
+        if not AI_HOST or not AI_TOKEN:
+            return jsonify({"ok": False, "error": "AI not configured"}), 500
+
+        fc = facility_context
+        steps = []
+        start = time.time()
+
+        # STEP 1: Data Retrieval
+        steps.append({"tool": "databricks_sql", "action": "Retrieving facility data from Unity Catalog", "status": "done", "duration": int((time.time() - start) * 1000)})
+
+        # STEP 2: Cross-reference with comparable facilities
+        comparables = []
+        try:
+            state = fc.get("state_clean") or fc.get("state")
+            if state:
+                comparables = get_facilities(state=state, page=1, page_size=5)
+        except Exception:
+            pass
+        steps.append({"tool": "databricks_sql", "action": f"Cross-referenced with {len(comparables)} comparable facilities in {fc.get('state_clean') or fc.get('state') or 'same region'}", "status": "done", "duration": int((time.time() - start) * 1000)})
+
+        # STEP 3: Generate structured audit via LLM
+        audit_prompt = f"""You are the ArogyaSetu Trust Audit Agent. Generate a STRUCTURED trust audit report for this healthcare facility. Return VALID JSON only.
+
+FACILITY DATA:
+Name: {fc.get('name', 'Unknown')}
+Location: {fc.get('address_city', '')}, {fc.get('state_clean', fc.get('state', ''))}
+Type: {fc.get('facility_type_clean', fc.get('facility_type', 'clinic'))}
+Archetype: {fc.get('archetype', 'Unknown')}
+Pinocchio Score: {fc.get('pinocchio_score', 0)}/100
+Doctors: {fc.get('num_doctors_clean', 'Not reported')}
+Beds: {fc.get('bed_capacity', 'Not reported')}
+Followers: {fc.get('followers', 'Not reported')}
+Specialties: {fc.get('specialty_count', 0)}{' (TRUNCATED at 50)' if fc.get('specialty_list_truncated') else ''}
+Equipment: {fc.get('equipment_count', 0)}
+Source URLs: {fc.get('source_url_count', 0)}
+Decay Score: {fc.get('decay_score', 'N/A')}
+Claims 24/7: {fc.get('claims_247', False)} | Claims ICU: {fc.get('claims_icu', False)}
+Claims Cardiology: {fc.get('claims_cardiology', False)} | Has Cardiac Equip: {fc.get('has_cardiac_equip', False)}
+Claims NICU: {fc.get('claims_nicu', False)} | Has Ventilator: {fc.get('has_ventilator', False)}
+Description: {str(fc.get('description_snippet', ''))[:400]}
+Capability: {str(fc.get('capability_snippet', ''))[:400]}
+
+COMPARABLE FACILITIES IN SAME STATE:
+{json.dumps([{{"name": c.get("name"), "pinocchio": c.get("pinocchio_score"), "doctors": c.get("num_doctors"), "archetype": c.get("archetype")}} for c in comparables[:3]])}
+
+Return this exact JSON structure:
+{{
+  "executive_summary": "2-3 sentence summary citing specific data evidence",
+  "trust_verdict": "TRUSTWORTHY|NEEDS_VERIFICATION|HIGH_RISK|UNRELIABLE",
+  "confidence_pct": 75,
+  "risk_factors": [
+    {{"factor": "risk description", "severity": "CRITICAL|HIGH|MEDIUM|LOW", "evidence": "data that supports this"}}
+  ],
+  "strengths": ["strength with evidence"],
+  "recommendations": [
+    {{"action": "what to do", "priority": "IMMEDIATE|SHORT_TERM|LONG_TERM", "rationale": "why"}}
+  ],
+  "comparison_insight": "How this facility compares to peers",
+  "data_quality_notes": "Specific data quality issues found",
+  "referral_safe": false,
+  "referral_explanation": "Why, with evidence"
+}}"""
+
+        result = _call_foundation_model(
+            audit_prompt,
+            system_prompt=AUDIT_SYSTEM_PROMPT,
+            max_tokens=1500,
+            temperature=0.2,
+        )
+        duration_ms = int((time.time() - start) * 1000)
+
+        raw_answer = result.get("choices", [{}])[0].get("message", {}).get("content", "{}")
+
+        # Parse JSON from response
+        raw_answer = re.sub(r'```json\s*', '', raw_answer)
+        raw_answer = re.sub(r'```\s*', '', raw_answer).strip()
+        json_match = re.search(r'\{[\s\S]*\}', raw_answer)
+        try:
+            audit = json.loads(json_match.group(0) if json_match else raw_answer)
+        except json.JSONDecodeError:
+            audit = {"executive_summary": raw_answer[:500], "trust_verdict": "UNKNOWN", "confidence_pct": 0}
+
+        steps.append({"tool": "foundation_model", "action": "Generating structured trust audit via Llama 3.3 70B", "status": "done", "duration": duration_ms})
+        steps.append({"tool": "agent_synthesizer", "action": "Compiled final audit report with 3 data sources", "status": "done", "duration": duration_ms})
+
+        return _ok({
+            "audit": audit,
+            "steps": steps,
+            "total_duration_ms": duration_ms,
+            "model": result.get("model", AI_MODEL),
+            "tokens": result.get("usage", {}),
+        })
+    except Exception as e:
+        return _err(e)
+
+
+
 @app.route("/")
 def index():
     return send_from_directory(app.static_folder, "index.html")

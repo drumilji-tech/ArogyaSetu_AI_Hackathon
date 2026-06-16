@@ -953,12 +953,53 @@ You MUST respond with valid JSON only (no markdown, no explanation outside JSON)
 @app.route("/api/ai/mission", methods=["POST"])
 def api_ai_mission():
     try:
+        import time
+
         body = request.get_json(force=True)
         mission_type = body.get("mission", "custom")
         state = body.get("state", "")
         custom_mission = body.get("customMission", "")
 
-        # Build mission prompt
+        # Detect if this is a casual/conversational message vs a real mission
+        casual_patterns = [
+            "hi", "hello", "hey", "howdy", "hola", "namaste", "sup",
+            "what are you", "who are you", "what can you do", "help",
+            "how are you", "good morning", "good evening", "thanks",
+            "thank you", "bye", "what is this", "tell me about yourself",
+        ]
+        is_casual = False
+        if custom_mission:
+            lower_msg = custom_mission.strip().lower().rstrip("?!.,")
+            if len(lower_msg) < 40 and any(lower_msg.startswith(p) or lower_msg == p for p in casual_patterns):
+                is_casual = True
+
+        t0 = time.time()
+
+        if is_casual:
+            # Conversational mode — respond as a helpful AI assistant
+            chat_prompt = f"""The user said: "{custom_mission}"
+
+Respond conversationally as the ArogyaSetu AI Policy Advisor. Introduce yourself briefly and suggest 2-3 example missions they can try, such as:
+- "Find hospitals claiming NICU with no ventilators in Maharashtra"
+- "Which districts in Bihar have the worst cardiac care gaps?"
+- "Investigate ghost facilities in Tamil Nadu"
+
+Keep your response friendly, concise (3-4 sentences max), and in markdown format. Use emoji sparingly."""
+
+            result = _call_foundation_model(chat_prompt, system_prompt=SYSTEM_PROMPT, max_tokens=512, temperature=0.5)
+            duration = int((time.time() - t0) * 1000)
+            answer = result.get("choices", [{}])[0].get("message", {}).get("content", "Hello! I'm the ArogyaSetu AI Policy Advisor.")
+
+            return _ok({
+                "mission": mission_type,
+                "total_duration_ms": duration,
+                "tokens": result.get("usage", {}),
+                "model": result.get("model", AI_MODEL),
+                "chat_response": answer,
+                "is_chat": True,
+            })
+
+        # Mission mode — generate structured policy brief
         if custom_mission:
             prompt = f"Generate an intelligence brief for this mission: {custom_mission}"
         else:
@@ -969,22 +1010,18 @@ def api_ai_mission():
 
         prompt += "\nRespond with valid JSON only."
 
-        import time
-        t0 = time.time()
         result = _call_foundation_model(prompt, system_prompt=MISSION_SYSTEM_PROMPT, max_tokens=2048, temperature=0.3)
         duration = int((time.time() - t0) * 1000)
 
         raw_answer = result.get("choices", [{}])[0].get("message", {}).get("content", "{}")
 
         # Parse JSON from response (handle markdown code blocks)
-        import re
         json_match = re.search(r'```(?:json)?\s*([\s\S]*?)```', raw_answer)
         json_str = json_match.group(1).strip() if json_match else raw_answer.strip()
 
         try:
             brief = json.loads(json_str)
         except json.JSONDecodeError:
-            # If JSON parsing fails, create a structured response from raw text
             brief = {
                 "brief_title": custom_mission or mission_type,
                 "classification": "ROUTINE",

@@ -9,8 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root{
       --bg:#F7F8FA; --bg2:#FFF; --bg3:#F0F2F5; --border:#E2E6ED;
@@ -509,22 +507,6 @@
     </div>
   </div>
 
-  <!-- TRUST MAP -->
-  <div class="card" style="margin-bottom:20px;overflow:hidden">
-    <div class="card-hd">
-      <span class="card-ttl">🗺️ India Facility Trust Map</span>
-      <span class="badge b-teal" id="map-count">Loading...</span>
-    </div>
-    <div id="trust-map" style="height:480px;background:#1a1a2e;border-radius:0 0 12px 12px"></div>
-    <div style="padding:10px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--t3)">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#059669;margin-right:4px"></span>High Trust</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0D9488;margin-right:4px"></span>Moderate</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#B45309;margin-right:4px"></span>Low Trust</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#DC2626;margin-right:4px"></span>Unreliable</span>
-      <span style="margin-left:auto;color:var(--t4)">Click any facility to open Deep Dive</span>
-    </div>
-  </div>
-
   <!-- ARCHETYPE STRIP -->
   <div class="arch-strip" id="arch-strip"></div>
 
@@ -733,7 +715,6 @@ function showPage(name){
 async function loadCmd(){
   window._kl=true;
   await Promise.all([loadKPIs(),loadStates(),loadFac()]);
-  loadMap(); // async, don't block
 }
 
 /* TRUST MAP */
@@ -790,7 +771,7 @@ async function loadMap(){
             <span style="font-size:10px;padding:2px 6px;border-radius:4px;background:#f0f0f0;font-weight:600">${f.archetype}</span>
           </div>
           <div style="font-size:11px;color:#888">🤥 Pinocchio: ${f.pinocchio_score}/100 · ${f.facility_type}</div>
-          <button onclick="loadDV('${f.id}')" style="margin-top:8px;width:100%;padding:6px;border:none;background:#0D9488;color:#fff;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Open Deep Dive →</button>
+          <button onclick="loadDV('${f.unique_id}')" style="margin-top:8px;width:100%;padding:6px;border:none;background:#0D9488;color:#fff;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Open Deep Dive →</button>
         </div>
       `, { maxWidth: 280 });
     });
@@ -1683,11 +1664,32 @@ async function launchMission(type) {
   try {
     const body = {mission: type, state};
     if (custom) body.customMission = custom;
-    const r = await fetch(API+'/api/ai/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
+    const resp = await fetch(API+'/api/ai/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const text = await resp.text();
+    let r;
+    try { r = JSON.parse(text); } catch(pe) {
+      // LLM returned HTML or non-JSON — show friendly fallback
+      container.innerHTML = `<div class="card" style="padding:24px">
+        <div style="font-weight:700;font-size:15px;color:var(--t1);margin-bottom:8px">⏳ AI Model Temporarily Busy</div>
+        <div style="font-size:13px;color:var(--t3);line-height:1.6">The Databricks Foundation Model endpoint is currently processing too many requests. This is a known scaling constraint of the free-tier endpoint.</div>
+        <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--t2)"><strong>What to do:</strong> Wait 10-15 seconds and try again. The AI pipeline works — it just needs a moment to become available.</div>
+        <button onclick="launchMission('${type}')" style="margin-top:12px;padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">🔄 Retry Mission</button>
+      </div>`;
+      missionRunning = false;
+      return;
+    }
     if (r.ok) renderMissionBrief(r.data, container);
-    else container.innerHTML = `<div class="card" style="padding:20px;color:var(--red)">⚠️ Mission failed: ${r.error}</div>`;
+    else container.innerHTML = `<div class="card" style="padding:24px">
+      <div style="font-weight:700;font-size:15px;color:var(--t1);margin-bottom:8px">⏳ AI Model Temporarily Busy</div>
+      <div style="font-size:13px;color:var(--t3);line-height:1.6">${r.error || 'The model is processing another request.'}</div>
+      <button onclick="launchMission('${type}')" style="margin-top:12px;padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">🔄 Retry Mission</button>
+    </div>`;
   } catch(e) {
-    container.innerHTML = `<div class="card" style="padding:20px;color:var(--red)">⚠️ ${e.message}</div>`;
+    container.innerHTML = `<div class="card" style="padding:24px">
+      <div style="font-weight:700;font-size:15px;color:var(--t1);margin-bottom:8px">⏳ Connection Issue</div>
+      <div style="font-size:13px;color:var(--t3);line-height:1.6">${e.message}</div>
+      <button onclick="launchMission('${type}')" style="margin-top:12px;padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">🔄 Retry Mission</button>
+    </div>`;
   }
   missionRunning = false;
 }

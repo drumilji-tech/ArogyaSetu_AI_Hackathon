@@ -10,6 +10,14 @@ from flask import Flask, jsonify, request, send_from_directory
 
 from databricks import sql as dbsql
 
+# ── MLflow Tracing (Agent Bricks observability) ──────────────────────────────
+try:
+    import mlflow
+    mlflow.set_tracking_uri("databricks")
+    MLFLOW_AVAILABLE = True
+except ImportError:
+    MLFLOW_AVAILABLE = False
+
 # ── App Setup ──────────────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder="static", static_url_path="")
 logging.basicConfig(level=logging.INFO)
@@ -890,9 +898,10 @@ Description: {str(fc.get('description_snippet', ''))[:300]}
         return _err(e)
 
 
-# ── Shared Foundation Model caller with retry ─────────────────────────────────
+# ── Shared Foundation Model caller with retry (Agent Bricks traced) ────────────
 def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temperature=0.3, history=None):
     """Call Databricks Foundation Model API with exponential backoff retry.
+    Traced via MLflow for Agent Bricks observability.
     
     Args:
         user_msg: The current user message
@@ -903,6 +912,23 @@ def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temper
     """
     import requests as http_requests
     import time
+
+    # Start MLflow trace span for Agent Bricks observability
+    span = None
+    if MLFLOW_AVAILABLE:
+        try:
+            span = mlflow.start_span(
+                name="foundation_model_call",
+                attributes={
+                    "model": AI_MODEL,
+                    "max_tokens": max_tokens,
+                    "temperature": temperature,
+                    "user_msg_length": len(user_msg),
+                    "history_turns": len(history) if history else 0,
+                }
+            )
+        except Exception:
+            span = None
 
     if system_prompt is None:
         system_prompt = SYSTEM_PROMPT
@@ -937,7 +963,20 @@ def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temper
                 time.sleep(wait)
                 continue
             resp.raise_for_status()
-            return resp.json()
+            result = resp.json()
+            # Log to MLflow trace
+            if span:
+                try:
+                    tokens = result.get('usage', {})
+                    span.set_attributes({
+                        "prompt_tokens": tokens.get('prompt_tokens', 0),
+                        "completion_tokens": tokens.get('completion_tokens', 0),
+                        "status": "success",
+                    })
+                    span.end()
+                except Exception:
+                    pass
+            return result
         except http_requests.exceptions.HTTPError as e:
             last_err = e
             if resp.status_code in (429, 503):
@@ -951,6 +990,12 @@ def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temper
                 continue
             raise
 
+    if span:
+        try:
+            span.set_attributes({"status": "failed", "error": str(last_err)})
+            span.end()
+        except Exception:
+            pass
     raise last_err or Exception("Foundation Model unavailable after 3 retries")
 
 

@@ -1209,6 +1209,75 @@ function renderDV(d){
           <div class="gauge-bar" style="margin-top:8px;height:10px"><div class="gauge-fill" style="width:${sc}%;background:${scColor}"></div></div>
         </div>
       </div>
+      <!-- Pinocchio Score Breakdown — shows WHY the score is what it is -->
+      <div style="margin-top:14px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t4);margin-bottom:10px">🔎 Score Breakdown — Why ${sc}/100?</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${[
+            {test: d.claims_247 && d.num_doctors_clean!=null && d.num_doctors_clean < 3, penalty: 15, label: 'Claims 24/7 emergency but <3 doctors', data: d.claims_247 ? 'Claims 24/7: <strong>Yes</strong> · Doctors: <strong>'+(d.num_doctors_clean!=null?d.num_doctors_clean:'MISSING')+'</strong>' : null},
+            {test: d.claims_icu && d.num_doctors_clean!=null && d.num_doctors_clean < 2, penalty: 25, label: 'Claims ICU but <2 doctors', data: d.claims_icu ? 'Claims ICU: <strong>Yes</strong> · Doctors: <strong>'+(d.num_doctors_clean!=null?d.num_doctors_clean:'MISSING')+'</strong>' : null},
+            {test: d.claims_multispecialty && d.num_doctors_clean!=null && d.num_doctors_clean < 3, penalty: 20, label: 'Claims multispecialty but <3 doctors', data: d.claims_multispecialty ? 'Claims Multi: <strong>Yes</strong> · Doctors: <strong>'+(d.num_doctors_clean!=null?d.num_doctors_clean:'MISSING')+'</strong>' : null},
+            {test: d.claims_cardiology && !d.has_cardiac_equip, penalty: 10, label: 'Claims cardiology but no cardiac equipment', data: d.claims_cardiology ? 'Claims Cardiology: <strong>Yes</strong> · ECG/Cath Lab: <strong>'+(d.has_cardiac_equip?'Found':'NOT FOUND')+'</strong>' : null},
+            {test: d.claims_oncology && !d.has_onco_equip, penalty: 10, label: 'Claims oncology but no oncology equipment', data: d.claims_oncology ? 'Claims Oncology: <strong>Yes</strong> · Radiation/Chemo equip: <strong>'+(d.has_onco_equip?'Found':'NOT FOUND')+'</strong>' : null},
+            {test: d.claims_nicu && !d.has_ventilator, penalty: 15, label: 'Claims NICU but no ventilator', data: d.claims_nicu ? 'Claims NICU: <strong>Yes</strong> · Ventilator: <strong>'+(d.has_ventilator?'Found':'NOT FOUND')+'</strong>' : null},
+            {test: d.specialty_list_truncated, penalty: 5, label: 'Specialty list truncated at exactly 50', data: d.specialty_list_truncated ? 'Specialty count: <strong>50</strong> (scraping cap detected)' : null},
+            {test: d.type_id_was_dirty, penalty: 5, label: 'Dirty facilityTypeId field', data: d.type_id_was_dirty ? 'Raw value: <strong>'+(d.facilityTypeId||'').substring(0,40)+'</strong>' : null},
+          ].map(f => {
+            if (f.test) return '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:6px"><span style="color:var(--red);font-weight:800;font-size:12px;min-width:40px">+'+f.penalty+'</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t1)">'+f.label+'</div>'+(f.data?'<div style="font-size:10px;color:var(--t3);margin-top:1px">'+f.data+'</div>':'')+'</div></div>';
+            if (f.data) return '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.12);border-radius:6px"><span style="color:var(--grn);font-weight:800;font-size:12px;min-width:40px">+0</span><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--t3)">'+f.label+'</div><div style="font-size:10px;color:var(--t4);margin-top:1px">'+f.data+' — <strong style="color:var(--grn)">Pass</strong></div></div></div>';
+            return '';
+          }).filter(Boolean).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA CONFIDENCE & COVERAGE — Uncertainty Communication -->
+    <div class="card" style="margin-bottom:14px;padding:0;overflow:hidden">
+      <div style="padding:14px 20px;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.05));border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--t1)">📊 Data Confidence & Coverage</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:2px">How much evidence do we actually have for this facility?</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:${
+              ((d.description_snippet?1:0)+(d.capability_snippet&&d.capability_snippet!=='null'?1:0)+(d.procedure_snippet&&d.procedure_snippet!=='null'?1:0)+(d.equipment_snippet&&d.equipment_snippet!=='null'?1:0)+(d.num_doctors_clean!=null?1:0)+(d.bed_capacity!=null?1:0)+(d.yearEstablished&&d.yearEstablished!=='null'?1:0)) >= 5 ? 'var(--grn)' :
+              ((d.description_snippet?1:0)+(d.capability_snippet&&d.capability_snippet!=='null'?1:0)+(d.procedure_snippet&&d.procedure_snippet!=='null'?1:0)+(d.equipment_snippet&&d.equipment_snippet!=='null'?1:0)+(d.num_doctors_clean!=null?1:0)+(d.bed_capacity!=null?1:0)+(d.yearEstablished&&d.yearEstablished!=='null'?1:0)) >= 3 ? 'var(--amb)' : 'var(--red)'
+            }">${Math.round(((d.description_snippet?1:0)+(d.capability_snippet&&d.capability_snippet!=='null'?1:0)+(d.procedure_snippet&&d.procedure_snippet!=='null'?1:0)+(d.equipment_snippet&&d.equipment_snippet!=='null'?1:0)+(d.num_doctors_clean!=null?1:0)+(d.bed_capacity!=null?1:0)+(d.yearEstablished&&d.yearEstablished!=='null'?1:0))/7*100)}%</div>
+            <div style="font-size:10px;color:var(--t3)">fields available</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:16px 20px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${[
+            {name:'Description', val:d.description_snippet&&d.description_snippet!=='null'&&d.description_snippet.trim(), pct:100, note:'100% coverage in dataset'},
+            {name:'Capability', val:d.capability_snippet&&d.capability_snippet!=='null'&&d.capability_snippet.trim(), pct:99.7, note:'99.7% coverage'},
+            {name:'Procedure', val:d.procedure_snippet&&d.procedure_snippet!=='null'&&d.procedure_snippet.trim(), pct:92.5, note:'92.5% coverage'},
+            {name:'Equipment', val:d.equipment_snippet&&d.equipment_snippet!=='null'&&d.equipment_snippet.trim(), pct:77, note:'77% coverage'},
+            {name:'Doctor Count', val:d.num_doctors_clean!=null, pct:36.4, note:'⚠️ Only 36.4% report this'},
+            {name:'Bed Capacity', val:d.bed_capacity!=null, pct:25.2, note:'⚠️ Only 25.2% report this'},
+            {name:'Year Established', val:d.yearEstablished&&d.yearEstablished!=='null', pct:47.8, note:'47.8% coverage'},
+          ].map(f=>`
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg2);border-radius:6px;border:1px solid var(--border)">
+              <span style="font-size:14px">${f.val?'✅':'⊘'}</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:11px;font-weight:700;color:${f.val?'var(--t1)':'var(--t4)'}">${f.name}</div>
+                <div style="height:3px;background:var(--bg3);border-radius:2px;margin-top:2px;overflow:hidden">
+                  <div style="height:100%;width:${f.val?'100':'0'}%;background:${f.val?'var(--grn)':'var(--red)'};border-radius:2px"></div>
+                </div>
+              </div>
+              <span style="font-size:9px;color:var(--t4);white-space:nowrap">${f.val?'Present':f.note}</span>
+            </div>
+          `).join('')}
+        </div>
+        ${((d.num_doctors_clean==null)||(d.bed_capacity==null)) ? `
+        <div style="margin-top:12px;padding:10px 14px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;font-size:12px;color:var(--amb);line-height:1.6">
+          <strong>⚠️ Uncertainty Warning:</strong> ${d.num_doctors_clean==null?'Doctor count is missing (only 36.4% of facilities report this).':''}
+          ${d.bed_capacity==null?'Bed capacity is unavailable (only 25.2% report this).':''}
+          Claims involving staffing or capacity <strong>cannot be fully verified</strong> without this data. Treat structural checks as <strong>indicative, not conclusive</strong>.
+        </div>` : ''}
+      </div>
     </div>
 
     <!-- Evidence Triangulation with TEXT CITATIONS -->

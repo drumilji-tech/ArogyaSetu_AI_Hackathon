@@ -630,8 +630,49 @@ async function getStateSummary() {
   `);
 }
 
+// ── MAP DATA (lat/lng + trust) ────────────────────────────────────────────────
+async function getMapData() {
+  return query(`
+    WITH cleaned AS (
+      SELECT
+        id,
+        ${CLEAN.name} AS name,
+        ${CLEAN.type} AS facility_type,
+        ${CLEAN.city} AS city,
+        ${CLEAN.state} AS state,
+        TRY_CAST(latitude AS DOUBLE) AS lat,
+        TRY_CAST(longitude AS DOUBLE) AS lng,
+        ${CLEAN.doctors} AS num_doctors,
+        ${CLEAN.followers} AS followers,
+        ${FLAGS},
+        (recency_of_page_update<'2023-01-01'
+         AND COALESCE(TRY_CAST(post_metrics_post_count AS DOUBLE),0)=0) AS is_stale
+      FROM ${FAC}
+    )
+    SELECT
+      id, name, facility_type, city, state, lat, lng,
+      ${PINOCCHIO_SCORE} AS pinocchio_score,
+      CASE
+        WHEN (${PINOCCHIO_SCORE}) <= 10 THEN 'High Trust'
+        WHEN (${PINOCCHIO_SCORE}) <= 30 THEN 'Moderate Trust'
+        WHEN (${PINOCCHIO_SCORE}) <= 60 THEN 'Low Trust'
+        ELSE 'Unreliable'
+      END AS trust_band,
+      CASE
+        WHEN COALESCE(followers,0)>500 AND specialty_count>20 AND COALESCE(num_doctors,0)<5 THEN 'Confident Claimer'
+        WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors,0)>50 AND equipment_count>20 THEN 'Hidden Gem'
+        WHEN is_stale THEN 'Ghost Facility'
+        ELSE 'Verified Pillar'
+      END AS archetype
+    FROM cleaned
+    WHERE lat IS NOT NULL AND lng IS NOT NULL
+      AND lat BETWEEN 6 AND 38 AND lng BETWEEN 68 AND 98
+  `);
+}
+
 module.exports = {
   getKpiSummary, getArchetypeCounts, getTrustDistribution,
   getSpecialtyDistribution, getFacilities, getFacilityDetail,
   getStates, getHiddenGems, getAnomalies, findReferrals, getStateSummary,
+  getMapData,
 };

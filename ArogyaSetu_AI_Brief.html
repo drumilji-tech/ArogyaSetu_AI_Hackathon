@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ArogyaSetu AI — Project Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', Calibri, Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 40px;
+    color: #1a1a1a;
+    line-height: 1.7;
+    font-size: 14px;
+    background: #fff;
+  }
+  h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: #111; }
+  .subtitle { font-size: 14px; color: #666; margin-bottom: 32px; }
+  h2 { font-size: 18px; font-weight: 700; color: #111; margin: 28px 0 12px; border-bottom: 2px solid #6366f1; padding-bottom: 6px; }
+  h3 { font-size: 15px; font-weight: 700; color: #333; margin: 16px 0 8px; }
+  p { margin-bottom: 12px; }
+  strong { color: #111; }
+  .highlight { background: #fef9c3; padding: 2px 4px; border-radius: 3px; font-weight: 600; }
+  .stat { display: inline-block; background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-weight: 700; color: #6366f1; margin: 2px 4px 2px 0; font-size: 13px; }
+  ul { margin: 8px 0 16px 24px; }
+  li { margin-bottom: 8px; }
+  .team-grid { display: flex; gap: 24px; margin-top: 12px; }
+  .team-member { text-align: center; }
+  .team-member .name { font-weight: 700; font-size: 13px; }
+  .team-member .role { font-size: 12px; color: #666; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #999; text-align: center; }
+  @media print {
+    body { margin: 0; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>ArogyaSetu AI</h1>
+<div class="subtitle">Facility Trust Desk — DAIS 2026 · Databricks Apps & Agents for Good Hackathon</div>
+
+<h2>🔴 The Problem</h2>
+<p>India has <strong>10,088 healthcare facilities</strong> listed online — but <span class="highlight">the listings lie.</span></p>
+<p><span class="stat">847 hospitals</span> claim 24/7 emergency care but have fewer than 3 doctors.<br>
+<span class="stat">168 hospitals</span> claim ICU capability with less than 2 doctors.<br>
+<span class="stat">2,884 facilities</span> have specialty data truncated at exactly 50 — a scraping bug hiding their real capacity.</p>
+
+<p>During COVID-19, my family in a <strong>small town in Gujarat, India</strong> searched for a hospital to treat pneumonia. They found one listed online. When they arrived — <strong>there was no doctor.</strong> They had to travel hours to find actual care.</p>
+
+<p>For <strong>1.4 billion people</strong>, trusting a hospital listing can be a life-or-death decision. Current platforms show you a name, an address, and a list of claimed services. None of them tell you: <em>should you actually trust this?</em></p>
+
+<h2>🟢 How We Solved It</h2>
+<p>We built <strong>ArogyaSetu AI</strong> — a Facility Trust Desk that doesn't just show data. It <strong>cross-examines</strong> it.</p>
+
+<h3>🤥 Pinocchio Score™ — Overclaiming Detection</h3>
+<p>Every facility gets a score (0–100) measuring overclaiming risk using <strong>8 penalty factors</strong>:</p>
+<ul>
+  <li><em>"You claim 24/7 emergency, but you have fewer than 3 doctors"</em> → +15</li>
+  <li><em>"You claim ICU, but you have fewer than 2 doctors"</em> → +25</li>
+  <li><em>"You claim multispecialty, but fewer than 3 doctors"</em> → +20</li>
+  <li><em>"You claim cardiology, but no cardiac equipment listed"</em> → +10</li>
+</ul>
+<p>Every penalty is <strong>traceable to a specific data field</strong>. Judges can click any score and see exactly why.</p>
+
+<h3>🔍 Evidence Triangulation — Text Citation Engine</h3>
+<p>For every claim (ICU, 24/7, Cardiology, NICU), we scan <strong>4 raw text fields</strong>: description, capability, procedure, and equipment.</p>
+<ul>
+  <li><strong>Found?</strong> → ✅ <em>description: "...provides 24/7 emergency services..."</em> — exact keyword highlighted</li>
+  <li><strong>Not found?</strong> → ⊘ <em>equipment: not mentioned</em></li>
+</ul>
+<p>Each claim gets a verdict: <strong>Strong</strong>, <strong>Partial</strong>, or <strong>Weak</strong> evidence — all traceable to source text.</p>
+
+<h3>📊 Uncertainty Communication</h3>
+<p>Only <strong>36.4%</strong> of facilities report doctor count. Only <strong>25.1%</strong> report bed capacity. When data is missing, we say so explicitly — field by field, with dataset-wide percentages. <strong>We never present weak evidence as fact.</strong></p>
+
+<h3>🎯 AI Policy Advisor</h3>
+<p>An autonomous agent powered by <strong>Llama 3.3 70B</strong> (via Databricks Foundation Model API) that:</p>
+<ul>
+  <li>Queries live facility data from Unity Catalog via SQL</li>
+  <li>Cross-references claims against structural evidence</li>
+  <li>Generates actionable intelligence briefs with citations</li>
+  <li>Supports voice input in <strong>6 Indian languages</strong> (Hindi, Tamil, Bengali, Telugu, Marathi, Gujarati)</li>
+</ul>
+
+<h2>⭐ What Makes Us Unique</h2>
+
+<h3>1. We show evidence, not just scores</h3>
+<p>Other dashboards show a number and say "trust this." We show the raw text citation, the penalty breakdown, and the data gaps — so you can verify every claim yourself.</p>
+
+<h3>2. We keep suspicious hospitals visible</h3>
+<p>We don't filter bad hospitals out. We <strong>explain WHY they can't be trusted</strong>. A health planner needs to know a hospital exists but shouldn't receive referrals — not that it disappeared from the system.</p>
+
+<h3>3. We say "we don't know"</h3>
+<p>Almost no healthcare platform communicates uncertainty. We do, field by field. If doctor count is missing, we show an amber warning — not a fake confidence score.</p>
+
+<h3>4. 100% Databricks Stack</h3>
+<p>Zero external dependencies. Data never leaves the platform:</p>
+<ul>
+  <li><strong>Unity Catalog</strong> — Data governance</li>
+  <li><strong>SQL Warehouse</strong> — Serverless compute</li>
+  <li><strong>Foundation Model API</strong> — Llama 3.3 70B</li>
+  <li><strong>Agent Bricks + MLflow</strong> — Agent observability & tracing</li>
+  <li><strong>Databricks Apps</strong> — Live production deployment</li>
+</ul>
+
+<h3>5. This is personal</h3>
+<p>This isn't a hypothetical use case built for a hackathon. A family member couldn't find a real hospital during COVID-19. <strong>We built what should have existed.</strong></p>
+
+<h2>👥 Team</h2>
+<div class="team-grid">
+  <div class="team-member"><div class="name">Drumil Joshi</div><div class="role">Lead Developer</div></div>
+  <div class="team-member"><div class="name">Andrew Riley</div><div class="role">Manager / Director</div></div>
+  <div class="team-member"><div class="name">Ishtiza Azad</div><div class="role">Operations Data Manager</div></div>
+  <div class="team-member"><div class="name">Terhemba</div><div class="role">Data Visualization Engineer</div></div>
+</div>
+
+<div class="footer">
+  DAIS 2026 · Databricks Apps & Agents for Good Hackathon<br>
+  Live App: arogyasetu-ai-7474653108428974.aws.databricksapps.com
+</div>
+
+</body>
+</html>

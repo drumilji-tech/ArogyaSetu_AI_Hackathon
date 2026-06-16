@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArogyaSetu AI — Team Demo Script (3 Minutes)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  
+  :root {
+    --drumil-color: #6366f1;
+    --drumil-bg: #e0e7ff;
+    --andrew-color: #10b981;
+    --andrew-bg: #d1fae5;
+    --ishtiza-color: #ea580c;
+    --ishtiza-bg: #ffedd5;
+    --terhemba-color: #14b8a6;
+    --terhemba-bg: #ccfbf1;
+    --bg-dark: #0f172a;
+    --text-main: #1e293b;
+    --border-color: #e2e8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    background-color: #f8fafc;
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 48px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05), 0 0 0 1px rgb(0 0 0 / 0.02);
+  }
+
+  header {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .meta-badges {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .badge-time { background: #fee2e2; color: #ef4444; }
+  .badge-tone { background: #f1f5f9; color: #475569; }
+  .badge-app { background: #e0f2fe; color: #0284c7; }
+
+  /* Rules/Overview Panel */
+  .overview-panel {
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 40px;
+    border-left: 4px solid #64748b;
+  }
+
+  .overview-panel h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .overview-panel ul {
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .overview-panel li {
+    font-size: 13px;
+    color: #475569;
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .overview-panel li::before {
+    content: "•";
+    color: #94a3b8;
+    font-size: 20px;
+    position: absolute;
+    left: 0;
+    top: -2px;
+  }
+
+  /* Table Style */
+  .flow-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .flow-table th, .flow-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .flow-table th {
+    background-color: #f8fafc;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .speaker-tag {
+    display: inline-block;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .speaker-drumil { background: var(--drumil-bg); color: var(--drumil-color); }
+  .speaker-andrew { background: var(--andrew-bg); color: var(--andrew-color); }
+  .speaker-ishtiza { background: var(--ishtiza-bg); color: var(--ishtiza-color); }
+  .speaker-terhemba { background: var(--terhemba-bg); color: var(--terhemba-color); }
+
+  /* Script Layout */
+  .script-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .script-block {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 28px;
+    padding-bottom: 40px;
+    border-bottom: 1px dashed var(--border-color);
+  }
+
+  .script-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .speaker-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .speaker-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .speaker-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: white;
+  }
+
+  .avatar-d { background-color: var(--drumil-color); }
+  .avatar-a { background-color: var(--andrew-color); }
+  .avatar-i { background-color: var(--ishtiza-color); }
+  .avatar-t { background-color: var(--terhemba-color); }
+
+  .speaker-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .speaker-role {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: -8px;
+    font-weight: 500;
+  }
+
+  .time-indicator {
+    display: inline-flex;
+    background: #e2e8f0;
+    color: #334155;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    width: fit-content;
+  }
+
+  .visual-cue {
+    background: #ffffff;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.5;
+  }
+
+  .visual-cue::before {
+    content: "🎬 SCREEN ACTION";
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .speech-bubble {
+    border-radius: 12px;
+    padding: 28px;
+    font-size: 15.5px;
+    line-height: 1.8;
+    color: #334155;
+    position: relative;
+    border-left: 5px solid var(--border-color);
+  }
+
+  .script-block[data-speaker="drumil"] .speech-bubble { border-left-color: var(--drumil-color); background: #fafaff; }
+  .script-block[data-speaker="andrew"] .speech-bubble { border-left-color: var(--andrew-color); background: #fafdfb; }
+  .script-block[data-speaker="ishtiza"] .speech-bubble { border-left-color: var(--ishtiza-color); background: #fffdf9; }
+  .script-block[data-speaker="terhemba"] .speech-bubble { border-left-color: var(--terhemba-color); background: #f9fdfd; }
+
+  .speech-text p {
+    margin-bottom: 16px;
+  }
+
+  .speech-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .speech-text strong {
+    color: #0f172a;
+    font-weight: 700;
+  }
+
+  .keyword-highlight {
+    background-color: #fef9c3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #854d0e;
+    font-size: 14.5px;
+    border-bottom: 1.5px solid #facc15;
+    display: inline-block;
+  }
+
+  .pause-cue {
+    display: block;
+    width: fit-content;
+    color: #ef4444;
+    font-weight: 800;
+    font-size: 11px;
+    margin: 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid #fee2e2;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: #fff5f5;
+  }
+
+  /* Keywords Grid */
+  .keywords-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid var(--border-color);
+  }
+
+  .keywords-section h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 16px;
+  }
+
+  .keywords-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .keyword-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .keyword-card h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #334155;
+  }
+
+  .keyword-card p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+  }
+
+  /* Recording Tips Box */
+  .tips-box {
+    margin-top: 40px;
+    background: #fdf2f8;
+    border-left: 4px solid #ec4899;
+    border-radius: 8px;
+    padding: 24px;
+  }
+
+  .tips-box h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #9d174d;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tips-box ul {
+    margin-left: 20px;
+    font-size: 13.5px;
+    color: #831843;
+  }
+
+  .tips-box li {
+    margin-bottom: 6px;
+  }
+
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 768px) {
+    .script-block {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    body { padding: 12px; }
+    .container { padding: 24px; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .container { box-shadow: none; padding: 0; }
+    .speech-bubble { background: #fff !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>ArogyaSetu AI — Team Demo Script</h1>
+    <div class="subtitle">Hackathon Video Recording Blueprint & Cues (3 Minutes Total)</div>
+    
+    <div class="meta-badges">
+      <div class="badge badge-time">⏱️ Target: 3:00 Minutes (Buffer: 10s)</div>
+      <div class="badge badge-tone">📣 Tone: Conversational, Emotional, Natural</div>
+      <div class="badge badge-app">🚀 Live App: arogyasetu-ai-7474653108428974</div>
+    </div>
+  </header>
+
+  <!-- Overview Panel -->
+  <div class="overview-panel">
+    <h3>🎙️ Delivery Guidelines</h3>
+    <ul>
+      <li><strong>No Teleprompter Reading:</strong> Keep it natural, like explaining the app to a colleague.</li>
+      <li><strong>Strict Transitions:</strong> Hand off verbally using names (e.g., "Andrew, show us...").</li>
+      <li><strong>Visual Synchronization:</strong> Match what you are saying exactly with the screen actions.</li>
+    </ul>
+  </div>
+
+  <!-- Flow Table -->
+  <table class="flow-table">
+    <thead>
+      <tr>
+        <th>Speaker</th>
+        <th>Role</th>
+        <th>Topic Focus</th>
+        <th>Timeline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="speaker-tag speaker-drumil">Drumil Joshi</span></td>
+        <td>Lead Developer</td>
+        <td>Personal Story, Problem Statement & Closing AI Agent</td>
+        <td>0:00 – 0:50</td>
+      </tr>
+      <tr>
+        <td><span class="speaker-tag speaker-andrew">Andrew Riley</span></td>
+        <td>Manager / Director</td>
+        <td>The Big Picture & Platform Business Case</td>
+        <td>0:50 – 1:25</td>
+      </tr>
+      <tr>
+        <td><span class="speaker-tag speaker-ishtiza">Ishtiza Azad</span></td>
+        <td>Operations Data Manager</td>
+        <td>Data Cleaning & Uncertainty Warning Panel</td>
+        <td>1:25 – 2:05</td>
+      </tr>
+      <tr>
+        <td><span class="speaker-tag speaker-terhemba">Terhemba</span></td>
+        <td>Data Viz Engineer</td>
+        <td>Pinocchio Score & Evidence Triangulation</td>
+        <td>2:05 – 2:40</td>
+      </tr>
+      <tr>
+        <td><span class="speaker-tag speaker-drumil">Drumil Joshi</span></td>
+        <td>Lead Developer</td>
+        <td>AI Policy Advisor Demo & Heartfelt Close</td>
+        <td>2:40 – 3:00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Script Container -->
+  <div class="script-container">
+
+    <!-- 1. DRUMIL JOSHI -->
+    <div class="script-block" data-speaker="drumil">
+      <div class="speaker-sidebar">
+        <div class="speaker-meta">
+          <div class="speaker-avatar avatar-d">DJ</div>
+          <span class="speaker-name">Drumil Joshi</span>
+        </div>
+        <div class="speaker-role">Lead Developer</div>
+        <div class="time-indicator">0:00 – 0:50</div>
+        <div class="visual-cue">App loads. Dashboard home screen is active, showing overview stats and map elements.</div>
+      </div>
+      
+      <div class="speech-bubble">
+        <div class="speech-text">
+          <p>"Hey everyone, I'm Drumil. So — quick personal story. During COVID, a family member of mine in a small town in Gujarat got severe pneumonia. We found a hospital online — it said ICU, pulmonology, 24/7 emergency. When we got there... no doctor for that. No ventilator. Nothing. Just a name on Google."</p>
+          
+          <span class="pause-cue">⏱️ Pause — Let it land</span>
+          
+          <p>"That moment stuck with me. Because this isn't just our story — this is the reality for 1.5 billion people in India. You search for a hospital, you trust what's listed, and sometimes that trust can cost you everything."</p>
+          
+          <p>"So we built ArogyaSetu AI. It doesn't just list hospitals — it verifies if they can actually do what they claim. Let me hand it off to Andrew to explain the big picture."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ANDREW RILEY -->
+    <div class="script-block" data-speaker="andrew">
+      <div class="speaker-sidebar">
+        <div class="speaker-meta">
+          <div class="speaker-avatar avatar-a">AR</div>
+          <span class="speaker-name">Andrew Riley</span>
+        </div>
+        <div class="speaker-role">Manager / Director</div>
+        <div class="time-indicator">0:50 – 1:25</div>
+        <div class="visual-cue">Hovering over the dashboard KPIs: 847 facilities with low doctors, 168 facilities with false ICU claims.</div>
+      </div>
+      
+      <div class="speech-bubble">
+        <div class="speech-text">
+          <p>"Thanks Drumil. I'm Andrew. So here's the scale of the problem — we analyzed over 10,000 healthcare facilities across India using the Virtue Foundation dataset on Databricks."</p>
+          
+          <p>"What we found is alarming. <strong>847 facilities</strong> claim 24/7 emergency but have fewer than 3 doctors. <strong>168 claim ICU</strong> with less than 2 doctors on record. These aren't edge cases — these are the hospitals in referral networks that real people get sent to."</p>
+          
+          <p>"Everything you see here is a live query against our <span class="keyword-highlight">SQL Warehouse</span> running through <span class="keyword-highlight">Unity Catalog</span>. No mock data, no cache. Ishtiza, walk us through how we made the data trustworthy."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ISHTIZA AZAD -->
+    <div class="script-block" data-speaker="ishtiza">
+      <div class="speaker-sidebar">
+        <div class="speaker-meta">
+          <div class="speaker-avatar avatar-i">IA</div>
+          <span class="speaker-name">Ishtiza Azad</span>
+        </div>
+        <div class="speaker-role">Operations Data Manager</div>
+        <div class="time-indicator">1:25 – 2:05</div>
+        <div class="visual-cue">Clicks on a facility to load its Deep Dive modal. Scrolls down and points to the Amber warning block and the Data Coverage stats.</div>
+      </div>
+      
+      <div class="speech-bubble">
+        <div class="speech-text">
+          <p>"I'm Ishtiza. So <span class="keyword-highlight">the raw dataset</span> is messy — really messy. We found facility type fields containing latitude coordinates and MD5 hashes instead of actual types. Specialty lists cut off at exactly 50 because of a scraping bug. We had to clean all of that."</p>
+          
+          <p>"But here's what we're most proud of — we're honest about what we don't know. This panel right here shows our <span class="keyword-highlight">data coverage</span>. Only 36.4% of facilities even report their doctor count. Only 25% report bed capacity."</p>
+          
+          <p>"When data is missing, we don't hide it — we show this warning: <em>'Claims involving staffing cannot be fully verified.'</em> Because presenting weak evidence as fact is exactly how my teammate Drumil's family ended up at the wrong hospital. Terhemba, show them the evidence."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TERHEMBA -->
+    <div class="script-block" data-speaker="terhemba">
+      <div class="speaker-sidebar">
+        <div class="speaker-meta">
+          <div class="speaker-avatar avatar-t">T</div>
+          <span class="speaker-name">Terhemba</span>
+        </div>
+        <div class="speaker-role">Data Viz Engineer</div>
+        <div class="time-indicator">2:05 – 2:40</div>
+        <div class="visual-cue">Scrolls to the Pinocchio Score Breakdown panel (showing the penalty point math) and the Evidence Triangulation badges (highlighting description and missing equipment).</div>
+      </div>
+      
+      <div class="speech-bubble">
+        <div class="speech-text">
+          <p>"I'm Terhemba. So this is the Pinocchio Score — it's our overclaiming detector. This facility scores 45 out of 100. And right here you can see exactly why — plus 25 because it claims ICU but only has 1 doctor. Plus 15 for claiming 24/7 emergency. <strong>Every single point traces back to actual data.</strong>"</p>
+          
+          <p>"And this is the <span class="keyword-highlight">evidence triangulation</span>. For every claim — ICU, NICU, cardiology — we scan 4 raw text fields. See this yellow highlight? That's the exact word from the description field. And these gray badges? That's us saying 'we looked in the equipment field and found nothing.' Strong evidence, partial evidence, or weak — all cited, all transparent."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. DRUMIL JOSHI (AI Agent & Close) -->
+    <div class="script-block" data-speaker="drumil">
+      <div class="speaker-sidebar">
+        <div class="speaker-meta">
+          <div class="speaker-avatar avatar-d">DJ</div>
+          <span class="speaker-name">Drumil Joshi</span>
+        </div>
+        <div class="speaker-role">Lead Developer</div>
+        <div class="time-indicator">2:40 – 3:00</div>
+        <div class="visual-cue">Clicks on the "AI Policy Advisor" tab, triggers a prompt (e.g. "Find ghost hospitals in Bihar") and displays the generated structured briefing.</div>
+      </div>
+      
+      <div class="speech-bubble">
+        <div class="speech-text">
+          <p>"One last thing — the AI Policy Advisor. Type a question like 'Find ghost hospitals in Bihar' and our agent runs a 3-step pipeline: SQL query to Unity Catalog, analysis with Llama 3.3 70B through the Databricks <span class="keyword-highlight">Foundation Model API</span>, and out comes a structured policy brief with real citations."</p>
+          
+          <p>"Built 100% as a <span class="keyword-highlight">Databricks App</span>. We built this because no family should have to drive to a hospital that can't actually help them."</p>
+          
+          <p>"Thank you."</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Keywords Section -->
+  <div class="keywords-section">
+    <h2>🔑 Databricks Key Terms & Alignment</h2>
+    <div class="keywords-grid">
+      <div class="keyword-card">
+        <h4>Unity Catalog</h4>
+        <p>Managed access and governance over the Indian facility dataset.</p>
+      </div>
+      <div class="keyword-card">
+        <h4>SQL Warehouse</h4>
+        <p>Serverless query engine powers the instantaneous dashboard aggregation.</p>
+      </div>
+      <div class="keyword-card">
+        <h4>Foundation Model API</h4>
+        <p>Hosts Llama 3.3 70B directly on Databricks infrastructure for intelligence.</p>
+      </div>
+      <div class="keyword-card">
+        <h4>Databricks Apps</h4>
+        <p>The native workspace framework where our Python backend is deployed live.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips Box -->
+  <div class="tips-box">
+    <h3>💗 Hackathon Success Tips</h3>
+    <ul>
+      <li><strong>Emotion is Key:</strong> Ensure Drumil's opening sounds personal and authentic. It sets the stakes of why this app is critical.</li>
+      <li><strong>The "Databricks native" claim:</strong> Show that you built this on Databricks completely — it checks all hackathon criteria boxes.</li>
+      <li><strong>Pacing:</strong> Do not rush. Let pauses sit for a beat, especially after the opening story hook.</li>
+    </ul>
+  </div>
+
+  <div class="footer">
+    DAIS 2026 · Databricks Apps & Agents for Good Hackathon<br>
+    India Healthcare Facility Verification System
+  </div>
+</div>
+
+</body>
+</html>

@@ -826,6 +826,7 @@ def api_ai_chat():
         body = request.get_json(force=True)
         question = body.get("question", "")
         facility_context = body.get("facilityContext")
+        history = body.get("history", [])  # Multi-turn conversation history
 
         if not question:
             return jsonify({"ok": False, "error": "Question is required"}), 400
@@ -856,7 +857,16 @@ Description: {str(fc.get('description_snippet', ''))[:300]}
 [USER QUESTION]
 {question}"""
 
-        result = _call_foundation_model(user_msg)
+        # Build multi-turn messages: system + history + current user message
+        # Keep last 10 messages to stay within token limits
+        conv_history = []
+        for msg in history[-10:]:
+            role = msg.get("role", "user")
+            content = msg.get("content", "")
+            if role in ("user", "assistant") and content:
+                conv_history.append({"role": role, "content": content})
+
+        result = _call_foundation_model(user_msg, history=conv_history)
         answer = result.get("choices", [{}])[0].get("message", {}).get("content", "No response.")
         model = result.get("model", AI_MODEL)
 
@@ -870,19 +880,30 @@ Description: {str(fc.get('description_snippet', ''))[:300]}
 
 
 # ── Shared Foundation Model caller with retry ─────────────────────────────────
-def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temperature=0.3):
-    """Call Databricks Foundation Model API with exponential backoff retry."""
+def _call_foundation_model(user_msg, system_prompt=None, max_tokens=1024, temperature=0.3, history=None):
+    """Call Databricks Foundation Model API with exponential backoff retry.
+    
+    Args:
+        user_msg: The current user message
+        system_prompt: System prompt (defaults to SYSTEM_PROMPT)
+        max_tokens: Max tokens in response
+        temperature: Model temperature
+        history: Optional list of prior conversation messages [{"role": "user/assistant", "content": "..."}]
+    """
     import requests as http_requests
     import time
 
     if system_prompt is None:
         system_prompt = SYSTEM_PROMPT
 
+    # Build messages: system + optional history + current user message
+    messages = [{"role": "system", "content": system_prompt}]
+    if history:
+        messages.extend(history)
+    messages.append({"role": "user", "content": user_msg})
+
     payload = {
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_msg},
-        ],
+        "messages": messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
     }

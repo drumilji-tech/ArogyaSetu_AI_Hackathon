@@ -2304,6 +2304,7 @@ function copyReport() {
 <script>
 /* AI Chat Logic */
 let aiOpen=false, aiSending=false, currentFacilityData=null;
+let chatHistory = []; // Multi-turn conversation history
 
 function toggleAI(){
   aiOpen=!aiOpen;
@@ -2338,14 +2339,19 @@ async function sendAI(){
   msgs.innerHTML+=`<div class="ai-typing" id="ai-typ"><span></span><span></span><span></span></div>`;
   msgs.scrollTop=msgs.scrollHeight;
 
+  // Add user message to history
+  chatHistory.push({role: 'user', content: q});
+
   try{
-    const body={question:q};
+    const body={question:q, history: chatHistory.slice(-10)};
     if(currentFacilityData) body.facilityContext=currentFacilityData;
     const r=await fetch(`${API}/api/ai/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
     document.getElementById('ai-typ')?.remove();
     if(r.ok){
       let answer=r.data.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/\n- /g,'<br>• ').replace(/\n/g,'<br>');
       msgs.innerHTML+=`<div class="ai-msg ai"><p>${answer}</p><div style="margin-top:6px;font-size:10px;color:var(--t4)">Model: ${r.data.model} · ${r.data.tokens?.total_tokens||'?'} tokens</div></div>`;
+      // Add assistant response to history
+      chatHistory.push({role: 'assistant', content: r.data.answer});
     } else {
       msgs.innerHTML+=`<div class="ai-msg ai" style="border-color:var(--red)">⚠️ ${r.error||'Failed'}</div>`;
     }

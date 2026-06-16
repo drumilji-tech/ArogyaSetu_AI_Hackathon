@@ -635,7 +635,7 @@ async function getMapData() {
   return query(`
     WITH cleaned AS (
       SELECT
-        id,
+        unique_id,
         ${CLEAN.name} AS name,
         ${CLEAN.type} AS facility_type,
         ${CLEAN.city} AS city,
@@ -650,7 +650,7 @@ async function getMapData() {
       FROM ${FAC}
     )
     SELECT
-      id, name, facility_type, city, state, lat, lng,
+      unique_id, name, facility_type, city, state, lat, lng,
       ${PINOCCHIO_SCORE} AS pinocchio_score,
       CASE
         WHEN (${PINOCCHIO_SCORE}) <= 10 THEN 'High Trust'

@@ -2016,11 +2016,13 @@ const TOUR_STEPS = [
     body: 'Every facility gets a <strong>Pinocchio Score (0–100)</strong> measuring overclaiming risk.<br><br>Below the gauge you\'ll see the <strong>Score Breakdown</strong> — each of the 8 penalty factors listed with:<br>• <span style="color:#ef4444"><strong>+15, +25</strong></span> for triggered penalties with the exact data<br>• <span style="color:#10b981"><strong>+0</strong></span> for passed checks<br><br>Judges can trace every point back to a specific data field. <strong>No black boxes.</strong>',
     position: 'top',
     page: 'deepdive',
+    waitMs: 3500,
     onEnter: function() {
-      // Auto-load first facility from the table for demo
-      const rows = document.querySelectorAll('.fac-table tbody tr');
-      if (rows && rows.length > 2) { rows[2].click(); }
-      else { loadDV && loadDV(null); }
+      // Auto-load a facility from cached data for demo
+      if (window._facRows && window._facRows.length > 0) {
+        const fac = window._facRows.find(function(r){return r.pinocchio_score > 20}) || window._facRows[0];
+        loadDV(fac.unique_id);
+      }
     }
   },
   {
@@ -2031,8 +2033,8 @@ const TOUR_STEPS = [
     page: 'deepdive',
     onEnter: function() {
       // Scroll to the Data Confidence panel
-      const cards = document.querySelectorAll('#dv-content .card');
-      if (cards && cards.length >= 3) cards[1].scrollIntoView({behavior:'smooth',block:'center'});
+      var cards = document.querySelectorAll('#dv-content .card');
+      if (cards && cards.length >= 2) cards[1].scrollIntoView({behavior:'smooth',block:'center'});
     }
   },
   {
@@ -2042,8 +2044,8 @@ const TOUR_STEPS = [
     position: 'top',
     page: 'deepdive',
     onEnter: function() {
-      const cards = document.querySelectorAll('#dv-content .card');
-      if (cards && cards.length >= 4) cards[2].scrollIntoView({behavior:'smooth',block:'center'});
+      var cards = document.querySelectorAll('#dv-content .card');
+      if (cards && cards.length >= 3) cards[2].scrollIntoView({behavior:'smooth',block:'center'});
     }
   },
   {
@@ -2105,7 +2107,7 @@ function renderTourStep() {
     try { step.onEnter(); } catch(e) { console.warn('Tour onEnter error:', e); }
   }
   // Wait longer for onEnter actions (like facility loading) to complete
-  const waitTime = step.onEnter ? 1500 : 300;
+  const waitTime = step.waitMs || (step.onEnter ? 1500 : 300);
   setTimeout(() => {
   const el = document.querySelector(step.target);
   if (!el) { tourStep++; renderTourStep(); return; }

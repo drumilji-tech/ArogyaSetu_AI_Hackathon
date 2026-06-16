@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ArogyaSetu AI — Healthcare Facility Trust Desk</title>
+  <meta name="description" content="AI-powered trust intelligence for 10,088 Indian healthcare facilities."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#F7F8FA; --bg2:#FFF; --bg3:#F0F2F5; --border:#E2E6ED;
+      --t1:#111827; --t2:#374151; --t3:#6B7280; --t4:#9CA3AF;
+      --teal:#0D9488; --teal2:#0F766E; --teal-l:#CCFBF1; --teal-d:#F0FDFA;
+      --grn:#059669; --grn-l:#D1FAE5; --grn-d:#F0FDF4;
+      --amb:#B45309; --amb-l:#FDE68A; --amb-d:#FFFBEB;
+      --red:#DC2626; --red-l:#FECACA; --red-d:#FEF2F2;
+      --slt:#475569; --slt-l:#E2E8F0; --slt-d:#F8FAFC;
+      --r:12px; --rsm:8px; --rxs:6px;
+      --sh0:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+      --sh:0 4px 16px rgba(0,0,0,.06),0 2px 4px rgba(0,0,0,.04);
+      --shmd:0 8px 32px rgba(0,0,0,.08);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--border);box-shadow:var(--sh0);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;}
+    .nav-logo{width:33px;height:33px;border-radius:7px;background:linear-gradient(135deg,var(--teal),var(--grn));display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(13,148,136,.25);}
+    .nav-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--t1);}
+    .nav-sub{font-size:10px;color:var(--t4);}
+    .nav-links{display:flex;gap:2px;}
+    .nav-btn{padding:6px 13px;border-radius:var(--rxs);font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;background:transparent;border:none;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px;}
+    .nav-btn:hover{background:var(--bg3);color:var(--t1);}
+    .nav-btn.active{background:var(--teal-l);color:var(--teal2);font-weight:600;}
+    .nav-right{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t3);}
+    .live{width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 6px var(--grn);animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* LAYOUT */
+    .page{display:none;} .page.active{display:block;}
+    .wrap{padding:32px 28px;max-width:1400px;margin:0 auto;}
+    .wrap-md{padding:32px 28px;max-width:1100px;margin:0 auto;}
+    .eyebrow{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:5px;}
+    .pg-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--t1);margin-bottom:5px;line-height:1.3;}
+    .pg-desc{font-size:13px;color:var(--t3);margin-bottom:24px;}
+
+    /* KPI CARDS */
+    .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+    .kpi{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh0);transition:box-shadow .2s,transform .2s;position:relative;overflow:hidden;}
+    .kpi:hover{box-shadow:var(--shmd);transform:translateY(-2px);}
+    .kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .kpi-icon{width:38px;height:38px;border-radius:var(--rxs);display:flex;align-items:center;justify-content:center;font-size:18px;}
+    .kpi-icon.teal{background:var(--teal-l);} .kpi-icon.grn{background:var(--grn-l);}
+    .kpi-icon.amb{background:var(--amb-d);} .kpi-icon.red{background:var(--red-d);}
+    .kpi-icon.slt{background:var(--slt-l);}
+    .kpi-chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:100px;}
+    .chip-ok{background:var(--grn-l);color:var(--grn);}
+    .chip-warn{background:var(--amb-d);color:var(--amb);}
+    .chip-alert{background:var(--red-d);color:var(--red);}
+    .chip-info{background:var(--teal-l);color:var(--teal2);}
+    .kpi-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:800;color:var(--t1);line-height:1;}
+    .kpi-label{font-size:12px;color:var(--t2);font-weight:600;margin:4px 0 6px;}
+    .kpi-context{font-size:12px;color:var(--t3);line-height:1.5;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;}
+    .kpi-context strong{color:var(--t2);}
+
+    /* CHARTS ROW */
+    .charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
+    .chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh0);padding:20px;}
+    .chart-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:4px;}
+    .chart-sub{font-size:11px;color:var(--t3);margin-bottom:14px;}
+    .chart-wrap{position:relative;height:180px;}
+    .chart-insight{font-size:12px;color:var(--t3);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);line-height:1.5;}
+    .chart-insight strong{color:var(--teal);}
+
+    /* TRUST BANDS BAR */
+    .trust-bands{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+    .trust-row{display:flex;align-items:center;gap:10px;}
+    .trust-label{font-size:12px;font-weight:600;width:120px;flex-shrink:0;}
+    .trust-bar-wrap{flex:1;height:20px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+    .trust-bar{height:100%;border-radius:4px;transition:width 1.2s ease;display:flex;align-items:center;padding-left:8px;}
+    .trust-bar-label{font-size:11px;font-weight:700;color:#fff;}
+    .trust-count{font-size:12px;font-weight:700;width:45px;text-align:right;flex-shrink:0;}
+
+    /* ARCHETYPE STRIP */
+    .arch-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+    .arch-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:all .15s;box-shadow:var(--sh0);}
+    .arch-card:hover{box-shadow:var(--sh);border-color:var(--teal);}
+    .arch-card.sel{border-color:var(--teal);background:var(--teal-d);}
+    .arch-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .arch-icon{width:42px;height:42px;border-radius:var(--rxs);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+    .arch-icon.grn{background:var(--grn-l);} .arch-icon.teal{background:var(--teal-l);}
+    .arch-icon.amb{background:var(--amb-d);} .arch-icon.red{background:var(--red-d);}
+    .arch-name{font-size:12px;font-weight:700;color:var(--t2);}
+    .arch-num{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;}
+    .arch-num.grn{color:var(--grn);} .arch-num.teal{color:var(--teal);}
+    .arch-num.amb{color:var(--amb);} .arch-num.red{color:var(--red);}
+    .arch-pct{font-size:11px;color:var(--t4);margin-bottom:8px;}
+    .arch-meaning{font-size:11px;color:var(--t3);line-height:1.5;padding-top:8px;border-top:1px solid var(--border);}
+    .arch-meaning strong{color:var(--t2);}
+
+    /* PROGRESS BAR inline */
+    .mini-bar{height:5px;background:var(--bg3);border-radius:3px;margin:4px 0;overflow:hidden;}
+    .mini-bar-fill{height:100%;border-radius:3px;}
+
+    /* SEARCH */
+    .search-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;}
+    .inp,.sel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);color:var(--t1);padding:9px 13px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;box-shadow:var(--sh0);}
+    .inp{flex:1;} .inp::placeholder{color:var(--t4);}
+    .inp:focus,.sel:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.12);}
+
+    /* BUTTONS */
+    .btn{padding:9px 17px;border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:all .15s;}
+    .btn-p{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(13,148,136,.25);}
+    .btn-p:hover{background:var(--teal2);transform:translateY(-1px);}
+    .btn-g{background:var(--bg2);color:var(--t2);border:1px solid var(--border);box-shadow:var(--sh0);}
+    .btn-g:hover{background:var(--bg3);}
+
+    /* CARD & TABLE */
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh0);overflow:hidden;}
+    .card-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .card-ttl{font-size:13px;font-weight:700;color:var(--t1);}
+    .card-meta{font-size:12px;color:var(--t4);}
+    table{width:100%;border-collapse:collapse;}
+    thead th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap;}
+    tbody tr{border-bottom:1px solid var(--border);transition:background .1s;cursor:pointer;}
+    tbody tr:last-child{border-bottom:none;}
+    tbody tr:hover{background:var(--bg3);}
+    tbody td{padding:12px 14px;font-size:13px;color:var(--t2);vertical-align:middle;}
+    td strong{color:var(--t1);font-weight:600;}
+    .pagination{padding:13px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:center;align-items:center;}
+    .pagination span{font-size:12px;color:var(--t3);padding:8px;}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700;white-space:nowrap;}
+    .b-grn{background:var(--grn-l);color:var(--grn);}
+    .b-teal{background:var(--teal-l);color:var(--teal2);}
+    .b-amb{background:var(--amb-l);color:var(--amb);}
+    .b-red{background:var(--red-l);color:var(--red);}
+    .b-slt{background:var(--slt-l);color:var(--slt);}
+
+    /* SCORE GAUGE */
+    .score-gauge{display:flex;align-items:center;gap:10px;}
+    .gauge-bar{flex:1;height:10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border);overflow:hidden;}
+    .gauge-fill{height:100%;border-radius:5px;transition:width 1.2s ease;}
+    .gauge-val{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;width:42px;text-align:right;flex-shrink:0;}
+
+    /* LOADING / EMPTY */
+    .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:52px;color:var(--t3);font-size:13px;}
+    .spinner{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--teal);animation:spin .7s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty{text-align:center;padding:52px;color:var(--t3);}
+    .empty-ic{font-size:36px;margin-bottom:10px;}
+
+    /* ALERT */
+    .alert{padding:12px 16px;border-radius:var(--rsm);font-size:13px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;border:1px solid;}
+    .a-warn{background:var(--amb-d);border-color:var(--amb-l);color:#92400E;}
+    .a-info{background:var(--teal-d);border-color:var(--teal-l);color:var(--teal2);}
+    .a-ok{background:var(--grn-d);border-color:var(--grn-l);color:var(--grn);}
+
+    /* DEEP DIVE */
+    .back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--t3);font-size:13px;cursor:pointer;margin-bottom:20px;background:none;border:none;font-family:'Inter',sans-serif;transition:color .15s;}
+    .back-btn:hover{color:var(--teal);}
+    .dv-hero{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh0);padding:26px;margin-bottom:16px;}
+    .dv-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;color:var(--t1);margin-bottom:8px;line-height:1.3;}
+    .dv-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;}
+    .dv-meta-i{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t3);}
+    .dv-meta-i a{color:var(--teal);text-decoration:none;}
+    .stat-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+    .stat-pill{text-align:center;padding:12px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);min-width:85px;}
+    .stat-pill-v{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;}
+    .spv-teal{color:var(--teal);} .spv-grn{color:var(--grn);} .spv-amb{color:var(--amb);}
+    .stat-pill-l{font-size:10px;color:var(--t4);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+    /* CLAIMS */
+    .claims-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;}
+    .claim-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rsm);padding:12px 14px;display:flex;align-items:flex-start;gap:10px;}
+    .claim-name{font-size:12px;font-weight:700;color:var(--t1);}
+    .claim-v{font-size:11px;font-weight:700;margin:3px 0;}
+    .claim-det{font-size:11px;color:var(--t3);}
+
+    /* TABS */
+    .tab-bar{display:flex;border-bottom:2px solid var(--border);margin-bottom:20px;}
+    .tab{padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;display:flex;align-items:center;gap:7px;}
+    .tab:hover:not(.active){color:var(--t1);background:var(--bg3);}
+    .tab.active{color:var(--teal);border-bottom-color:var(--teal);background:var(--teal-d);}
+    .chip{background:var(--red-d);color:var(--red);font-size:11px;font-weight:700;padding:1px 6px;border-radius:100px;}
+    .chip.info{background:var(--teal-l);color:var(--teal2);}
+
+    /* GEMS */
+    .gems-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .gem-card{background:var(--bg2);border:1px solid var(--border);border-top:3px solid var(--teal);border-radius:var(--r);box-shadow:var(--sh0);padding:20px;cursor:pointer;transition:all .15s;}
+    .gem-card:hover{box-shadow:var(--shmd);transform:translateY(-3px);border-top-color:var(--grn);}
+    .gem-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:2px;line-height:1.4;}
+    .gem-loc{font-size:12px;color:var(--t4);margin-bottom:12px;}
+    .gem-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .gem-stat{text-align:center;background:var(--bg3);border-radius:var(--rxs);padding:10px 6px;}
+    .gem-stat-v{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;color:var(--teal);}
+    .gem-stat-l{font-size:10px;color:var(--t4);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+    .gem-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--t3);display:flex;align-items:center;gap:6px;}
+    .gem-context{font-size:11px;color:var(--teal2);margin-top:6px;font-style:italic;}
+
+    /* REFERRAL */
+    .ref-form{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh0);padding:26px;margin-bottom:20px;}
+    .fg{display:flex;flex-direction:column;gap:7px;}
+    .flbl{font-size:12px;font-weight:700;color:var(--t2);}
+    .finp{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rsm);color:var(--t1);padding:10px 13px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;box-shadow:var(--sh0);}
+    .finp:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.12);}
+    .ref-res{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh0);overflow:hidden;}
+    .ref-item{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;transition:background .1s;cursor:pointer;}
+    .ref-item:last-child{border-bottom:none;} .ref-item:hover{background:var(--bg3);}
+    .ref-rank{font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--t4);width:32px;flex-shrink:0;}
+    .ref-info{flex:1;} .ref-name{font-size:14px;font-weight:700;color:var(--t1);}
+    .ref-loc{font-size:12px;color:var(--t3);margin-top:2px;}
+    .ref-trust{font-size:11px;color:var(--t3);margin-top:3px;}
+    .ref-stats{display:flex;gap:16px;flex-shrink:0;}
+    .rs{text-align:center;} .rs-v{font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:var(--teal);}
+    .rs-l{font-size:10px;color:var(--t4);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+
+    /* TOOLTIP */
+    .tip-wrap{position:relative;display:inline-flex;align-items:center;}
+    .tip-icon{width:16px;height:16px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t4);cursor:help;margin-left:5px;flex-shrink:0;transition:all .2s;font-style:normal;}
+    .tip-icon:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal2);}
+    .tip-body{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) scale(.95);opacity:0;pointer-events:none;z-index:200;width:320px;max-width:90vw;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--r);box-shadow:0 12px 40px rgba(0,0,0,.12),0 4px 12px rgba(0,0,0,.06);padding:14px 16px;transition:all .2s ease;overflow:visible;}
+    .tip-wrap:hover .tip-body{opacity:1;transform:translateX(-50%) scale(1);pointer-events:auto;}
+    .tip-body::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border);}
+    .tip-body::before{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#fff;z-index:1;margin-top:-1px;}
+    .tip-title{font-size:11px;font-weight:700;color:var(--teal2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+    .tip-title::before{content:'';width:3px;height:12px;background:var(--teal);border-radius:2px;flex-shrink:0;}
+    .tip-section{margin-bottom:8px;}
+    .tip-section:last-child{margin-bottom:0;}
+    .tip-section-hd{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+    .tip-section-bd{font-size:11px;color:var(--t3);line-height:1.5;word-wrap:break-word;overflow-wrap:break-word;}
+    .tip-section-bd strong{color:var(--t1);}
+    .tip-section-bd code{font-size:10px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--teal2);font-family:'Courier New',monospace;}
+    @media(max-width:700px){.tip-body{width:260px;left:0;transform:translateX(-10%) scale(.95);}.tip-wrap:hover .tip-body{transform:translateX(-10%) scale(1);}}
+
+    /* GUIDED TOUR */
+    .tour-overlay{position:fixed;inset:0;z-index:9998;pointer-events:none;transition:opacity .3s;}
+    .tour-overlay.active{pointer-events:auto;}
+    .tour-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;transition:opacity .3s;}
+    .tour-spotlight{position:absolute;z-index:9999;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.55);transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+    .tour-tooltip{position:absolute;z-index:10000;width:360px;max-width:90vw;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.05);padding:0;overflow:hidden;animation:tourIn .35s ease;}
+    @keyframes tourIn{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+    .tour-header{padding:16px 20px 10px;background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;}
+    .tour-step-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(99,102,241,.3);color:#a5b4fc;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:6px;}
+    .tour-title{font-size:16px;font-weight:700;margin:0;}
+    .tour-body{padding:14px 20px;font-size:13px;color:#475569;line-height:1.6;}
+    .tour-body strong{color:#0f172a;}
+    .tour-footer{padding:10px 20px 14px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;}
+    .tour-dots{display:flex;gap:5px;}
+    .tour-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:all .2s;}
+    .tour-dot.active{background:#6366f1;width:20px;border-radius:4px;}
+    .tour-dot.done{background:#10b981;}
+    .tour-btns{display:flex;gap:8px;}
+    .tour-btn{padding:7px 16px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+    .tour-btn-skip{background:transparent;color:#94a3b8;}.tour-btn-skip:hover{color:#475569;}
+    .tour-btn-next{background:#6366f1;color:#fff;}.tour-btn-next:hover{background:#4f46e5;}
+    .tour-btn-prev{background:#f1f5f9;color:#475569;}.tour-btn-prev:hover{background:#e2e8f0;}
+    .tour-start-btn{position:relative;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;animation:tourPulse 2s infinite;}
+    .tour-start-btn:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(16,185,129,.3);}
+    @keyframes tourPulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4)}50%{box-shadow:0 0 0 8px rgba(16,185,129,0)}}
+    @keyframes voicePulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+    @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr);}.charts-row{grid-template-columns:1fr 1fr;}.arch-strip,.gems-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:700px){nav{padding:0 14px;}.nav-links{display:none;}.wrap,.wrap-md{padding:14px;}.kpi-grid,.charts-row,.arch-strip,.gems-grid,.claims-grid{grid-template-columns:1fr;}.dv-hero>div{flex-direction:column;}}
+
+    /* AI CHAT PANEL */
+    .ai-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(99,102,241,.4);z-index:1000;transition:transform .2s,box-shadow .2s;}
+    .ai-fab:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(99,102,241,.5);}
+    .ai-fab.open{transform:rotate(45deg);}
+    .ai-panel{position:fixed;bottom:92px;right:24px;width:420px;max-height:560px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.15);z-index:999;display:none;flex-direction:column;overflow:hidden;animation:aiSlide .25s ease;}
+    .ai-panel.show{display:flex;}
+    @keyframes aiSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .ai-header{padding:14px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+    .ai-header .ai-badge{font-size:10px;background:rgba(255,255,255,.2);padding:2px 8px;border-radius:100px;font-weight:500;}
+    .ai-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:380px;}
+    .ai-msg{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.55;max-width:92%;word-wrap:break-word;}
+    .ai-msg.user{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+    .ai-msg.ai{background:var(--bg3);color:var(--t1);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border);}
+    .ai-msg.ai strong{color:var(--teal);}
+    .ai-typing{padding:10px 14px;background:var(--bg3);border-radius:12px;align-self:flex-start;border:1px solid var(--border);display:flex;gap:4px;}
+    .ai-typing span{width:6px;height:6px;background:var(--t4);border-radius:50%;animation:typDot .8s infinite ease-in-out;}
+    .ai-typing span:nth-child(2){animation-delay:.15s;}
+    .ai-typing span:nth-child(3){animation-delay:.3s;}
+    @keyframes typDot{0%,80%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+    .ai-input-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg);}
+    .ai-input-row input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;background:var(--bg2);color:var(--t1);outline:none;font-family:inherit;}
+    .ai-input-row input:focus{border-color:#6366f1;}
+    .ai-input-row button{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+    .ai-input-row button:disabled{opacity:.5;cursor:not-allowed;}
+    .ai-suggestions{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;}
+    .ai-sug{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:100px;cursor:pointer;color:var(--t3);background:var(--bg);transition:all .15s;}
+    .ai-sug:hover{border-color:#6366f1;color:#6366f1;background:rgba(99,102,241,.05);}
+    @media(max-width:700px){.ai-panel{width:calc(100vw - 32px);right:16px;bottom:84px;max-height:70vh;}}
+
+    /* PLANNER WORKSPACE */
+    .planner-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;}
+    .planner-stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxs);padding:14px;text-align:center;}
+    .planner-stat .ps-v{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;}
+    .planner-stat .ps-l{font-size:11px;color:var(--t3);margin-top:2px;}
+    .pl-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxs);padding:16px;margin-bottom:12px;transition:border-color .2s;}
+    .pl-card:hover{border-color:var(--teal);}
+    .pl-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
+    .pl-name{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:var(--t1);cursor:pointer;}
+    .pl-name:hover{color:var(--teal);text-decoration:underline;}
+    .pl-meta{font-size:12px;color:var(--t3);}
+    .pl-verdicts{display:flex;gap:6px;flex-wrap:wrap;}
+    .pl-vbtn{font-size:11px;padding:4px 10px;border-radius:100px;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--t3);transition:all .15s;}
+    .pl-vbtn:hover{opacity:.85;}
+    .pl-vbtn.v-approve{background:var(--grn-l);color:var(--grn);border-color:var(--grn);}
+    .pl-vbtn.v-flag{background:var(--amb-l);color:var(--amb);border-color:var(--amb);}
+    .pl-vbtn.v-reject{background:var(--red-d);color:var(--red);border-color:var(--red);}
+    .pl-vbtn.active{font-weight:700;box-shadow:0 0 0 2px currentColor;}
+    .pl-notes{width:100%;border:1px solid var(--border);border-radius:var(--rxs);padding:8px 10px;font-size:12px;background:var(--bg);color:var(--t1);font-family:inherit;resize:vertical;min-height:40px;margin-top:8px;}
+    .pl-notes:focus{border-color:var(--teal);outline:none;}
+    .pl-actions{display:flex;gap:8px;margin-top:8px;}
+    .pl-rm{font-size:11px;color:var(--red);cursor:pointer;padding:2px 8px;border:1px solid var(--red-d);border-radius:100px;background:transparent;}
+    .pl-rm:hover{background:var(--red-d);}
+    .save-btn{font-size:12px;padding:4px 10px;border-radius:100px;cursor:pointer;border:1px solid var(--teal);background:transparent;color:var(--teal);transition:all .15s;}
+    .save-btn:hover{background:var(--teal);color:#fff;}
+    .save-btn.saved{background:var(--teal);color:#fff;}
+    .export-btn{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;}
+    .export-btn:hover{opacity:.9;}
+    .export-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+    /* AGENT AUDIT REPORT */
+    .audit-btn{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s;}
+    .audit-btn:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(245,158,11,.4);}
+    .audit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+    .audit-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxs);overflow:hidden;margin-top:20px;animation:aiSlide .3s ease;}
+    .audit-head{padding:16px 20px;background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;display:flex;align-items:center;justify-content:space-between;}
+    .audit-head .ah-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;}
+    .audit-head .ah-badge{font-size:11px;padding:3px 10px;border-radius:100px;font-weight:700;}
+    .ah-trustworthy{background:rgba(16,185,129,.2);color:#10b981;}
+    .ah-needs_verification{background:rgba(245,158,11,.2);color:#f59e0b;}
+    .ah-high_risk{background:rgba(239,68,68,.2);color:#ef4444;}
+    .ah-unreliable{background:rgba(239,68,68,.4);color:#fca5a5;}
+    .audit-body{padding:20px;}
+    .audit-exec{font-size:14px;line-height:1.6;color:var(--t2);margin-bottom:16px;padding:14px;background:var(--bg3);border-radius:8px;border-left:3px solid #6366f1;}
+    .audit-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+    @media(max-width:700px){.audit-grid{grid-template-columns:1fr;}}
+    .audit-section{background:var(--bg3);border-radius:8px;padding:14px;}
+    .audit-section h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--t4);margin-bottom:8px;}
+    .risk-item{padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+    .risk-item:last-child{border:none;}
+    .risk-sev{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px;}
+    .sev-CRITICAL{background:rgba(239,68,68,.15);color:#ef4444;}
+    .sev-HIGH{background:rgba(245,158,11,.15);color:#f59e0b;}
+    .sev-MEDIUM{background:rgba(99,102,241,.15);color:#6366f1;}
+    .sev-LOW{background:rgba(16,185,129,.15);color:#10b981;}
+    .referral-box{margin-top:14px;padding:14px;border-radius:8px;font-size:13px;line-height:1.5;}
+    .ref-safe{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);}
+    .ref-unsafe{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);}
+
+    /* AGENT STEPS PIPELINE */
+    .agent-steps{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding:12px;background:var(--bg3);border-radius:8px;}
+    .ag-step{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);padding:4px 10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);}
+    .ag-step.complete{border-color:var(--grn);color:var(--grn);}
+    .ag-step.running{border-color:#6366f1;color:#6366f1;animation:pulse 1.5s infinite;}
+    .ag-step.error{border-color:var(--red);color:var(--red);}
+    .ag-step .ag-ic{font-size:13px;}
+    .ag-step .ag-t{font-size:10px;color:var(--t4);margin-left:4px;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .ag-arrow{color:var(--t4);font-size:12px;}
+
+    /* SQL AGENT */
+    .sql-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxs);overflow:hidden;margin-top:10px;}
+    .sql-query{background:#1e1b4b;color:#a5b4fc;padding:12px 16px;font-family:'Courier New',monospace;font-size:11px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;}
+    .sql-results{padding:14px;overflow-x:auto;}
+    .sql-results table{font-size:11px;}
+    .sql-narrative{padding:14px;border-top:1px solid var(--border);font-size:13px;line-height:1.6;color:var(--t2);}
+    .sql-mode-toggle{display:flex;gap:4px;padding:8px 14px;background:var(--bg3);border-bottom:1px solid var(--border);}
+    .sql-tab{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--t3);}
+    /* MISSION CONTROL PAGE */
+    .mission-card{display:flex;gap:12px;align-items:center;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+    .mission-card:hover{border-left-color:#6366f1;background:var(--bg3);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.12);}
+    .mc-icon{font-size:28px;flex-shrink:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:10px;}
+    .mc-title{font-weight:700;font-size:13px;color:var(--t1);}
+    .mc-desc{font-size:11px;color:var(--t3);margin-top:2px;line-height:1.4;}
+    .mission-loading{padding:24px;text-align:center;}
+    .mission-loading .spinner{width:28px;height:28px;margin:0 auto 12px;}
+    .brief-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:16px;}
+    .brief-header{padding:18px 20px;background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;}
+    .brief-body{padding:20px;}
+    .citation-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:100px;font-size:10px;color:#6366f1;font-weight:600;margin:2px;}
+    .evidence-row{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--t2);}
+    .evidence-row:last-child{border-bottom:none;}
+    .ev-name{font-weight:600;color:var(--t1);min-width:180px;}
+    .ev-val{color:var(--t3);}
+
+    /* THESIS HERO */
+    .thesis-hero{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);border-radius:16px;padding:28px 32px;margin-bottom:24px;color:#fff;position:relative;overflow:hidden;}
+    .thesis-hero::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(99,102,241,.15),transparent 70%);}
+    .thesis-hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:250px;height:250px;background:radial-gradient(circle,rgba(16,185,129,.1),transparent 70%);}
+    .thesis-hero h2{font-size:18px;font-weight:700;margin:0 0 10px;position:relative;z-index:1;}
+    .thesis-hero p{font-size:13px;color:#94a3b8;line-height:1.7;margin:0;position:relative;z-index:1;}
+    .thesis-hero strong{color:#e2e8f0;}
+    .thesis-hero em{color:#a5b4fc;font-style:normal;font-weight:600;}
+    .thesis-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1;}
+    .thesis-pill{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);backdrop-filter:blur(4px);}
+
+    /* PDF EXPORT */
+    .export-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+    .export-btn:hover{transform:scale(1.03);box-shadow:0 4px 12px rgba(245,158,11,.3);}
+    @media print{nav,.back-btn,.save-btn,.audit-btn,.export-btn,.tour-start-btn,.ai-fab,.ai-panel{display:none!important;}
+      body{background:#fff!important;} .page{display:block!important;position:static!important;}
+      .card{break-inside:avoid;box-shadow:none!important;border:1px solid #ddd!important;}
+      .dv-hero{background:#f8fafc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="#" class="nav-brand" onclick="showPage('cmd');return false;">
+    <div class="nav-logo">🏥</div>
+    <div><div class="nav-title">ArogyaSetu AI</div><div class="nav-sub">Facility Trust Desk · DAIS 2026</div></div>
+  </a>
+  <div class="nav-links">
+    <button class="nav-btn active" id="nav-cmd"     onclick="showPage('cmd')">Overview</button>
+    <button class="nav-btn"        id="nav-anomaly" onclick="showPage('anomaly')">Anomaly Lab</button>
+    <button class="nav-btn"        id="nav-gems"    onclick="showPage('gems')">Hidden Gems</button>
+    <button class="nav-btn"        id="nav-ref"     onclick="showPage('ref')">Referrals</button>
+    <button class="nav-btn"        id="nav-planner" onclick="showPage('planner')">Planner</button>
+    <button class="nav-btn"        id="nav-mission" onclick="showPage('mission')" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:600">🎯 AI Advisor</button>
+  </div>
+  <div class="nav-right">
+    <button class="tour-start-btn" onclick="startTour()">▶ Guided Demo</button>
+    <div class="live"></div><span>Live · Databricks</span>
+  </div>
+</nav>
+
+<!-- PAGE: COMMAND CENTER -->
+<section class="page active" id="page-cmd">
+<div class="wrap">
+  <div class="eyebrow">Track 1 · Cleaned Dataset · facility_clean view</div>
+  <h1 class="pg-title">India Facility Trust Command Center</h1>
+  <p class="pg-desc">10,088 facilities cleaned and analyzed. Numbers below tell the story of data quality — what it means for 1.4 billion people seeking care.</p>
+
+  <!-- THESIS HERO -->
+  <div class="thesis-hero">
+    <h2>🔬 What Makes This App Different</h2>
+    <p>Most healthcare dashboards show you a number and say <em>"trust this."</em> We don't.<br>
+    This app <strong>reads the raw text</strong> of each facility's description, capability, procedure, and equipment fields. It <strong>cross-references claims against structural data</strong> — and shows you <strong>cited text evidence</strong> so you can verify every claim yourself.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;position:relative;z-index:1">
+      <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:14px 16px">
+        <div style="font-size:13px;font-weight:700;color:#34d399;margin-bottom:6px">🏛️ For Government Officials</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">
+          <strong style="color:#e2e8f0">Health Secretary</strong> can identify which districts have ghost hospitals claiming ICU without doctors.<br>
+          <strong style="color:#e2e8f0">District Planner</strong> can find verified referral hospitals for cardiac emergencies with equipment confirmation.<br>
+          <strong style="color:#e2e8f0">Policy Maker</strong> can ask AI Advisor: "Which state has the worst healthcare gap?" and get cited intelligence.
+        </div>
+      </div>
+      <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:14px 16px">
+        <div style="font-size:13px;font-weight:700;color:#a5b4fc;margin-bottom:6px">👨‍👩‍👧 For Citizens & NGOs</div>
+        <div style="font-size:12px;color:#94a3b8;line-height:1.6">
+          <strong style="color:#e2e8f0">A parent</strong> searching for a NICU-equipped hospital can see if the claim is backed by actual equipment data.<br>
+          <strong style="color:#e2e8f0">An NGO coordinator</strong> can find "Hidden Gems" — high-capacity hospitals ignored by the internet.<br>
+          <strong style="color:#e2e8f0">A researcher</strong> can export trust reports with full evidence chains for academic audits.
+        </div>
+      </div>
+    </div>
+    <div class="thesis-pills">
+      <span class="thesis-pill">🤥 Pinocchio Score™ — overclaiming detection</span>
+      <span class="thesis-pill">🔍 4-field text evidence scanning</span>
+      <span class="thesis-pill">🧠 Llama 3.3 70B multi-agent audit</span>
+      <span class="thesis-pill">📊 10,088 facilities · 28 states</span>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpi-grid">
+    <div class="loading" style="grid-column:1/-1"><div class="spinner"></div>Loading live data…</div>
+  </div>
+
+  <!-- DATA COVERAGE UNCERTAINTY BANNER -->
+  <div id="coverage-banner" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px"></div>
+
+  <!-- CHARTS ROW -->
+  <div class="charts-row" id="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">🏷️ Trust Band Distribution</div>
+      <div class="chart-sub">What fraction of facilities are safe to recommend?</div>
+      <div id="trust-bands-list"><div class="loading" style="padding:24px"><div class="spinner"></div></div></div>
+      <div class="chart-insight" id="trust-insight">Loading…</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">✂️ The 50-Specialty Spike</div>
+      <div class="chart-sub">Why this distribution proves data was truncated</div>
+      <div class="chart-wrap"><canvas id="specialtyChart"></canvas></div>
+      <div class="chart-insight"><strong>The spike at 50 is 51× bigger</strong> than adjacent counts. 2,884 facilities were cut off — their real capabilities may be much broader.</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">🏥 Facility Archetypes</div>
+      <div class="chart-sub">How we categorize 10,088 facilities</div>
+      <div class="chart-wrap"><canvas id="archetypeChart"></canvas></div>
+      <div class="chart-insight" id="arch-chart-insight">Loading…</div>
+    </div>
+  </div>
+
+  <!-- ARCHETYPE STRIP -->
+  <div class="arch-strip" id="arch-strip"></div>
+
+  <!-- SEARCH -->
+  <div class="search-row">
+    <input class="inp" id="si" placeholder="🔍  Search facility name…" oninput="debSearch()"/>
+    <select class="sel" id="sf" onchange="loadFac()"><option value="">All States</option></select>
+    <button class="btn btn-g" onclick="clearF()">✕ Clear</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div class="card-hd"><span class="card-ttl">Healthcare Facilities — Cleaned Dataset</span><span class="card-meta" id="tc">Loading…</span></div>
+    <div id="fac-body"><div class="loading"><div class="spinner"></div>Querying Databricks…</div></div>
+    <div class="pagination" id="pg"></div>
+  </div>
+</div>
+</section>
+
+<!-- PAGE: DEEP DIVE -->
+<section class="page" id="page-deepdive">
+<div class="wrap-md">
+  <button class="back-btn" onclick="showPage('cmd')">← Back to Overview</button>
+  <div id="dv-content"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+</div>
+</section>
+
+<!-- PAGE: ANOMALY LAB -->
+<section class="page" id="page-anomaly">
+<div class="wrap">
+  <div class="eyebrow">Data Archaeology · Real findings from the raw dataset</div>
+  <h1 class="pg-title">🔬 Anomaly Lab</h1>
+  <p class="pg-desc">Every anomaly below is a real row in the dataset — verified by SQL query. These are not estimates.</p>
+  <div class="tab-bar" id="anom-tabs">
+    <button class="tab active" onclick="aTab('dirty')">🐛 Dirty Type IDs <span class="chip" id="dc">—</span></button>
+    <button class="tab" onclick="aTab('trunc')">✂️ 50-Specialty Ceiling <span class="chip info" id="trc">—</span></button>
+    <button class="tab" onclick="aTab('247')">🚨 Suspicious 24/7 <span class="chip" id="2c">—</span></button>
+    <button class="tab" onclick="aTab('icu')">⚕️ Impossible ICU <span class="chip" id="ic">—</span></button>
+  </div>
+  <div id="anom-content"><div class="loading"><div class="spinner"></div>Scanning…</div></div>
+</div>
+</section>
+
+<!-- PAGE: HIDDEN GEMS -->
+<section class="page" id="page-gems">
+<div class="wrap">
+  <div class="eyebrow">💎 Digitally Invisible · Operationally Strong</div>
+  <h1 class="pg-title">Hidden Gems Finder</h1>
+  <p class="pg-desc">Facilities with strong doctor count and equipment — but nearly zero social presence. These are the hospitals planners miss every time.</p>
+  <div id="gems-content"><div class="loading"><div class="spinner"></div>Discovering…</div></div>
+</div>
+</section>
+
+<!-- PAGE: REFERRAL FINDER -->
+<section class="page" id="page-ref">
+<div class="wrap-md">
+  <div class="eyebrow">✅ Equipment-Verified · Ghost Facilities Excluded</div>
+  <h1 class="pg-title">Verified Referral Finder</h1>
+  <p class="pg-desc">We only show hospitals where the claimed specialty is confirmed by matching equipment from the cleaned dataset.</p>
+  <div class="ref-form">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div class="fg">
+        <label class="flbl">Patient Condition</label>
+        <select class="finp" id="cond">
+          <option value="cardiac">❤️  Cardiac / Heart Care</option>
+          <option value="cancer">🩺  Cancer / Oncology</option>
+          <option value="pregnancy">🤱  High-Risk Pregnancy / Obstetrics</option>
+          <option value="nicu">👶  NICU / Neonatal Care</option>
+          <option value="orthopedic">🦴  Orthopedic / Bone &amp; Joint</option>
+          <option value="neurology">🧠  Neurology / Brain &amp; Spine</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="flbl">Patient's Pincode</label>
+        <input class="finp" id="pin" type="text" placeholder="e.g. 400001" maxlength="6"/>
+      </div>
+    </div>
+    <button class="btn btn-p" onclick="findRef()" style="width:100%;justify-content:center;">🔍 Find Verified Hospitals Near This Pincode</button>
+  </div>
+  <div id="ref-res"></div>
+</div>
+</section>
+
+<!-- PAGE: PLANNER WORKSPACE -->
+<section class="page" id="page-planner">
+<div class="wrap-md">
+  <div class="eyebrow">Session-Persistent · LocalStorage Backed</div>
+  <h1 class="pg-title">Planner Workspace</h1>
+  <p class="pg-desc">Save facilities, assign verdicts, add notes, and export your audit report. All data persists in your browser.</p>
+  <div class="planner-stats" id="pl-stats"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="pl-vbtn" onclick="filterPlanner('all')" id="pl-fall" style="font-weight:700">All</button>
+      <button class="pl-vbtn" onclick="filterPlanner('approved')">✅ Approved</button>
+      <button class="pl-vbtn" onclick="filterPlanner('flagged')">⚠️ Flagged</button>
+      <button class="pl-vbtn" onclick="filterPlanner('rejected')">❌ Rejected</button>
+      <button class="pl-vbtn" onclick="filterPlanner('pending')">⏳ Pending</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="export-btn" onclick="exportCSV()" id="pl-export">📥 Export CSV</button>
+      <button class="pl-rm" onclick="if(confirm('Clear all saved facilities?')){localStorage.removeItem('planner');renderPlanner()}">🗑️ Clear All</button>
+    </div>
+  </div>
+  <div id="pl-list"></div>
+</div>
+</section>
+
+<!-- PAGE: AI MISSION CONTROL -->
+<section class="page" id="page-mission">
+<div class="wrap-md">
+  <!-- Hero -->
+  <div style="text-align:center;padding:40px 0 32px">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.15);border-radius:100px;font-size:11px;font-weight:600;color:#6366f1;margin-bottom:16px">
+      <span style="width:6px;height:6px;border-radius:50%;background:#6366f1;animation:pulse 2s infinite"></span>
+      Autonomous Agent · Databricks Foundation Models
+    </div>
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:var(--t1);margin-bottom:8px">AI Policy Advisor</h1>
+    <p style="font-size:14px;color:var(--t3);max-width:520px;margin:0 auto 20px;line-height:1.6">Give the agent a mission. It queries live data, cross-references facilities, and produces an actionable intelligence brief.</p>
+    <!-- Inline agent flow -->
+    <div style="display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--t4)">
+      <span style="padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">🗄️ Data Retrieval</span>
+      <span>→</span>
+      <span style="padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">🧠 LLM Analysis</span>
+      <span>→</span>
+      <span style="padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">📋 Policy Brief</span>
+    </div>
+  </div>
+
+  <!-- Mission Cards -->
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px">
+    <div class="mission-card" onclick="launchMission('emergency_audit')">
+      <div class="mc-icon">🚑</div>
+      <div><div class="mc-title">Emergency Care Audit</div><div class="mc-desc">Verify 24/7 care claims against staffing data</div></div>
+    </div>
+    <div class="mission-card" onclick="launchMission('ghost_investigation')">
+      <div class="mc-icon">👻</div>
+      <div><div class="mc-title">Ghost Facility Investigation</div><div class="mc-desc">Find fake or abandoned facilities</div></div>
+    </div>
+    <div class="mission-card" onclick="launchMission('scheme_eligibility')">
+      <div class="mc-icon">🏛️</div>
+      <div><div class="mc-title">Govt Scheme Eligibility</div><div class="mc-desc">Check Ayushman Bharat / PMJAY readiness</div></div>
+    </div>
+    <div class="mission-card" onclick="launchMission('nicu_referral')">
+      <div class="mc-icon">👶</div>
+      <div><div class="mc-title">NICU Referral Safety</div><div class="mc-desc">Find verified neonatal referral options</div></div>
+    </div>
+  </div>
+
+  <!-- Custom Mission + State + Voice -->
+  <div style="margin-bottom:28px">
+    <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+      <select id="m-state" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:13px;min-width:150px">
+        <option value="">All States</option>
+        <option value="Maharashtra">Maharashtra</option><option value="Delhi">Delhi</option><option value="Karnataka">Karnataka</option><option value="Tamil Nadu">Tamil Nadu</option><option value="Uttar Pradesh">Uttar Pradesh</option><option value="West Bengal">West Bengal</option><option value="Gujarat">Gujarat</option><option value="Rajasthan">Rajasthan</option><option value="Punjab">Punjab</option><option value="Kerala">Kerala</option><option value="Telangana">Telangana</option><option value="Bihar">Bihar</option><option value="Madhya Pradesh">Madhya Pradesh</option>
+      </select>
+      <select id="voice-lang" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:12px;min-width:120px" title="Voice language">
+        <option value="en-IN">🇬🇧 English</option>
+        <option value="hi-IN">🇮🇳 हिन्दी (Hindi)</option>
+        <option value="ta-IN">தமிழ் (Tamil)</option>
+        <option value="te-IN">తెలుగు (Telugu)</option>
+        <option value="bn-IN">বাংলা (Bengali)</option>
+        <option value="mr-IN">मराठी (Marathi)</option>
+        <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+        <option value="ml-IN">മലയാളം (Malayalam)</option>
+        <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+        <option value="pa-IN">ਪੰਜਾਬੀ (Punjabi)</option>
+        <option value="ur-IN">اردو (Urdu)</option>
+        <option value="or-IN">ଓଡ଼ିଆ (Odia)</option>
+        <option value="as-IN">অসমীয়া (Assamese)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;align-items:stretch">
+      <textarea id="m-custom" rows="3" placeholder="Type your mission here or use voice input in any Indian language...&#10;&#10;Example: A pregnant woman in rural Bihar needs emergency NICU access. Which hospitals have verified neonatal equipment?" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:14px;font-family:inherit;resize:vertical;line-height:1.5"></textarea>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button id="voice-btn" onclick="toggleVoice()" style="width:52px;height:52px;border-radius:12px;border:2px solid var(--border);background:var(--bg2);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .2s" title="Voice Input">🎙️</button>
+        <button class="audit-btn" onclick="launchMission('custom')" style="white-space:nowrap;padding:10px 20px;flex:1;border-radius:10px;font-size:14px">🚀 Launch</button>
+      </div>
+    </div>
+    <div id="voice-status" style="font-size:11px;color:var(--t4);margin-top:4px;min-height:16px"></div>
+  </div>
+
+  <!-- Results -->
+  <div id="mission-results"></div>
+</div>
+</section>
+
+<script>
+const API=''; let curPage=1,selArch='',anomData=null,curATab='dirty';
+
+/* NAV */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const nb=document.getElementById('nav-'+name);if(nb)nb.classList.add('active');
+  window.scrollTo(0,0);
+  if(name!=='deepdive' && typeof currentFacilityData!=='undefined') currentFacilityData=null;
+  if(name==='cmd'&&!window._kl)loadCmd();
+  if(name==='anomaly'&&!anomData)loadAnom();
+  if(name==='gems'&&!window._gl)loadGems();
+  if(name==='planner')renderPlanner();
+  if(name==='mission')window._missionLoaded=true;
+}
+
+/* COMMAND CENTER */
+async function loadCmd(){
+  window._kl=true;
+  await Promise.all([loadKPIs(),loadStates(),loadFac()]);
+}
+
+async function loadKPIs(){
+  try{
+    const[k,a,t,s]=await Promise.all([
+      fetch(`${API}/api/kpi`).then(r=>r.json()),
+      fetch(`${API}/api/archetypes`).then(r=>r.json()),
+      fetch(`${API}/api/trust-distribution`).then(r=>r.json()),
+      fetch(`${API}/api/specialty-distribution`).then(r=>r.json()),
+    ]);
+    if(k.ok)renderKPIs(k.data);
+    if(a.ok)renderArchStrip(a.data);
+    if(t.ok)renderTrustBands(t.data);
+    if(s.ok)renderSpecialtyChart(s.data);
+    if(a.ok)renderArchChart(a.data);
+  }catch(e){
+    document.getElementById('kpi-grid').innerHTML=`<div class="loading" style="grid-column:1/-1;color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+}
+
+function tip(label,title,calc,why){
+  return '<div class="tip-wrap">'+label+'<i class="tip-icon">i</i><div class="tip-body"><div class="tip-title">'+title+'</div><div class="tip-section"><div class="tip-section-hd">How It\'s Calculated</div><div class="tip-section-bd">'+calc+'</div></div><div class="tip-section"><div class="tip-section-hd">Why It Matters</div><div class="tip-section-bd">'+why+'</div></div></div></div>';
+}
+
+function renderKPIs(d){
+  const total=+d.total_facilities||0;
+  const p247=(+d.suspicious_247/total*100).toFixed(1);
+  const pICU=(+d.suspicious_icu/+d.total_facilities*100).toFixed(1);
+  const pHT =(+d.high_trust/total*100).toFixed(0);
+  document.getElementById('kpi-grid').innerHTML=`
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon teal">🏥</div><span class="kpi-chip chip-info">Live Dataset</span></div>
+      <div class="kpi-num" id="kv0">0</div>
+      <div class="kpi-label">${tip('Total Facilities Analyzed','Total Count','<code>COUNT(*)</code> from the <strong>facilities</strong> table. Includes hospitals, clinics, dentists, pharmacies and nursing homes.','This is the universe of data. Every metric below is computed over this full set — nothing is sampled or estimated.')}</div>
+      <div class="kpi-context">Spanning <strong>${d.total_states||28} states & UTs</strong>. This is the complete picture of formal healthcare in India from this dataset — equivalent to knowing every hospital, clinic and dental office in a country of <strong>1.4 billion</strong>.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon grn">✅</div><span class="kpi-chip chip-ok">Good Signal</span></div>
+      <div class="kpi-num" id="kv1">0</div>
+      <div class="kpi-label">${tip('High-Trust Facilities','Pinocchio Score ≤ 10','Facilities with a <strong>Pinocchio Score of 10 or below</strong>. The score sums 7 checks: <code>+15</code> claims 24/7 with &lt;3 doctors, <code>+25</code> claims ICU with &lt;2 doctors, <code>+20</code> claims multi-specialty with &lt;3 doctors, <code>+10</code> claims cardiology without cardiac equipment, <code>+10</code> claims oncology without onco equipment, <code>+5</code> specialty list truncated, <code>+5</code> facility type was dirty.','A score of 0–10 means <strong>no contradictions</strong> between claims and structural data. Safe for direct policy referrals.')}</div>
+      <div class="kpi-context"><strong>${pHT}% of all facilities</strong> have no claim contradictions. These are safe for direct policy referrals. The rest need deeper verification before inclusion in government health schemes.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon amb">✂️</div><span class="kpi-chip chip-warn">Data Gap</span></div>
+      <div class="kpi-num" id="kv2">0</div>
+      <div class="kpi-label">${tip('Specialty Lists Truncated at 50','50-Specialty Spike','Count where <code>SIZE(FROM_JSON(specialties)) = 50</code>. Adjacent counts (49, 48…) average ~56 each — the spike at 50 is <strong>51× larger</strong>, proving a pipeline truncation limit.','These facilities likely offer more than 50 specialties but were cut off. Any analysis using specialty count for these facilities is working with <strong>incomplete data</strong>.')}</div>
+      <div class="kpi-context"><strong>1 in 3 multi-specialty hospitals</strong> may offer MORE services than the dataset shows. The scraping pipeline cut off at 50 specialties — planners making decisions on this data are missing real capacity.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon red">🚨</div><span class="kpi-chip chip-alert">Risk: HIGH</span></div>
+      <div class="kpi-num" id="kv3">0</div>
+      <div class="kpi-label">${tip('Suspicious 24/7 Emergency Claims','24/7 + Low Staff','Facilities where <code>description</code> or <code>capability</code> contains "24/7" <strong>AND</strong> <code>doctors &lt; 3</code>. A real 24/7 ER needs at minimum 6 rotating staff.','If a patient in emergency is directed here and there are fewer than 3 doctors, <strong>there may be no one on duty</strong>. Direct patient safety risk.')}</div>
+      <div class="kpi-context">That's <strong>${p247}% of all emergency-claim facilities</strong>. A 24/7 ER needs at minimum 6 rotating staff. If a patient in distress is directed to one of these, it could be life-threatening.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon red">⚕️</div><span class="kpi-chip chip-alert">Risk: CRITICAL</span></div>
+      <div class="kpi-num" id="kv4">0</div>
+      <div class="kpi-label">${tip('Suspicious ICU Claims','ICU + Low Staff','Facilities claiming ICU capability in <code>capability</code>, <code>equipment</code>, or <code>description</code> <strong>AND</strong> <code>doctors &lt; 2</code>. An ICU needs a dedicated intensivist 24/7.','An ICU with &lt;2 doctors <strong>cannot safely operate</strong>. Referring a critical patient here could be fatal — highest-severity data quality issue.')}</div>
+      <div class="kpi-context">ICUs require a dedicated intensivist 24/7. Facilities claiming ICU with fewer than 2 doctors <strong>cannot safely operate one</strong>. Referring a critical patient here could be fatal.</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-top"><div class="kpi-icon teal">💎</div><span class="kpi-chip chip-info">Opportunity</span></div>
+      <div class="kpi-num" id="kv5">0</div>
+      <div class="kpi-label">${tip('Hidden Gems Discovered','Low Followers + High Capacity','Facilities where <code>followers &lt; 100</code> AND <code>doctors &gt; 50</code> AND <code>equipment types &gt; 20</code>. Structurally strong but digitally invisible.','These hospitals are <strong>systematically overlooked</strong> because they don\'t appear in Google or social media. Surfacing them could immediately improve healthcare access.')}</div>
+      <div class="kpi-context">Strong hospitals with <strong>50+ doctors and 20+ equipment types</strong> but fewer than 100 social followers. Planners have been ignoring these because they don't show up in search rankings.</div>
+    </div>
+  `;
+  cnt('kv0',d.total_facilities||0);cnt('kv1',d.high_trust||0);cnt('kv2',d.truncated_50||0);
+  cnt('kv3',d.suspicious_247||0);cnt('kv4',d.suspicious_icu||0);cnt('kv5',d.hidden_gems||0);
+
+  // Data Coverage Uncertainty Banner
+  const pDoc = +d.pct_has_doctors || 36.4;
+  const pEq = +d.pct_has_equipment || 77.0;
+  const pSp = +d.pct_has_specialties || 99.0;
+  const pFol = +d.pct_has_followers || 50.0;
+  function covColor(p){ return p>=80?'var(--grn)':p>=50?'var(--amb)':'#DC2626'; }
+  function covLabel(p){ return p>=80?'High':p>=50?'Moderate':'Low'; }
+  
+  const covEl = document.getElementById('coverage-banner');
+  if(covEl) covEl.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:14px">⚠️</span>
+      <span style="font-size:13px;font-weight:700;color:var(--t1)">Data Coverage & Confidence Levels</span>
+      <span style="font-size:11px;color:var(--t4);margin-left:auto">Not all fields are reported by all facilities. Low coverage = lower confidence in derived metrics.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Doctor Count</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-size:20px;font-weight:800;color:${covColor(pDoc)}">${pDoc}%</span>
+          <span style="font-size:10px;font-weight:600;color:${covColor(pDoc)}">${covLabel(pDoc)} Coverage</span>
+        </div>
+        <div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pDoc}%;background:${covColor(pDoc)};border-radius:2px"></div></div>
+        <div style="font-size:10px;color:var(--t4);margin-top:4px">⚠️ Staffing checks unreliable for ${(100-pDoc).toFixed(0)}% of facilities</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Equipment Data</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-size:20px;font-weight:800;color:${covColor(pEq)}">${pEq}%</span>
+          <span style="font-size:10px;font-weight:600;color:${covColor(pEq)}">${covLabel(pEq)} Coverage</span>
+        </div>
+        <div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pEq}%;background:${covColor(pEq)};border-radius:2px"></div></div>
+        <div style="font-size:10px;color:var(--t4);margin-top:4px">Equipment claims verifiable for ${pEq}% of records</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Specialties</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-size:20px;font-weight:800;color:${covColor(pSp)}">${pSp}%</span>
+          <span style="font-size:10px;font-weight:600;color:${covColor(pSp)}">${covLabel(pSp)} Coverage</span>
+        </div>
+        <div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pSp}%;background:${covColor(pSp)};border-radius:2px"></div></div>
+        <div style="font-size:10px;color:var(--t4);margin-top:4px">Strong signal — most facilities report specialties</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px">
+        <div style="font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Social Presence</div>
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-size:20px;font-weight:800;color:${covColor(pFol)}">${pFol}%</span>
+          <span style="font-size:10px;font-weight:600;color:${covColor(pFol)}">${covLabel(pFol)} Coverage</span>
+        </div>
+        <div style="height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pFol}%;background:${covColor(pFol)};border-radius:2px"></div></div>
+        <div style="font-size:10px;color:var(--t4);margin-top:4px">"Hidden Gems" metric biased by missing data</div>
+      </div>
+    </div>
+  `;
+}
+
+function cnt(id,target){
+  const el=document.getElementById(id);if(!el)return;
+  let cur=0;const step=target/60;
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=Math.floor(cur).toLocaleString('en-IN');if(cur>=target)clearInterval(t);},16);
+}
+
+/* TRUST BANDS */
+function renderTrustBands(data){
+  const colors={'High Trust':'#059669','Moderate Trust':'#0D9488','Low Trust':'#B45309','Unreliable':'#DC2626'};
+  const total=data.reduce((s,r)=>s+(+r.count),0);
+  let html='<div class="trust-bands">';
+  data.forEach(r=>{
+    const w=((+r.count/total)*100).toFixed(1);
+    html+=`<div class="trust-row">
+      <span class="trust-label" style="color:${colors[r.trust_band]||'#374151'}">${r.trust_band}</span>
+      <div class="trust-bar-wrap"><div class="trust-bar" style="width:${w}%;background:${colors[r.trust_band]};"><span class="trust-bar-label">${r.pct||w}%</span></div></div>
+      <span class="trust-count" style="color:${colors[r.trust_band]}">${(+r.count).toLocaleString('en-IN')}</span>
+    </div>`;
+  });
+  html+='</div>';
+  document.getElementById('trust-bands-list').innerHTML=html;
+  const ht=data.find(r=>r.trust_band==='High Trust');
+  document.getElementById('trust-insight').innerHTML=ht?`<strong>${ht.pct}% (${(+ht.count).toLocaleString('en-IN')} facilities)</strong> are High Trust — safe for direct recommendation. Every other facility needs human verification before policy referral.`:'Trust data loaded.';
+}
+
+/* SPECIALTY SPIKE CHART */
+let specChart=null;
+function renderSpecialtyChart(data){
+  const sorted=data.sort((a,b)=>a.specialty_count-b.specialty_count);
+  const labels=sorted.map(r=>r.specialty_count);
+  const vals=sorted.map(r=>+r.facility_count);
+  const colors=sorted.map(r=>r.specialty_count===50?'#DC2626':'#0D9488');
+  const ctx=document.getElementById('specialtyChart').getContext('2d');
+  if(specChart)specChart.destroy();
+  specChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{data:vals,backgroundColor:colors,borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y.toLocaleString()} facilities`}}},scales:{x:{display:false},y:{display:true,grid:{color:'#F0F2F5'},ticks:{font:{size:10},maxTicksLimit:4,callback:v=>v.toLocaleString()}}}}
+  });
+}
+
+/* ARCHETYPE DONUT */
+let archChart=null;
+function renderArchChart(data){
+  const colors={'Verified Pillar':'#059669','Hidden Gem':'#0D9488','Confident Claimer':'#B45309','Ghost Facility':'#DC2626'};
+  const ctx=document.getElementById('archetypeChart').getContext('2d');
+  if(archChart)archChart.destroy();
+  archChart=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:data.map(r=>r.archetype),
+      datasets:[{data:data.map(r=>+r.count),backgroundColor:data.map(r=>colors[r.archetype]||'#6B7280'),borderWidth:2,borderColor:'#FFF'}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:10,padding:8}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed.toLocaleString()}`}}}}
+  });
+  const vp=data.find(r=>r.archetype==='Verified Pillar');
+  const pct=vp?((+vp.count/data.reduce((s,r)=>s+(+r.count),0))*100).toFixed(0):0;
+  document.getElementById('arch-chart-insight').innerHTML=`<strong>${pct}% are Verified Pillars</strong> — data is internally consistent. The remaining ${100-pct}% carry risk flags that require human review before referral.`;
+}
+
+/* ARCHETYPE STRIP */
+function renderArchStrip(data){
+  const cfg={
+    'Verified Pillar':{ic:'\ud83c\udfe5',col:'grn',meaning:'<strong>Safe to recommend.</strong> Claims are consistent with structural data \u2014 doctor counts, equipment, and stated specialties all align.',calc:'Default category. A facility is a Verified Pillar if it does <strong>not</strong> match any other archetype rule. Pinocchio Score is typically \u226410.'},
+    'Confident Claimer':{ic:'\ud83d\udcca',col:'amb',meaning:'<strong>Verify before referral.</strong> High social visibility but few verifiable doctors. May be a chain brand showing at branch level \u2014 or genuinely overclaiming.',calc:'Classified when <code>followers &gt; 500</code> AND <code>specialty count &gt; 20</code> AND <code>doctors &lt; 5</code>. High online presence, low actual staffing.'},
+    'Ghost Facility':{ic:'\ud83d\udc7b',col:'red',meaning:'<strong>May be closed or abandoned.</strong> Zero activity since 2023 and no posts. Sending a patient here is a risk without a phone confirmation first.',calc:'Classified when <code>page updated &lt; 2023</code> AND <code>post count = 0</code>. Both conditions must be true.'},
+    'Hidden Gem':{ic:'\ud83d\udc8e',col:'teal',meaning:'<strong>Untapped public health asset.</strong> Strong operations, minimal digital footprint. Systematically overlooked by planners and patients alike.',calc:'Classified when <code>followers &lt; 100</code> AND <code>doctors &gt; 50</code> AND <code>equipment types &gt; 20</code>. Structurally excellent but digitally invisible.'},
+  };
+  const total=data.reduce((s,r)=>s+(+r.count),0);
+  document.getElementById('arch-strip').innerHTML=data.map(a=>{
+    const c=cfg[a.archetype]||{ic:'\ud83c\udfe5',col:'teal',meaning:'',calc:''};
+    const pct=((+a.count/total)*100).toFixed(1);
+    return `<div class="arch-card" onclick="filterArch('${a.archetype}',this)">
+      <div class="arch-header">
+        <div class="arch-icon ${c.col}">${c.ic}</div>
+        <div><div class="arch-name">${tip(a.archetype,'Classification Rule',c.calc,'Archetypes are checked in order: <strong>Confident Claimer \u2192 Hidden Gem \u2192 Ghost \u2192 Verified Pillar</strong>. First match wins. Click to filter the table.')}</div><div class="arch-num ${c.col}">${(+a.count).toLocaleString('en-IN')}</div></div>
+      </div>
+      <div class="arch-pct">${pct}% of all facilities</div>
+      <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${c.col==='grn'?'var(--grn)':c.col==='teal'?'var(--teal)':c.col==='amb'?'var(--amb)':'var(--red)'}"></div></div>
+      <div class="arch-meaning">${c.meaning}</div>
+    </div>`;
+  }).join('');
+}
+
+/* STATES */
+async function loadStates(){
+  try{
+    const r=await fetch(`${API}/api/states`).then(r=>r.json());
+    if(!r.ok)return;
+    const sel=document.getElementById('sf');
+    r.data.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;sel.appendChild(o);});
+  }catch{}
+}
+
+/* FACILITY TABLE */
+let dbt;
+function debSearch(){clearTimeout(dbt);dbt=setTimeout(()=>{curPage=1;loadFac();},380);}
+function filterArch(a,el){selArch=selArch===a?'':a;document.querySelectorAll('.arch-card').forEach(c=>c.classList.remove('sel'));if(selArch)el.classList.add('sel');curPage=1;loadFac();}
+function clearF(){selArch='';document.getElementById('si').value='';document.getElementById('sf').value='';document.querySelectorAll('.arch-card').forEach(c=>c.classList.remove('sel'));curPage=1;loadFac();}
+
+async function loadFac(){
+  document.getElementById('fac-body').innerHTML=`<div class="loading"><div class="spinner"></div>Querying cleaned dataset…</div>`;
+  const p=new URLSearchParams({page:curPage,pageSize:20,...(selArch&&{archetype:selArch}),...(document.getElementById('sf')?.value&&{state:document.getElementById('sf').value}),...(document.getElementById('si')?.value&&{search:document.getElementById('si').value})});
+  try{
+    const r=await fetch(`${API}/api/facilities?${p}`).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    renderFacTable(r.data);
+    document.getElementById('tc').textContent=`${r.data.length} shown · Page ${curPage}`;
+  }catch(e){
+    document.getElementById('fac-body').innerHTML=`<div class="loading" style="color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+}
+
+function renderFacTable(rows){
+  if(!rows.length){document.getElementById('fac-body').innerHTML=`<div class="empty"><div class="empty-ic">🔍</div><div>No facilities match this filter</div></div>`;document.getElementById('pg').innerHTML='';return;}
+  const ab=a=>{const m={'Verified Pillar':'b-grn','Hidden Gem':'b-teal','Confident Claimer':'b-amb','Ghost Facility':'b-red'};return`<span class="badge ${m[a]||'b-slt'}">${{'Verified Pillar':'🏅','Hidden Gem':'💎','Confident Claimer':'📣','Ghost Facility':'👻'}[a]||''} ${a||'Unknown'}</span>`;};
+  const tb=b=>{const m={'High Trust':'b-grn','Moderate Trust':'b-teal','Low Trust':'b-amb','Unreliable':'b-red'};return`<span class="badge ${m[b]||'b-slt'}">${b||'Unknown'}</span>`;};
+  const sc=s=>{const c=s<=10?'var(--grn)':s<=30?'var(--teal)':s<=60?'var(--amb)':'var(--red)';return`<div class="score-gauge"><div class="gauge-bar"><div class="gauge-fill" style="width:${s}%;background:${c}"></div></div><div class="gauge-val" style="color:${c}">${s}</div></div>`;};
+  const fmtDr=(n,suspect)=>{
+    if(n==null)return`<span style="color:var(--t4);font-size:12px">Not reported</span>`;
+    const v=(+n).toLocaleString('en-IN');
+    if(suspect)return`<span title="May be chain-level total, not single facility">${v} <span style="color:var(--amb);font-size:10px">⚠️ chain?</span></span>`;
+    return v;
+  };
+  const fmtN=(n)=>n!=null?(+n).toLocaleString('en-IN'):`<span style="color:var(--t4);font-size:12px">Not reported</span>`;
+  window._facRows=rows;
+  document.getElementById('fac-body').innerHTML=`
+    <table><thead><tr><th></th><th>Facility Name</th><th>Location</th><th>Type</th><th>Archetype</th><th>Trust Band</th><th>Pinocchio</th><th>Doctors</th><th>Beds</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`
+      <tr>
+        <td style="width:30px;text-align:center;cursor:pointer" onclick="event.stopPropagation();saveFromTable(${i})" title="Save to Planner">${isSaved(r.unique_id)?'⭐':'☆'}</td>
+        <td onclick="loadDV('${r.unique_id}')"><strong>${r.name||'Unnamed Facility'}</strong>${r.specialty_list_truncated?'<br><span style="font-size:10px;color:var(--amb)">✂️ Specialty list may be incomplete</span>':''}</td>
+        <td onclick="loadDV('${r.unique_id}')" style="color:var(--t3)">${[r.address_city,r.state].filter(Boolean).join(', ')||'<span style="color:var(--t4);font-size:12px">Location unknown</span>'}</td>
+        <td onclick="loadDV('${r.unique_id}')"><span class="badge b-slt">${r.facility_type||'clinic'}</span></td>
+        <td onclick="loadDV('${r.unique_id}')">${ab(r.archetype)}</td>
+        <td onclick="loadDV('${r.unique_id}')">${tb(r.trust_band)}</td>
+        <td onclick="loadDV('${r.unique_id}')" style="min-width:130px">${sc(r.pinocchio_score||0)}</td>
+        <td onclick="loadDV('${r.unique_id}')">${fmtDr(r.num_doctors, r.doctor_count_suspect)}</td>
+        <td onclick="loadDV('${r.unique_id}')">${fmtN(r.bed_capacity)}</td>
+      </tr>`).join('')}
+    </tbody></table>`;
+  document.getElementById('pg').innerHTML=`${curPage>1?`<button class="btn btn-g" onclick="chgPg(${curPage-1})">← Previous</button>`:''}<span>Page ${curPage}</span>${rows.length===20?`<button class="btn btn-g" onclick="chgPg(${curPage+1})">Next →</button>`:''}`;
+}
+function chgPg(p){curPage=p;loadFac();window.scrollTo(0,0);}
+
+/* DEEP DIVE */
+async function loadDV(id){
+  showPage('deepdive');
+  currentFacilityData=null; // clear until loaded
+  document.getElementById('dv-content').innerHTML=`<div class="loading"><div class="spinner"></div>Loading facility intelligence…</div>`;
+  try{
+    const r=await fetch(`${API}/api/facility/${id}`).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    currentFacilityData=r.data; // Store for AI chat context
+    renderDV(r.data);
+  }catch(e){document.getElementById('dv-content').innerHTML=`<div class="empty"><div class="empty-ic">⚠️</div><div>${e.message}</div></div>`;}
+}
+
+function renderDV(d){
+  const fmt=(n,def='—')=>n!=null?(+n).toLocaleString('en-IN'):def;
+  const str=(s,def='—')=>s&&s!=='null'&&s.trim()?s:def;
+  const sc=d.pinocchio_score||0;
+  const scColor=sc<=10?'var(--grn)':sc<=30?'var(--teal)':sc<=60?'var(--amb)':'var(--red)';
+  const scLabel=sc<=10?'Honest — Claims match data':sc<=30?'Slightly Inflated — Minor gaps':sc<=60?'Overclaimer — Multiple contradictions':'Misleading — Significant contradictions';
+  const archM={'Verified Pillar':'b-grn','Hidden Gem':'b-teal','Confident Claimer':'b-amb','Ghost Facility':'b-red'};
+  // Build claim checks with TEXT CITATIONS
+  const checks=[];
+  const fields = {
+    description: (d.description_snippet||'').toLowerCase(),
+    capability: (d.capability_snippet||'').toLowerCase(),
+    procedure: (d.procedure_snippet||'').toLowerCase(),
+    equipment: (d.equipment_snippet||'').toLowerCase()
+  };
+  // Helper: find keyword in fields, return citations
+  function findEvidence(keywords, label) {
+    const citations = [];
+    for (const [field, text] of Object.entries(fields)) {
+      if (!text || text === 'null') continue;
+      for (const kw of keywords) {
+        const idx = text.indexOf(kw.toLowerCase());
+        if (idx >= 0) {
+          const start = Math.max(0, idx - 30);
+          const end = Math.min(text.length, idx + kw.length + 30);
+          const excerpt = (start > 0 ? '…' : '') + text.substring(start, end).replace(new RegExp('(' + kw.replace(/[.*+?^${}()|[\]]/g, '$&') + ')', 'gi'), '<mark style="background:#fef08a;padding:0 2px;border-radius:2px">$1</mark>') + (end < text.length ? '…' : '');
+          citations.push({ field, excerpt });
+          break;
+        }
+      }
+    }
+    return citations;
+  }
+
+  function addCheck(claimed, claimName, keywords, structCheck, structLabel) {
+    if (!claimed) return;
+    const cites = findEvidence(keywords, claimName);
+    const structOk = structCheck;
+    const totalConfirm = cites.length + (structOk ? 1 : 0);
+    const totalChecked = 4 + 1; // 4 text fields + 1 structural
+    let signal, sigColor, sigIcon;
+    if (totalConfirm >= 3) { signal = 'STRONG EVIDENCE'; sigColor = 'var(--grn)'; sigIcon = '✅'; }
+    else if (totalConfirm >= 1) { signal = 'PARTIAL EVIDENCE'; sigColor = 'var(--amb)'; sigIcon = '⚠️'; }
+    else { signal = 'WEAK / NO EVIDENCE'; sigColor = 'var(--red)'; sigIcon = '❌'; }
+    checks.push({ name: claimName, signal, sigColor, sigIcon, citations: cites, structOk, structLabel, totalConfirm, totalChecked });
+  }
+
+  addCheck(d.claims_247, '24/7 Emergency Care', ['24/7','24 hour','24-hour','round the clock','emergency'], d.num_doctors_clean >= 3, 'Doctors ≥ 3');
+  addCheck(d.claims_icu, 'ICU / Intensive Care', ['icu','intensive care','critical care','ventilator'], d.num_doctors_clean >= 2, 'Doctors ≥ 2');
+  addCheck(d.claims_nicu, 'NICU / Neonatal Care', ['nicu','neonatal','newborn','neonat'], d.has_ventilator, 'Has ventilator');
+  addCheck(d.claims_cardiology, 'Cardiology', ['cardiology','cardiac','heart','cardiovascular','angioplasty'], d.has_cardiac_equip, 'Has cardiac equipment');
+  addCheck(d.claims_oncology, 'Oncology', ['oncology','cancer','chemotherapy','radiation therapy','tumor'], d.has_onco_equip, 'Has onco equipment');
+  addCheck(d.claims_multispecialty, 'Multispecialty', ['multispecialt','multi-specialt','multi specialt'], d.specialty_count >= 10, 'Specialties ≥ 10');
+
+  const verifiedCount = checks.filter(c => c.totalConfirm >= 2).length;
+  const totalChecks = checks.length || 1;
+
+  // Uncertainty-aware trust signal
+  const trustSignal = checks.length === 0 ? 'No claims to verify' :
+    verifiedCount === checks.length ? `All ${verifiedCount} claims have supporting evidence` :
+    `${verifiedCount} of ${checks.length} claims verified in text fields`;
+  const trustSigColor = verifiedCount === checks.length ? 'var(--grn)' : verifiedCount >= checks.length/2 ? 'var(--amb)' : 'var(--red)';
+
+  if(d.specialty_list_truncated)checks.push({name:'Specialty Count (50 listed)',signal:'DATA TRUNCATED',sigColor:'var(--amb)',sigIcon:'✂️',citations:[],structOk:false,structLabel:'Exactly 50 — scraping cap',totalConfirm:0,totalChecked:1});
+  if(d.type_id_was_dirty)checks.push({name:'Facility Type Field',signal:'DATA CORRUPTED',sigColor:'var(--slt)',sigIcon:'🐛',citations:[],structOk:false,structLabel:'Raw: "'+((d.facilityTypeId||'').substring(0,40))+'"',totalConfirm:0,totalChecked:1});
+
+  // Source URL provenance
+  const urls = d.source_urls_parsed || [];
+  const cats = {};
+  urls.forEach(u=>{cats[u.category]=(cats[u.category]||0)+1;});
+  const govCount = (cats['government']||0);
+  const acadCount = (cats['academic']||0);
+  const provenanceScore = govCount >= 2 ? 'High' : govCount >= 1 || acadCount >= 1 ? 'Moderate' : urls.length >= 3 ? 'Fair' : 'Low';
+  const provBadge = provenanceScore==='High'?'b-grn':provenanceScore==='Moderate'?'b-teal':provenanceScore==='Fair'?'b-amb':'b-red';
+
+  // Temporal decay
+  const decayScore = d.decay_score || 0;
+  const daysStale = d.days_since_update;
+  const decayColor = decayScore<=10?'var(--grn)':decayScore<=30?'var(--teal)':decayScore<=60?'var(--amb)':'var(--red)';
+  const decayLabel = decayScore<=10?'Fresh — Updated within 1 year':decayScore<=30?'Recent — Updated within 2 years':decayScore<=60?'Stale — Not updated in 2-4 years':'Ghost Risk — No update in 4+ years';
+
+  // Pre-build evidence HTML to avoid nested template literal issues
+  var checksHtml = '';
+  checks.forEach(function(c) {
+    var citesHtml = '';
+    if (c.citations.length) {
+      citesHtml = '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px">';
+      c.citations.forEach(function(ci) {
+        citesHtml += '<div style="display:flex;gap:8px;align-items:flex-start;padding:6px 10px;background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.15);border-radius:6px"><span style="font-size:10px;font-weight:700;color:var(--grn);text-transform:uppercase;min-width:70px;flex-shrink:0">✅ '+ci.field+'</span><span style="font-size:12px;color:var(--t2);line-height:1.5">'+ci.excerpt+'</span></div>';
+      });
+      citesHtml += '</div>';
+    }
+    var missingFields = ['description','capability','procedure','equipment'].filter(function(f){return !c.citations.find(function(ci){return ci.field===f}) && fields[f] && fields[f]!=='null' && fields[f].trim()});
+    var missBadges = '';
+    if (missingFields.length) {
+      missBadges = '<div style="display:flex;gap:4px;flex-wrap:wrap">';
+      missingFields.forEach(function(f){missBadges += '<span style="font-size:10px;padding:2px 6px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--t4)">⊘ '+f+': not mentioned</span>';});
+      missBadges += '</div>';
+    }
+    checksHtml += '<div style="padding:14px 16px;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:16px">'+c.sigIcon+'</span><strong style="font-size:13px">'+c.name+'</strong><span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:'+c.sigColor+'15;color:'+c.sigColor+'">'+c.signal+'</span><span style="font-size:10px;color:var(--t4);margin-left:auto">'+c.totalConfirm+' of '+c.totalChecked+' sources confirm</span></div>'+citesHtml+missBadges+'<div style="margin-top:6px;font-size:11px;color:var(--t3)">Structural check: <strong style="color:'+(c.structOk?'var(--grn)':'var(--red)')+'">'+( c.structOk?'✓ Pass':'✗ Fail')+'</strong> ('+c.structLabel+')</div></div>';
+  });
+  var evidenceVerified = checks.filter(function(c){return c.totalConfirm>=2}).length;
+  var evidenceTotal = checks.filter(function(c){return c.signal!=='DATA TRUNCATED'&&c.signal!=='DATA CORRUPTED'}).length;
+
+  document.getElementById('dv-content').innerHTML=`
+    <div class="dv-hero">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div style="flex:1">
+          <div class="dv-name">${d.name||'Unnamed Facility'}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            <span class="badge ${archM[d.archetype]||'b-slt'}">${d.archetype||'Unknown'}</span>
+            <span class="badge" style="background:${trustSigColor}20;color:${trustSigColor};border-color:${trustSigColor}40">${trustSignal}</span>
+            <button class="save-btn ${isSaved(d.unique_id)?'saved':''}" onclick="toggleSaveDV()">${isSaved(d.unique_id)?'⭐ Saved':'☆ Save to Planner'}</button>
+            <button class="audit-btn" id="audit-trigger" onclick="runAudit()">🤖 AI Trust Audit</button>
+          </div>
+          <div class="dv-meta">
+            <span class="dv-meta-i">📍 ${[d.address_city,d.state_clean||d.state].filter(s=>s&&s!=='null'&&s.trim()).join(', ')||'Location not available'}</span>
+            <span class="dv-meta-i">🏥 ${d.facility_type_clean||d.facility_type||'clinic'}</span>
+            ${d.yearEstablished&&d.yearEstablished!=='null'?`<span class="dv-meta-i">📆 Est. ${d.yearEstablished}</span>`:''}
+            ${d.phone&&d.phone!=='null'?`<span class="dv-meta-i">📞 <a href="tel:${d.phone}">${d.phone}</a></span>`:''}
+          </div>
+        </div>
+        <div class="stat-pills">
+          <div class="stat-pill"><div class="stat-pill-v spv-teal">${d.num_doctors_clean!=null?(+d.num_doctors_clean).toLocaleString('en-IN'):'N/A'}</div><div class="stat-pill-l">Doctors</div></div>
+          <div class="stat-pill"><div class="stat-pill-v spv-grn">${d.bed_capacity!=null?(+d.bed_capacity).toLocaleString('en-IN'):'N/A'}</div><div class="stat-pill-l">Beds</div></div>
+          <div class="stat-pill"><div class="stat-pill-v spv-amb">${d.specialty_count||'0'}</div><div class="stat-pill-l">Specialties</div></div>
+          <div class="stat-pill"><div class="stat-pill-v">${urls.length||d.source_url_count||0}</div><div class="stat-pill-l">Sources</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pinocchio Score -->
+    <div class="card" style="margin-bottom:14px;padding:20px">
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="font-size:48px;position:relative">🤥
+          <div style="position:absolute;top:58%;left:100%;height:5px;width:${Math.max(sc*1.8,4)}px;background:linear-gradient(90deg,var(--amb),${scColor});border-radius:0 3px 3px 0;transition:width 1s ease"></div>
+        </div>
+        <div style="flex:1;margin-left:${Math.max(sc*1.8+16,16)}px">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:${scColor}">${sc}/100</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t2);margin:3px 0">Overclaiming Risk: ${sc<=10?'Low':sc<=30?'Moderate':sc<=60?'High':'Very High'} <span style="font-weight:400;color:var(--t3)">— ${evidenceVerified} of ${evidenceTotal} claims have text evidence</span></div>
+          <div class="gauge-bar" style="margin-top:8px;height:10px"><div class="gauge-fill" style="width:${sc}%;background:${scColor}"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evidence Triangulation with TEXT CITATIONS -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd">
+        <span class="card-ttl">🔍 Evidence Triangulation — Text Citations</span>
+        <span style="font-size:11px;color:var(--t3)">${checks.length} claims checked across 4 text fields + structural data</span>
+      </div>
+      ${checks.length?'<div style="padding:0">'+checksHtml+'</div>':'<div style="padding:16px;font-size:13px;color:var(--t3)">No capability claims detected.</div>'}
+    </div>
+
+    <!-- Temporal Trust Decay -->
+    <div class="card" style="margin-bottom:14px;padding:20px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t4);margin-bottom:12px">📅 Temporal Trust Timeline</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:var(--t3);min-width:50px">
+          ${d.yearEstablished&&d.yearEstablished!=='null'?`Est. ${d.yearEstablished}`:'Unknown'}
+        </div>
+        <div style="flex:1;position:relative;height:24px;background:linear-gradient(90deg,var(--grn-l),var(--amb-d),var(--red-d));border-radius:6px;border:1px solid var(--border);overflow:hidden">
+          <div style="position:absolute;left:0;top:0;height:100%;width:${100-decayScore}%;background:var(--grn);opacity:0.25;border-radius:6px 0 0 6px"></div>
+          <div style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:${decayColor}">${decayLabel}</div>
+        </div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:${decayColor};min-width:70px;text-align:right">
+          ${d.recency_of_page_update&&d.recency_of_page_update!=='null'?d.recency_of_page_update.substring(0,10):'No data'}
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--t3)">
+        ${daysStale!=null?`<strong>${Math.round(daysStale/365*10)/10} years</strong> since last web update. `:''}
+        ${d.post_count!=null?`<strong>${d.post_count}</strong> social posts tracked. `:''}
+        ${d.social_platforms!=null?`Present on <strong>${d.social_platforms}</strong> social platforms.`:''}
+        ${decayScore>=60?' <span style="color:var(--red);font-weight:700">⚠️ This facility may be closed or significantly changed since last update.</span>':''}
+      </div>
+    </div>
+
+    <!-- Raw Data Evidence (text fields) -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd"><span class="card-ttl">📝 Raw Data Evidence — Free-Text Fields</span><span class="card-meta">This is the actual text the evidence checks are scanning</span></div>
+      <div style="padding:0">
+        ${d.description_snippet&&d.description_snippet!=='null'&&d.description_snippet.trim()?`<div style="padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:4px">📄 Description</div><div style="font-size:12px;color:var(--t2);line-height:1.6">${d.description_snippet}${d.description_snippet.length>=798?'…':''}</div></div>`:''}
+        ${d.capability_snippet&&d.capability_snippet!=='null'&&d.capability_snippet.trim()?`<div style="padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:4px">🎯 Capabilities</div><div style="font-size:12px;color:var(--t2);line-height:1.6">${d.capability_snippet}${d.capability_snippet.length>=798?'…':''}</div></div>`:''}
+        ${d.procedure_snippet&&d.procedure_snippet!=='null'&&d.procedure_snippet.trim()?`<div style="padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:4px">🔬 Procedures</div><div style="font-size:12px;color:var(--t2);line-height:1.6">${d.procedure_snippet}${d.procedure_snippet.length>=798?'…':''}</div></div>`:''}
+        ${d.equipment_snippet&&d.equipment_snippet!=='null'&&d.equipment_snippet.trim()?`<div style="padding:12px 16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:4px">🏗️ Equipment</div><div style="font-size:12px;color:var(--t2);line-height:1.6">${d.equipment_snippet}${d.equipment_snippet.length>=798?'…':''}</div></div>`:''}
+        ${!((d.description_snippet&&d.description_snippet!=='null'&&d.description_snippet.trim())||(d.capability_snippet&&d.capability_snippet!=='null'&&d.capability_snippet.trim())||(d.procedure_snippet&&d.procedure_snippet!=='null'&&d.procedure_snippet.trim())||(d.equipment_snippet&&d.equipment_snippet!=='null'&&d.equipment_snippet.trim()))?'<div style="padding:16px;font-size:12px;color:var(--t4)">No free-text data available for this facility. Evidence checks cannot scan text fields.</div>':''}
+      </div>
+    </div>
+
+    <!-- Source URL Provenance Trail -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-hd">
+        <span class="card-ttl">🔗 Source URL Provenance Trail</span>
+        <span><span class="badge ${provBadge}">${provenanceScore} Provenance</span> <span class="card-meta" style="margin-left:6px">${urls.length} URLs</span></span>
+      </div>
+      <div style="padding:16px">
+        ${urls.length?`
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+            ${Object.entries(cats).map(([cat,cnt])=>{
+              const catColors={'government':'b-grn','academic':'b-teal','social':'b-amb','own-website':'b-teal','listing':'b-slt','commercial':'b-slt','healthcare':'b-teal'};
+              return `<span class="badge ${catColors[cat]||'b-slt'}">${cat}: ${cnt}</span>`;
+            }).join('')}
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto">
+            ${urls.map(u=>`
+              <div style="display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--bg3);border-radius:var(--rxs);border:1px solid var(--border)">
+                <span style="font-size:14px">${u.icon}</span>
+                <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t4);min-width:60px">${u.category}</span>
+                <a href="${u.url}" target="_blank" style="font-size:11px;color:var(--teal);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1" title="${u.url}">${u.url.replace(/^https?:\/\//,'').substring(0,80)}</a>
+              </div>
+            `).join('')}
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:var(--t3)">
+            ${govCount>=1?`<strong style="color:var(--grn)">✅ Government source</strong> — high trust. `:''}
+            ${acadCount>=1?`<strong style="color:var(--teal)">🎓 Academic source</strong> — research hospital. `:''}
+            ${urls.length<3?'⚠️ Few sources — limited scraping.':''}
+          </div>
+        `:`<div style="font-size:12px;color:var(--t3)">No source URLs. Minimal web presence — high uncertainty.</div>`}
+      </div>
+    </div>
+
+    <!-- AI Trust Audit Container -->
+    <div id="audit-container"></div>
+
+    <!-- Export Actions -->
+    <div style="display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <button class="export-btn" onclick="exportPDF()">📄 Export as PDF Report</button>
+      <button class="export-btn" style="background:linear-gradient(135deg,#6366f1,#4f46e5)" onclick="copyReport()">📋 Copy to Clipboard</button>
+    </div>
+  `;
+}
+
+/* ANOMALY LAB */
+async function loadAnom(){
+  try{
+    const r=await fetch(`${API}/api/anomalies`).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    anomData=r.data;
+    document.getElementById('dc').textContent=anomData.dirtyType?.length||'—';
+    document.getElementById('trc').textContent=anomData.truncated?.length||'—';
+    document.getElementById('2c').textContent=anomData.suspicious247?.length||'—';
+    document.getElementById('ic').textContent=anomData.suspiciousICU?.length||'—';
+    renderATab('dirty');
+  }catch(e){document.getElementById('anom-content').innerHTML=`<div class="empty"><div class="empty-ic">⚠️</div><div>${e.message}</div></div>`;}
+}
+
+function aTab(tab){
+  const tabs=['dirty','trunc','247','icu'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  curATab=tab;renderATab(tab);
+}
+
+function renderATab(tab){
+  if(!anomData)return;
+  const el=document.getElementById('anom-content');
+  const cfgs={
+    dirty:{rows:anomData.dirtyType,alert:'a-warn',ic:'💡',
+      insight:`<strong>What happened:</strong> The scraping pipeline stored latitude coordinates, MD5 hashes, and URL arrays in the "facilityTypeId" field instead of values like "hospital" or "clinic". Our clean view has fixed all ${anomData.dirtyType?.length} cases by inferring the correct type from the facility name and description. <br><br><strong>Why it matters:</strong> Without fixing this, any facility type filter in the app would silently exclude these ${anomData.dirtyType?.length} facilities.`,
+      headers:['Facility Name','Location','Original Raw Value (dirty)','Cleaned To'],
+      rowFn:r=>[r.name,`${r.address_city||''}${r.state?', '+r.state:''}`,`<code style="font-size:11px;background:var(--bg3);border:1px solid var(--border);padding:2px 6px;border-radius:4px;color:var(--amb)">${(r.raw_type_id||'').substring(0,50)}${(r.raw_type_id||'').length>50?'…':''}</code>`,`<span class="badge b-grn">${r.facility_type_clean||'—'}</span>`]},
+    trunc:{rows:anomData.truncated,alert:'a-info',ic:'✂️',
+      insight:`<strong>The smoking gun:</strong> Facilities with exactly 50 specialties — ${anomData.truncated?.length} in this sample alone — are 51× more common than facilities with 49. That spike is statistically impossible if the data were real. The scraping pipeline hit a hard limit at 50 entries.<br><br><strong>For planners:</strong> These facilities may offer MORE services than shown. Do not use specialty count to decide patient routing for these ${anomData.truncated?.length} facilities without a direct call.`,
+      headers:['Facility Name','Location','Specialty Count','Doctors'],
+      rowFn:r=>[r.name,`${r.address_city||''}${r.state?', '+r.state:''}`,`<span class="badge b-amb">50 ✂️ Truncated</span>`,r.num_doctors!=null?(+r.num_doctors).toLocaleString():'—']},
+    '247':{rows:anomData.suspicious247,alert:'a-warn',ic:'🚨',
+      insight:`<strong>Patient safety risk:</strong> A 24/7 emergency room typically needs 6+ rotating staff for safe continuous operation. These ${anomData.suspicious247?.length} facilities claim 24/7 emergency services but list fewer than 3 doctors total. That's not enough for safe emergency care.<br><br><strong>Action required:</strong> Before any of these are added to emergency referral networks, a physical verification visit or at minimum a staffing audit is required.`,
+      headers:['Facility Name','Location','Doctors Listed','Risk'],
+      rowFn:r=>[r.name,`${r.address_city||''}${r.state?', '+r.state:''}`,`<strong style="color:var(--red)">${r.num_doctors!=null?(+r.num_doctors):0}</strong>`,`<span class="badge b-red">⚠️ Verify Staffing</span>`]},
+    icu:{rows:anomData.suspiciousICU,alert:'a-warn',ic:'🚨',
+      insight:`<strong>Critical risk:</strong> These ${anomData.suspiciousICU?.length} facilities claim ICU capability but list fewer than 2 doctors. An ICU requires 24/7 intensivist coverage — one doctor cannot safely manage ICU patients alone while handling all other cases.<br><br><strong>If a critically ill patient is sent here:</strong> They may arrive to find an ICU that cannot function. This is a life-threatening data quality issue.`,
+      headers:['Facility Name','Location','Doctors Listed','Risk Level'],
+      rowFn:r=>[r.name,`${r.address_city||''}${r.state?', '+r.state:''}`,`<strong style="color:var(--red)">${r.num_doctors!=null?(+r.num_doctors):0}</strong>`,`<span class="badge b-red">🚨 Critical Risk</span>`]},
+  };
+  const cfg=cfgs[tab];
+  if(!cfg?.rows?.length){el.innerHTML=`<div class="empty"><div class="empty-ic">✅</div><div>No anomalies in this category</div></div>`;return;}
+  el.innerHTML=`
+    <div class="alert ${cfg.alert}"><span style="font-size:18px">${cfg.ic}</span><div>${cfg.insight}</div></div>
+    <div class="card">
+      <div class="card-hd"><span class="card-ttl">${cfg.rows.length} Records — Click any row for full facility profile</span><span class="card-meta">${cfg.rows.length} found</span></div>
+      <table><thead><tr>${cfg.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${cfg.rows.map(r=>`<tr onclick="loadDV('${r.unique_id}')">${cfg.rowFn(r).map(v=>`<td>${v||'—'}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>`;
+}
+
+/* HIDDEN GEMS */
+async function loadGems(){
+  window._gl=true;
+  try{
+    const r=await fetch(`${API}/api/hidden-gems`).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    const el=document.getElementById('gems-content');
+    if(!r.data.length){el.innerHTML=`<div class="empty"><div class="empty-ic">💎</div><div>No hidden gems found</div></div>`;return;}
+    el.innerHTML=`
+      <div class="alert a-info"><span>💡</span><div><strong>Why these are "gems":</strong> Each hospital below has 50+ doctors and 20+ equipment types — proving real operational capacity — but fewer than 100 social media followers. A patient searching online would never find them. A planner relying on digital presence metrics would overlook them entirely. <strong>These are exactly the facilities that should be in public health referral networks.</strong></div></div>
+      <div class="gems-grid">
+        ${r.data.map(g=>{
+          const avgDr=100;const avgEq=30;const drPct=Math.min(((+g.num_doctors/avgDr)*100),100);const eqPct=Math.min(((+g.equipment_count/avgEq)*100),100);
+          return `<div class="gem-card" onclick="loadDV('${g.unique_id}')">
+            <div class="gem-name">${g.name}</div>
+            <div class="gem-loc">📍 ${[g.address_city,g.state].filter(Boolean).join(', ')||'—'}</div>
+            <div class="gem-stats">
+              <div class="gem-stat"><div class="gem-stat-v">${g.num_doctors!=null?(+g.num_doctors).toLocaleString():'—'}</div><div class="gem-stat-l">Doctors</div></div>
+              <div class="gem-stat"><div class="gem-stat-v">${g.bed_capacity!=null?(+g.bed_capacity).toLocaleString():'—'}</div><div class="gem-stat-l">Beds</div></div>
+              <div class="gem-stat"><div class="gem-stat-v">${g.equipment_count||'—'}</div><div class="gem-stat-l">Equipment</div></div>
+            </div>
+            <div class="mini-bar" style="margin-top:10px"><div class="mini-bar-fill" style="width:${drPct}%;background:var(--teal)"></div></div>
+            <div style="font-size:10px;color:var(--t4);margin-bottom:6px">Doctor capacity vs avg (${avgDr})</div>
+            <div class="gem-foot">📱 Only ${g.followers!=null?(+g.followers).toLocaleString():'0'} followers — invisible online${g.officialPhone&&g.officialPhone!=='null'?`<span style="margin-left:auto">📞 ${g.officialPhone}</span>`:''}</div>
+            <div class="gem-context">Pinocchio Score: ${g.pinocchio_score||0}/100 — data is internally consistent</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  }catch(e){document.getElementById('gems-content').innerHTML=`<div class="empty"><div class="empty-ic">⚠️</div><div>${e.message}</div></div>`;}
+}
+
+/* REFERRAL FINDER */
+async function findRef(){
+  const cond=document.getElementById('cond').value,pin=document.getElementById('pin').value.trim();
+  const el=document.getElementById('ref-res');
+  el.innerHTML=`<div class="loading"><div class="spinner"></div>Finding verified hospitals…</div>`;
+  try{
+    const r=await fetch(`${API}/api/referrals`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({condition:cond,pincode:pin})}).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    if(!r.data.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🔍</div><div style="font-size:14px;font-weight:600;color:var(--t2)">No verified hospitals found</div><div style="font-size:13px;color:var(--t3);margin-top:6px">Try a different condition or leave the pincode blank to search all of India.</div></div>`;return;}
+    el.innerHTML=`
+      <div class="alert a-ok" style="margin-bottom:12px"><span>✅</span><div><strong>${r.data.length} verified hospitals found.</strong> Every result has the specialty confirmed by matching equipment — not just claimed. Ghost Facilities automatically excluded. Ranked by trust quality then doctor count.</div></div>
+      <div class="ref-res">
+        ${r.data.map((h,i)=>`
+          <div class="ref-item" onclick="loadDV('${h.unique_id}')">
+            <div class="ref-rank">#${i+1}</div>
+            <div class="ref-info">
+              <div class="ref-name">${h.name}</div>
+              <div class="ref-loc">📍 ${[h.address_city,h.state].filter(Boolean).join(', ')||'—'}${h.officialPhone&&h.officialPhone!=='null'?` · 📞 ${h.officialPhone}`:''}</div>
+              <div class="ref-trust">Trust Band: <strong style="color:${{High:'var(--grn)',Moderate:'var(--teal)',Low:'var(--amb)',Unreliable:'var(--red)'}[h.trust_band?.split(' ')[0]]||'var(--t2)'}">${h.trust_band||'—'}</strong> · Pinocchio Score: ${h.pinocchio_score||0}/100</div>
+            </div>
+            <div class="ref-stats">
+              <div class="rs"><div class="rs-v">${h.num_doctors!=null?(+h.num_doctors).toLocaleString():'—'}</div><div class="rs-l">Doctors</div></div>
+              <div class="rs"><div class="rs-v">${h.bed_capacity!=null?(+h.bed_capacity).toLocaleString():'—'}</div><div class="rs-l">Beds</div></div>
+              <div class="rs"><div class="rs-v">${h.equipment_count||'—'}</div><div class="rs-l">Equip.</div></div>
+            </div>
+            <span class="badge b-grn" style="flex-shrink:0">✅ Specialty Verified</span>
+          </div>`).join('')}
+      </div>`;
+  }catch(e){el.innerHTML=`<div class="empty"><div class="empty-ic">⚠️</div><div>${e.message}</div></div>`;}
+}
+
+/* PLANNER WORKSPACE */
+function getPlanner(){try{return JSON.parse(localStorage.getItem('planner'))||{}}catch{return{}}}
+function savePlanner(pl){localStorage.setItem('planner',JSON.stringify(pl))}
+function isSaved(id){return !!getPlanner()[id]}
+
+function toggleSave(id,meta){
+  const pl=getPlanner();
+  if(pl[id]){delete pl[id]}
+  else{pl[id]={...meta,verdict:'pending',notes:'',savedAt:new Date().toISOString()}}
+  savePlanner(pl);
+  if(document.getElementById('page-cmd')?.classList.contains('active'))loadFac();
+}
+
+function saveFromTable(idx){
+  const r=window._facRows?.[idx];
+  if(!r)return;
+  toggleSave(r.unique_id,{name:r.name||'Unnamed',city:r.address_city||'',state:r.state||'',type:r.facility_type||'clinic',archetype:r.archetype||'Unknown',pinocchio:r.pinocchio_score||0,doctors:r.num_doctors,beds:r.bed_capacity,trust:r.trust_band||'Unknown'});
+}
+
+function toggleSaveDV(){
+  if(!currentFacilityData)return;
+  const d=currentFacilityData;
+  const pl=getPlanner();
+  if(pl[d.unique_id]){delete pl[d.unique_id]}
+  else{pl[d.unique_id]={name:d.name||'Unnamed',city:d.address_city||'',state:d.state_clean||d.state||'',type:d.facility_type_clean||'clinic',archetype:d.archetype||'Unknown',pinocchio:d.pinocchio_score||0,doctors:d.num_doctors_clean,beds:d.bed_capacity,trust:d.trust_band||'Unknown',verdict:'pending',notes:'',savedAt:new Date().toISOString()}}
+  savePlanner(pl);
+  renderDV(d); // re-render to update save button
+}
+
+let plFilter='all';
+function filterPlanner(f){plFilter=f;renderPlanner()}
+
+function renderPlanner(){
+  const pl=getPlanner();
+  const all=Object.entries(pl);
+  const stats={total:all.length,approved:0,flagged:0,rejected:0,pending:0};
+  all.forEach(([,v])=>{if(v.verdict==='approved')stats.approved++;else if(v.verdict==='flagged')stats.flagged++;else if(v.verdict==='rejected')stats.rejected++;else stats.pending++});
+
+  document.getElementById('pl-stats').innerHTML=`
+    <div class="planner-stat"><div class="ps-v">${stats.total}</div><div class="ps-l">Total Saved</div></div>
+    <div class="planner-stat"><div class="ps-v" style="color:var(--grn)">${stats.approved}</div><div class="ps-l">✅ Approved</div></div>
+    <div class="planner-stat"><div class="ps-v" style="color:var(--amb)">${stats.flagged}</div><div class="ps-l">⚠️ Flagged</div></div>
+    <div class="planner-stat"><div class="ps-v" style="color:var(--red)">${stats.rejected}</div><div class="ps-l">❌ Rejected</div></div>
+    <div class="planner-stat"><div class="ps-v" style="color:var(--t3)">${stats.pending}</div><div class="ps-l">⏳ Pending</div></div>
+  `;
+
+  let filtered=all;
+  if(plFilter!=='all')filtered=all.filter(([,v])=>(v.verdict||'pending')===plFilter);
+
+  if(!filtered.length){
+    document.getElementById('pl-list').innerHTML=`<div class="empty"><div class="empty-ic">${all.length?'🔍':'📋'}</div><div>${all.length?'No facilities match this filter':'No facilities saved yet. Click ☆ in the Explorer or Deep Dive to save.'}</div></div>`;
+    return;
+  }
+
+  document.getElementById('pl-list').innerHTML=filtered.map(([id,f])=>{
+    const vClass=f.verdict==='approved'?'v-approve':f.verdict==='flagged'?'v-flag':f.verdict==='rejected'?'v-reject':'';
+    const vLabel=f.verdict==='approved'?'✅ Approved':f.verdict==='flagged'?'⚠️ Flagged':f.verdict==='rejected'?'❌ Rejected':'⏳ Pending';
+    const pColor=(f.pinocchio||0)<=10?'var(--grn)':(f.pinocchio||0)<=30?'var(--teal)':(f.pinocchio||0)<=60?'var(--amb)':'var(--red)';
+    return `<div class="pl-card" data-id="${id}">
+      <div class="pl-header">
+        <div>
+          <div class="pl-name" onclick="loadDV('${id}')">${f.name||'Unnamed Facility'}</div>
+          <div class="pl-meta">📍 ${[f.city,f.state].filter(Boolean).join(', ')||'Location unknown'} · 🏥 ${f.type||'clinic'} · ${f.archetype||'Unknown'}</div>
+          <div class="pl-meta" style="margin-top:4px">
+            <span style="color:${pColor};font-weight:700">Pinocchio: ${f.pinocchio||0}/100</span>
+            · Doctors: ${f.doctors!=null?f.doctors:'N/A'}
+            · Beds: ${f.beds!=null?f.beds:'N/A'}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <span class="badge ${vClass?'b-'+vClass.replace('v-',''):'b-slt'}" style="margin-bottom:4px">${vLabel}</span>
+          <div class="pl-meta">Saved ${new Date(f.savedAt).toLocaleDateString()}</div>
+        </div>
+      </div>
+      <div class="pl-verdicts">
+        <span style="font-size:11px;color:var(--t4);margin-right:4px">Verdict:</span>
+        <button class="pl-vbtn v-approve ${f.verdict==='approved'?'active':''}" onclick="setVerdict('${id}','approved')">✅ Approve</button>
+        <button class="pl-vbtn v-flag ${f.verdict==='flagged'?'active':''}" onclick="setVerdict('${id}','flagged')">⚠️ Flag</button>
+        <button class="pl-vbtn v-reject ${f.verdict==='rejected'?'active':''}" onclick="setVerdict('${id}','rejected')">❌ Reject</button>
+      </div>
+      <textarea class="pl-notes" placeholder="Add audit notes…" onchange="saveNote('${id}',this.value)">${f.notes||''}</textarea>
+      <div class="pl-actions">
+        <button class="pl-rm" onclick="removeSaved('${id}')">🗑️ Remove</button>
+        <button class="save-btn" onclick="loadDV('${id}')" style="margin-left:auto">🔍 Deep Dive</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setVerdict(id,v){const pl=getPlanner();if(pl[id]){pl[id].verdict=v;savePlanner(pl);renderPlanner()}}
+function saveNote(id,text){const pl=getPlanner();if(pl[id]){pl[id].notes=text;savePlanner(pl)}}
+function removeSaved(id){const pl=getPlanner();delete pl[id];savePlanner(pl);renderPlanner()}
+
+function exportCSV(){
+  const pl=getPlanner();
+  const entries=Object.entries(pl);
+  if(!entries.length){alert('No facilities saved to export.');return;}
+  const header='ID,Name,City,State,Type,Archetype,Pinocchio Score,Doctors,Beds,Trust Band,Verdict,Notes,Saved Date\n';
+  const rows=entries.map(([id,f])=>{
+    const esc=s=>`"${String(s||'').replace(/"/g,'""')}"`;
+    return [id,esc(f.name),esc(f.city),esc(f.state),esc(f.type),esc(f.archetype),f.pinocchio||0,f.doctors||'',f.beds||'',esc(f.trust),esc(f.verdict),esc(f.notes),esc(f.savedAt)].join(',');
+  }).join('\n');
+  const blob=new Blob([header+rows],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`arogyasetu_planner_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+}
+
+/* ── AI TRUST AUDIT AGENT ──────────────────────────────────────────────── */
+async function runAudit(){
+  if(!currentFacilityData)return;
+  const btn=document.getElementById('audit-trigger');
+  if(btn){btn.disabled=true;btn.innerHTML='⏳ Agent Running...';}
+  const ct=document.getElementById('audit-container');
+  ct.innerHTML=`<div class="audit-card">
+    <div class="audit-head"><span class="ah-title">🤖 AI Trust Audit Agent</span><span class="ah-badge" style="background:rgba(255,255,255,.2);color:#fff">Running…</span></div>
+    <div class="audit-body">
+      <div class="agent-steps" id="audit-steps">
+        <div class="ag-step running"><span class="ag-ic">🗄️</span> Retrieving facility data</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">🔗</span> Cross-referencing peers</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">🧠</span> LLM Audit Analysis</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">📋</span> Final Report</div>
+      </div>
+      <div class="loading"><div class="spinner"></div>Multi-step agent analyzing facility trust…</div>
+    </div>
+  </div>`;
+
+  try{
+    const r=await fetch(API+'/api/ai/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({facilityContext:currentFacilityData})}).then(r=>r.json());
+    if(!r.ok)throw new Error(r.error);
+    renderAudit(r.data);
+  }catch(e){
+    ct.innerHTML=`<div class="audit-card"><div class="audit-head"><span class="ah-title">🤖 AI Trust Audit Agent</span><span class="ah-badge ah-unreliable">Error</span></div><div class="audit-body"><div style="color:var(--red)">⚠️ ${e.message}</div></div></div>`;
+  }
+  if(btn){btn.disabled=false;btn.innerHTML='🤖 Generate AI Trust Audit';}
+}
+
+function renderAudit(data){
+  const a=data.audit||{};
+  const steps=data.steps||[];
+  const verdictClass='ah-'+(a.trust_verdict||'unknown').toLowerCase();
+  const toolIcons={'databricks_sql':'🗄️','foundation_model':'🧠','agent_synthesizer':'📋'};
+
+  const stepsHtml=steps.map((s,i)=>`
+    <div class="ag-step ${s.status}">
+      <span class="ag-ic">${toolIcons[s.tool]||'🔧'}</span>
+      ${s.action}
+      <span class="ag-t">${s.duration}ms</span>
+    </div>
+    ${i<steps.length-1?'<span class="ag-arrow">→</span>':''}
+  `).join('');
+
+  const risksHtml=(a.risk_factors||[]).map(r=>`
+    <div class="risk-item">
+      <span class="risk-sev sev-${r.severity}">${r.severity}</span>
+      <strong>${r.factor}</strong>
+      <div style="margin-top:2px;color:var(--t3);font-size:11px">${r.evidence}</div>
+    </div>
+  `).join('')||'<div style="color:var(--t3);font-size:12px">No risk factors identified</div>';
+
+  const strengthsHtml=(a.strengths||[]).map(s=>`<div style="padding:4px 0;font-size:12px">✅ ${s}</div>`).join('')||'<div style="color:var(--t3);font-size:12px">No notable strengths</div>';
+
+  const recsHtml=(a.recommendations||[]).map(r=>`
+    <div class="risk-item">
+      <span class="risk-sev sev-${r.priority==='IMMEDIATE'?'CRITICAL':r.priority==='SHORT_TERM'?'HIGH':'MEDIUM'}">${r.priority}</span>
+      <strong>${r.action}</strong>
+      <div style="margin-top:2px;color:var(--t3);font-size:11px">${r.rationale}</div>
+    </div>
+  `).join('')||'';
+
+  document.getElementById('audit-container').innerHTML=`
+    <div class="audit-card">
+      <div class="audit-head">
+        <div>
+          <div class="ah-title">🤖 AI Trust Audit Report</div>
+          <div style="font-size:11px;opacity:.7;margin-top:2px">Generated in ${data.total_duration_ms}ms · ${data.tokens?.total_tokens||'?'} tokens · ${data.model||'LLM'}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="ah-badge ${verdictClass}">${(a.trust_verdict||'UNKNOWN').replace(/_/g,' ')}</span>
+          <span class="ah-badge" style="background:rgba(255,255,255,.15);color:#fff">Confidence: ${a.confidence_pct||'?'}%</span>
+        </div>
+      </div>
+      <div class="audit-body">
+        <div class="agent-steps">${stepsHtml}</div>
+        <div class="audit-exec">${a.executive_summary||'No summary available.'}</div>
+        <div class="audit-grid">
+          <div class="audit-section">
+            <h4>⚠️ Risk Factors</h4>
+            ${risksHtml}
+          </div>
+          <div class="audit-section">
+            <h4>💪 Strengths</h4>
+            ${strengthsHtml}
+          </div>
+          <div class="audit-section">
+            <h4>📋 Recommendations</h4>
+            ${recsHtml}
+          </div>
+          <div class="audit-section">
+            <h4>🔗 Peer Comparison</h4>
+            <div style="font-size:12px;color:var(--t2);line-height:1.5">${a.comparison_insight||'No comparison available.'}</div>
+            ${a.data_quality_notes?`<div style="margin-top:8px;font-size:11px;color:var(--t4);border-top:1px solid var(--border);padding-top:8px">📝 ${a.data_quality_notes}</div>`:''}
+          </div>
+        </div>
+        <div class="referral-box ${a.referral_safe?'ref-safe':'ref-unsafe'}">
+          <strong>${a.referral_safe?'✅ SAFE for Patient Referrals':'❌ NOT RECOMMENDED for Patient Referrals'}</strong>
+          <div style="margin-top:4px">${a.referral_explanation||''}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ── MISSION CONTROL PAGE LOGIC ────────────────────────────────────────── */
+let missionRunning = false;
+async function launchMission(type) {
+  if (missionRunning) return;
+  missionRunning = true;
+  const state = document.getElementById('m-state')?.value || '';
+  const custom = document.getElementById('m-custom')?.value?.trim() || '';
+  if (type === 'custom' && !custom) { missionRunning = false; return alert('Please describe your mission'); }
+  
+  const labels = {emergency_audit:'🚑 Emergency Care Audit',ghost_investigation:'👻 Ghost Facility Investigation',scheme_eligibility:'🏛️ Govt Scheme Eligibility',nicu_referral:'👶 NICU Referral Safety',custom:'🎯 Custom Mission'};
+  const container = document.getElementById('mission-results');
+  
+  container.innerHTML = `<div class="brief-card">
+    <div class="brief-header">
+      <div style="font-weight:800;font-size:16px">${labels[type]||'🎯 Mission'}${state?' — '+state:''}</div>
+      <div style="font-size:11px;opacity:.7;margin-top:4px">${custom||'Autonomous agent executing...'}</div>
+    </div>
+    <div class="brief-body">
+      <div class="agent-steps" id="m-steps">
+        <div class="ag-step running"><span class="ag-ic">🗄️</span> Scanning regional infrastructure</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">🔗</span> Gathering mission intelligence</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">🧠</span> Analyzing with Llama 3.3 70B</div>
+        <span class="ag-arrow">→</span>
+        <div class="ag-step"><span class="ag-ic">📋</span> Compiling policy brief</div>
+      </div>
+      <div class="loading"><div class="spinner"></div>Agent is autonomously querying Databricks Unity Catalog...</div>
+    </div>
+  </div>`;
+  container.scrollIntoView({behavior:'smooth',block:'start'});
+
+  try {
+    const body = {mission: type, state};
+    if (custom) body.customMission = custom;
+    const r = await fetch(API+'/api/ai/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
+    if (r.ok) renderMissionBrief(r.data, container);
+    else container.innerHTML = `<div class="card" style="padding:20px;color:var(--red)">⚠️ Mission failed: ${r.error}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div class="card" style="padding:20px;color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+  missionRunning = false;
+}
+
+function renderMissionBrief(data, container) {
+  const b = data.brief || {};
+  const steps = data.steps || [];
+  const toolIcons = {'databricks_sql':'🗄️','foundation_model':'🧠','policy_synthesizer':'📋'};
+  const classColors = {'FOR OFFICIAL USE':'#6366f1','PRIORITY':'#ef4444','ROUTINE':'#10b981'};
+
+  const stepsHtml = steps.map((s,i) => `
+    <div class="ag-step ${s.status}">
+      <span class="ag-ic">${toolIcons[s.tool]||'🔧'}</span>
+      ${s.action}
+      <span class="ag-t">${s.duration}ms</span>
+    </div>
+    ${i<steps.length-1?'<span class="ag-arrow">→</span>':''}`).join('');
+
+  const findingsHtml = (b.key_findings||[]).map(f => `
+    <div class="risk-item">
+      <span class="risk-sev sev-${f.severity}">${f.severity}</span>
+      <strong>${f.finding}</strong>
+      <div style="margin-top:4px;color:var(--t3);font-size:11px;line-height:1.5">${f.evidence||''}</div>
+    </div>`).join('');
+
+  const alertsHtml = (b.risk_alerts||[]).map(a => `
+    <div style="padding:10px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:8px;margin-bottom:8px">
+      <div style="font-weight:700;color:var(--red);font-size:13px">⚠️ ${a.risk}</div>
+      <div style="margin-top:4px;font-size:12px;color:var(--t3)">Affected population: ${a.affected_population||'—'}</div>
+      <div style="margin-top:4px;font-size:12px"><strong>Immediate action:</strong> ${a.immediate_action||'—'}</div>
+    </div>`).join('');
+
+  const recsHtml = (b.recommended_actions||[]).map(r => {
+    const pColors = {IMMEDIATE:'var(--red)','30_DAYS':'var(--amb)','90_DAYS':'#6366f1'};
+    return `<div class="risk-item">
+      <span class="risk-sev" style="background:${pColors[r.priority]||'var(--amb)'}20;color:${pColors[r.priority]||'var(--amb)'}">${(r.priority||'').replace(/_/g,' ')}</span>
+      <strong>${r.action}</strong>
+      <div style="margin-top:4px;font-size:11px;color:var(--t3);line-height:1.5">
+        <strong>Impact:</strong> ${r.impact||'—'}<br>
+        <strong>Responsible:</strong> ${r.responsible_authority||'—'}
+      </div>
+    </div>`;
+  }).join('');
+
+  const concernHtml = (b.facilities_of_concern||[]).map(f => `<span style="display:inline-block;padding:3px 10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:6px;font-size:11px;color:var(--red);margin:3px">❌ ${f}</span>`).join('');
+  const recFacHtml = (b.facilities_recommended||[]).map(f => `<span style="display:inline-block;padding:3px 10px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:6px;font-size:11px;color:var(--grn);margin:3px">✅ ${f}</span>`).join('');
+
+  container.innerHTML = `
+  <div class="brief-card">
+    <div class="brief-header">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px">📋 ${b.brief_title||data.mission}</div>
+          <div style="font-size:11px;opacity:.7;margin-top:4px">Generated in ${data.total_duration_ms}ms · ${data.tokens?.total_tokens||'?'} tokens · ${data.data_sources?.length||0} data sources</div>
+        </div>
+        <span style="padding:4px 14px;border-radius:100px;font-size:11px;font-weight:700;background:${classColors[b.classification]||'#6366f1'}30;color:#fff">${b.classification||'INTELLIGENCE BRIEF'}</span>
+      </div>
+    </div>
+    <div class="brief-body">
+      <!-- Agent Pipeline -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd"><span class="card-ttl">🤖 Agent Execution Pipeline</span><span class="badge b-grn">${steps.length} steps</span></div>
+        <div style="padding:14px">
+          <div class="agent-steps">${stepsHtml}</div>
+        </div>
+      </div>
+
+      <!-- Citations -->
+      <div style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:4px">
+        <span class="citation-badge">📊 Source: Databricks Unity Catalog</span>
+        <span class="citation-badge">🗄️ Table: facilities (10,088 records)</span>
+        <span class="citation-badge">🧠 Model: ${data.model||'Llama 3.3 70B'}</span>
+        ${(data.data_sources||[]).map(s=>`<span class="citation-badge">📁 ${s}</span>`).join('')}
+      </div>
+
+      <!-- Executive Summary -->
+      <div style="padding:16px;background:linear-gradient(135deg,rgba(99,102,241,.05),rgba(139,92,246,.05));border:1px solid rgba(99,102,241,.15);border-radius:10px;margin-bottom:16px">
+        <div style="font-weight:800;font-size:13px;color:#6366f1;margin-bottom:6px">EXECUTIVE SUMMARY</div>
+        <div style="font-size:14px;line-height:1.7;color:var(--t1)">${b.executive_summary||'No summary.'}</div>
+      </div>
+
+      ${b.situation_assessment?`
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd"><span class="card-ttl">📍 Situation Assessment</span></div>
+        <div style="padding:14px;font-size:13px;line-height:1.7;color:var(--t2)">${b.situation_assessment}</div>
+      </div>`:''}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <!-- Key Findings -->
+        <div class="card">
+          <div class="card-hd"><span class="card-ttl">🔍 Key Findings</span><span class="badge b-amb">${(b.key_findings||[]).length} findings</span></div>
+          <div style="padding:14px">${findingsHtml||'<span style="color:var(--t4)">No findings</span>'}</div>
+        </div>
+
+        <!-- Risk Alerts -->
+        <div class="card">
+          <div class="card-hd"><span class="card-ttl">🚨 Risk Alerts</span><span class="badge b-red">${(b.risk_alerts||[]).length} alerts</span></div>
+          <div style="padding:14px">${alertsHtml||'<span style="color:var(--t4)">No alerts</span>'}</div>
+        </div>
+      </div>
+
+      <!-- Recommended Actions -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-hd"><span class="card-ttl">📋 Recommended Actions</span><span class="badge b-grn">${(b.recommended_actions||[]).length} actions</span></div>
+        <div style="padding:14px">${recsHtml||'<span style="color:var(--t4)">No actions</span>'}</div>
+      </div>
+
+      <!-- Facilities -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card">
+          <div class="card-hd"><span class="card-ttl">🏥 Facilities of Concern</span></div>
+          <div style="padding:14px">${concernHtml||'<span style="color:var(--t4);font-size:12px">None identified</span>'}</div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span class="card-ttl">✅ Recommended Facilities</span></div>
+          <div style="padding:14px">${recFacHtml||'<span style="color:var(--t4);font-size:12px">None identified</span>'}</div>
+        </div>
+      </div>
+
+      ${b.data_limitations?`
+      <div style="padding:12px 16px;background:var(--bg3);border-radius:8px;margin-bottom:12px;font-size:12px;color:var(--t3)">
+        <strong>📝 Data Limitations & Caveats:</strong> ${b.data_limitations}
+      </div>`:''}
+
+      ${b.next_steps?`
+      <div style="padding:14px 16px;background:rgba(99,102,241,.04);border:1px solid rgba(99,102,241,.15);border-radius:8px;font-size:13px">
+        <strong style="color:#6366f1">▶ Next Steps:</strong> ${b.next_steps}
+      </div>`:''}
+    </div>
+  </div>`;
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  loadCmd();
+  // Auto-show tour on first visit
+  if(!localStorage.getItem('tour_seen')){
+    setTimeout(()=>startTour(),2500);
+  }
+});
+
+/* ═══════════════ GUIDED TOUR SYSTEM ═══════════════ */
+var tourStep = 0;
+var tourActive = false;
+const TOUR_STEPS = [
+  {
+    target: '#page-cmd .pg-title',
+    title: 'Welcome to ArogyaSetu AI',
+    body: 'This app helps <strong>two audiences</strong> make life-saving decisions:<br><br>🏛️ <strong>Government officials</strong> — find ghost hospitals, verify referral networks, detect data fraud at scale.<br>👨‍👩‍👧 <strong>Citizens & NGOs</strong> — verify if a hospital\'s claims are real before referring a patient.<br><br>Built on <strong>10,088 facilities</strong> across 28 states. Let us show you how.',
+    position: 'bottom'
+  },
+  {
+    target: '#kpi-grid',
+    title: 'Trust Metrics Dashboard',
+    body: 'Every number here is a <strong>live SQL query</strong> against the cleaned dataset. Hover any <strong>ⓘ icon</strong> to see exactly how it\'s calculated and why it matters. No black boxes.',
+    position: 'bottom'
+  },
+  {
+    target: '.fac-table',
+    title: 'Facility Explorer — Click Any Row',
+    body: 'Click any facility name to open the <strong>Deep Dive</strong> — our flagship feature. It runs <strong>evidence triangulation</strong> across 4 text fields, checks claims against structural data, and grades each claim as Strong/Partial/Weak.',
+    position: 'top'
+  },
+  {
+    target: '#nav-anomaly',
+    title: 'Anomaly Lab — Data Archaeology',
+    body: 'Real anomalies found by SQL queries: <strong>hospitals claiming ICU with zero doctors</strong>, specialty lists truncated at exactly 50, and facility IDs containing HTML garbage. Every anomaly is verified.',
+    position: 'bottom'
+  },
+  {
+    target: '#nav-gems',
+    title: 'Hidden Gems Finder',
+    body: 'Surfaces facilities with <strong>strong clinical capacity but near-zero online presence</strong>. These are the hospitals that government planners miss — found by cross-referencing doctor count, equipment, and social media data.',
+    position: 'bottom'
+  },
+  {
+    target: '#nav-ref',
+    title: 'Verified Referral Finder',
+    body: 'When a patient needs cardiac care in Mumbai, this finds hospitals where the claimed specialty is <strong>confirmed by matching equipment</strong> in the dataset. Ghost facilities with no equipment are excluded.',
+    position: 'bottom'
+  },
+  {
+    target: '#nav-mission',
+    title: '🎯 AI Policy Advisor — The Agent',
+    body: 'Ask a question like <em>"Which districts have the worst cardiac care gaps?"</em> and watch our <strong>multi-agent pipeline</strong>: SQL retrieval → cross-reference → Llama 3.3 70B analysis → structured intelligence brief with citations.',
+    position: 'bottom'
+  }
+];
+
+function startTour() {
+  tourStep = 0;
+  tourActive = true;
+  localStorage.setItem('tour_seen', '1');
+  showPage('cmd');
+  // Wait for page to render
+  setTimeout(()=>renderTourStep(), 400);
+}
+
+function renderTourStep() {
+  // Remove existing tour elements
+  document.querySelectorAll('.tour-backdrop,.tour-spotlight,.tour-tooltip').forEach(e=>e.remove());
+  if (!tourActive || tourStep >= TOUR_STEPS.length) { endTour(); return; }
+  
+  const step = TOUR_STEPS[tourStep];
+  const el = document.querySelector(step.target);
+  if (!el) { tourStep++; renderTourStep(); return; }
+  
+  // Scroll element into view
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  
+  setTimeout(() => {
+    const rect = el.getBoundingClientRect();
+    const pad = 12;
+    
+    // Backdrop
+    const bd = document.createElement('div');
+    bd.className = 'tour-backdrop';
+    bd.onclick = () => endTour();
+    document.body.appendChild(bd);
+    
+    // Spotlight
+    const sp = document.createElement('div');
+    sp.className = 'tour-spotlight';
+    sp.style.cssText = `top:${rect.top-pad+window.scrollY}px;left:${rect.left-pad}px;width:${rect.width+pad*2}px;height:${rect.height+pad*2}px;`;
+    document.body.appendChild(sp);
+    
+    // Tooltip
+    const tt = document.createElement('div');
+    tt.className = 'tour-tooltip';
+    
+    // Dots
+    let dotsHtml = '<div class="tour-dots">';
+    for (let i = 0; i < TOUR_STEPS.length; i++) {
+      dotsHtml += '<div class="tour-dot '+(i<tourStep?'done':i===tourStep?'active':'')+'"></div>';
+    }
+    dotsHtml += '</div>';
+    
+    tt.innerHTML = `
+      <div class="tour-header">
+        <div class="tour-step-badge">Step ${tourStep+1} of ${TOUR_STEPS.length}</div>
+        <div class="tour-title">${step.title}</div>
+      </div>
+      <div class="tour-body">${step.body}</div>
+      <div class="tour-footer">
+        ${dotsHtml}
+        <div class="tour-btns">
+          ${tourStep > 0 ? '<button class="tour-btn tour-btn-prev" onclick="prevTourStep()">← Back</button>' : '<button class="tour-btn tour-btn-skip" onclick="endTour()">Skip</button>'}
+          <button class="tour-btn tour-btn-next" onclick="nextTourStep()">${tourStep < TOUR_STEPS.length-1 ? 'Next →' : '✓ Start Exploring'}</button>
+        </div>
+      </div>`;
+    
+    // Position tooltip
+    const ttWidth = 360;
+    let ttTop, ttLeft;
+    if (step.position === 'bottom') {
+      ttTop = rect.bottom + pad + 16 + window.scrollY;
+      ttLeft = Math.max(16, Math.min(rect.left + rect.width/2 - ttWidth/2, window.innerWidth - ttWidth - 16));
+    } else {
+      ttTop = rect.top - pad - 16 + window.scrollY;
+      ttLeft = Math.max(16, Math.min(rect.left + rect.width/2 - ttWidth/2, window.innerWidth - ttWidth - 16));
+      // Will be positioned above, so we need to subtract height after render
+    }
+    tt.style.cssText = `top:${ttTop}px;left:${ttLeft}px;`;
+    document.body.appendChild(tt);
+    
+    // If positioned above, adjust after render
+    if (step.position === 'top') {
+      const ttRect = tt.getBoundingClientRect();
+      tt.style.top = (rect.top - pad - 16 - ttRect.height + window.scrollY) + 'px';
+    }
+  }, 300);
+}
+
+function nextTourStep() {
+  tourStep++;
+  if (tourStep >= TOUR_STEPS.length) { endTour(); return; }
+  renderTourStep();
+}
+
+function prevTourStep() {
+  if (tourStep > 0) tourStep--;
+  renderTourStep();
+}
+
+function endTour() {
+  tourActive = false;
+  document.querySelectorAll('.tour-backdrop,.tour-spotlight,.tour-tooltip').forEach(e=>e.remove());
+}
+
+/* ═══════════════ VOICE INPUT (Web Speech API) ═══════════════ */
+var voiceRecognition = null;
+var voiceActive = false;
+
+function toggleVoice() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    document.getElementById('voice-status').innerHTML = '⚠️ Voice input is not supported in this browser. Use Chrome for best results.';
+    return;
+  }
+  
+  if (voiceActive) {
+    stopVoice();
+    return;
+  }
+  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  voiceRecognition = new SpeechRecognition();
+  voiceRecognition.lang = document.getElementById('voice-lang').value;
+  voiceRecognition.continuous = true;
+  voiceRecognition.interimResults = true;
+  voiceRecognition.maxAlternatives = 1;
+  
+  const langName = document.getElementById('voice-lang').selectedOptions[0].text;
+  const btn = document.getElementById('voice-btn');
+  const status = document.getElementById('voice-status');
+  
+  voiceRecognition.onstart = () => {
+    voiceActive = true;
+    btn.style.background = '#ef4444';
+    btn.style.borderColor = '#ef4444';
+    btn.style.color = '#fff';
+    btn.innerHTML = '⏹️';
+    btn.style.animation = 'voicePulse 1s infinite';
+    status.innerHTML = '🔴 Listening in <strong>' + langName + '</strong>... Speak now';
+  };
+  
+  voiceRecognition.onresult = (event) => {
+    const textarea = document.getElementById('m-custom');
+    let finalTranscript = '';
+    let interimTranscript = '';
+    
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+      } else {
+        interimTranscript += event.results[i][0].transcript;
+      }
+    }
+    
+    if (finalTranscript) {
+      // Append final text
+      const existing = textarea.value.trim();
+      textarea.value = existing ? existing + ' ' + finalTranscript.trim() : finalTranscript.trim();
+      status.innerHTML = '🔴 Listening... <span style="color:var(--grn)">✓ Captured: "' + finalTranscript.trim().substring(0, 50) + '..."</span>';
+    } else if (interimTranscript) {
+      status.innerHTML = '🔴 Hearing: <em style="color:var(--t2)">"' + interimTranscript.substring(0, 60) + '..."</em>';
+    }
+  };
+  
+  voiceRecognition.onerror = (event) => {
+    status.innerHTML = '⚠️ Error: ' + (event.error === 'no-speech' ? 'No speech detected. Try again.' : event.error === 'not-allowed' ? 'Microphone access denied. Please allow microphone.' : event.error);
+    stopVoice();
+  };
+  
+  voiceRecognition.onend = () => {
+    if (voiceActive) {
+      // Auto-restart if still active (continuous mode)
+      try { voiceRecognition.start(); } catch(e) { stopVoice(); }
+    }
+  };
+  
+  try {
+    voiceRecognition.start();
+  } catch(e) {
+    status.innerHTML = '⚠️ Could not start voice input: ' + e.message;
+  }
+}
+
+function stopVoice() {
+  voiceActive = false;
+  if (voiceRecognition) {
+    try { voiceRecognition.stop(); } catch(e) {}
+    voiceRecognition = null;
+  }
+  const btn = document.getElementById('voice-btn');
+  btn.style.background = 'var(--bg2)';
+  btn.style.borderColor = 'var(--border)';
+  btn.style.color = '';
+  btn.innerHTML = '🎙️';
+  btn.style.animation = '';
+  const textarea = document.getElementById('m-custom');
+  if (textarea.value.trim()) {
+    document.getElementById('voice-status').innerHTML = '✅ Voice captured. Click 🚀 Launch to send.';
+  } else {
+    document.getElementById('voice-status').innerHTML = '';
+  }
+}
+
+/* ═══════════════ PDF EXPORT & CLIPBOARD ═══════════════ */
+function exportPDF() {
+  if (!currentFacilityData) return;
+  const d = currentFacilityData;
+  // Hide everything except Deep Dive page
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  const dvPage = document.getElementById('page-deepdive');
+  dvPage.style.display = 'block';
+  dvPage.style.position = 'static';
+  // Set title for PDF filename
+  const origTitle = document.title;
+  document.title = 'ArogyaSetu_Trust_Report_' + (d.name || 'Facility').replace(/[^a-zA-Z0-9]/g, '_');
+  // Trigger print
+  window.print();
+  // Restore
+  document.title = origTitle;
+  document.querySelectorAll('.page').forEach(p => { p.style.display = ''; p.style.position = ''; });
+  showPage('deepdive');
+}
+
+function copyReport() {
+  if (!currentFacilityData) return;
+  const d = currentFacilityData;
+  const sc = d.pinocchio_score || 0;
+  const lines = [
+    '═══════════════════════════════════════════',
+    'AROGYA SETU AI — FACILITY TRUST REPORT',
+    '═══════════════════════════════════════════',
+    '',
+    'Facility: ' + (d.name || 'Unknown'),
+    'Location: ' + [d.address_city, d.state_clean || d.state].filter(Boolean).join(', '),
+    'Type: ' + (d.facility_type_clean || d.facility_type || 'Unknown'),
+    'Archetype: ' + (d.archetype || 'Unknown'),
+    '',
+    '── TRUST METRICS ──',
+    'Pinocchio Score: ' + sc + '/100 (' + (sc<=10?'Low':sc<=30?'Moderate':sc<=60?'High':'Very High') + ' Overclaiming Risk)',
+    'Doctors: ' + (d.num_doctors_clean != null ? d.num_doctors_clean : 'N/A'),
+    'Beds: ' + (d.bed_capacity != null ? d.bed_capacity : 'N/A'),
+    'Specialties: ' + (d.specialty_count || '0'),
+    'Sources: ' + (d.source_url_count || '0'),
+    '',
+    '── CLAIMS ──',
+    '24/7 Service: ' + (d.claims_247 ? 'Yes' : 'No'),
+    'ICU: ' + (d.claims_icu ? 'Yes' : 'No'),
+    'Cardiology: ' + (d.claims_cardiology ? 'Yes' : 'No'),
+    'NICU: ' + (d.claims_nicu ? 'Yes' : 'No'),
+    'Has Cardiac Equipment: ' + (d.has_cardiac_equip ? 'Yes' : 'No'),
+    'Has Ventilator: ' + (d.has_ventilator ? 'Yes' : 'No'),
+    '',
+    '── RAW TEXT EVIDENCE ──',
+    'Description: ' + (d.description_snippet || 'N/A').substring(0, 300),
+    'Capability: ' + (d.capability_snippet || 'N/A').substring(0, 300),
+    'Procedure: ' + (d.procedure_snippet || 'N/A').substring(0, 300),
+    'Equipment: ' + (d.equipment_snippet || 'N/A').substring(0, 300),
+    '',
+    '═══════════════════════════════════════════',
+    'Generated by ArogyaSetu AI · DAIS 2026 Hackathon',
+    'App: https://arogyasetu-ai-7474653108428974.aws.databricksapps.com',
+    '═══════════════════════════════════════════',
+  ];
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = document.querySelector('.export-btn[onclick*="copyReport"]');
+    if (btn) { const orig = btn.innerHTML; btn.innerHTML = '✅ Copied!'; setTimeout(() => btn.innerHTML = orig, 2000); }
+  });
+}
+</script>
+
+<!-- AI Mission Control Panel -->
+<button class="ai-fab" id="ai-fab" onclick="toggleAI()" title="AI Policy Advisor">🎯</button>
+<div class="ai-panel" id="ai-panel">
+  <div class="ai-header">
+    <span style="font-size:18px">🎯</span>
+    <span>AI Mission Control</span>
+    <span class="ai-badge">Autonomous Agent</span>
+  </div>
+  <div class="ai-messages" id="ai-msgs">
+    <div class="ai-msg ai">🎯 I'm the <strong>ArogyaSetu Policy Advisor</strong> — an autonomous AI agent powered by Databricks.<br><br>I don't just answer questions. <strong>Give me a mission</strong> and I'll autonomously query the database, cross-reference facilities, and produce a professional policy intelligence brief.<br><br>
+    <strong>Select a mission below</strong> or describe your own:</div>
+  </div>
+  <div class="ai-suggestions" id="ai-sugs" style="flex-direction:column;gap:6px">
+    <div class="ai-sug" style="text-align:left;padding:8px 12px" onclick="runMission('emergency_audit')">🚑 <strong>Emergency Care Audit</strong><br><span style="font-size:10px;color:var(--t3)">Find facilities claiming 24/7 care without adequate staff</span></div>
+    <div class="ai-sug" style="text-align:left;padding:8px 12px" onclick="runMission('ghost_investigation')">👻 <strong>Ghost Facility Investigation</strong><br><span style="font-size:10px;color:var(--t3)">Investigate suspected fake or abandoned facilities</span></div>
+    <div class="ai-sug" style="text-align:left;padding:8px 12px" onclick="runMission('scheme_eligibility')">🏛️ <strong>Govt Scheme Eligibility Check</strong><br><span style="font-size:10px;color:var(--t3)">Which facilities qualify for Ayushman Bharat / PMJAY?</span></div>
+    <div class="ai-sug" style="text-align:left;padding:8px 12px" onclick="runMission('nicu_referral')">👶 <strong>NICU Referral Safety</strong><br><span style="font-size:10px;color:var(--t3)">Find verified NICU-capable facilities for referrals</span></div>
+  </div>
+  <div style="padding:6px 10px;display:flex;gap:6px;align-items:center">
+    <select id="mission-state" style="padding:5px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--t1);font-size:11px;flex:0 0 auto">
+      <option value="">All States</option>
+      <option value="Maharashtra">Maharashtra</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Karnataka">Karnataka</option>
+      <option value="Tamil Nadu">Tamil Nadu</option>
+      <option value="Uttar Pradesh">Uttar Pradesh</option>
+      <option value="West Bengal">West Bengal</option>
+      <option value="Gujarat">Gujarat</option>
+      <option value="Rajasthan">Rajasthan</option>
+      <option value="Punjab">Punjab</option>
+      <option value="Kerala">Kerala</option>
+      <option value="Telangana">Telangana</option>
+      <option value="Bihar">Bihar</option>
+      <option value="Madhya Pradesh">Madhya Pradesh</option>
+    </select>
+  </div>
+  <div class="ai-input-row">
+    <input type="text" id="ai-input" placeholder="Describe your mission or ask anything..." onkeydown="if(event.key==='Enter')sendAI()">
+    <button id="ai-send" onclick="sendAI()">Send</button>
+  </div>
+</div>
+
+<script>
+/* AI Chat Logic */
+let aiOpen=false, aiSending=false, currentFacilityData=null;
+
+function toggleAI(){
+  aiOpen=!aiOpen;
+  document.getElementById('ai-panel').classList.toggle('show',aiOpen);
+  document.getElementById('ai-fab').classList.toggle('open',aiOpen);
+  if(aiOpen) document.getElementById('ai-input').focus();
+}
+
+function askAI(q){
+  document.getElementById('ai-input').value=q;
+  sendAI();
+}
+
+async function sendAI(){
+  if(aiSending)return;
+  const input=document.getElementById('ai-input');
+  const q=input.value.trim();
+  if(!q)return;
+  input.value='';
+
+  // If it looks like a mission (long query), route to mission control
+  if(q.length > 50 || q.toLowerCase().includes('audit') || q.toLowerCase().includes('investigate') || q.toLowerCase().includes('find') || q.toLowerCase().includes('which') || q.toLowerCase().includes('evaluate')) {
+    return runMission('custom', q);
+  }
+
+  aiSending=true;
+  document.getElementById('ai-send').disabled=true;
+  document.getElementById('ai-sugs').style.display='none';
+
+  const msgs=document.getElementById('ai-msgs');
+  msgs.innerHTML+=`<div class="ai-msg user">${q.replace(/</g,'&lt;')}</div>`;
+  msgs.innerHTML+=`<div class="ai-typing" id="ai-typ"><span></span><span></span><span></span></div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+
+  try{
+    const body={question:q};
+    if(currentFacilityData) body.facilityContext=currentFacilityData;
+    const r=await fetch(`${API}/api/ai/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
+    document.getElementById('ai-typ')?.remove();
+    if(r.ok){
+      let answer=r.data.answer.replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/\n- /g,'<br>• ').replace(/\n/g,'<br>');
+      msgs.innerHTML+=`<div class="ai-msg ai"><p>${answer}</p><div style="margin-top:6px;font-size:10px;color:var(--t4)">Model: ${r.data.model} · ${r.data.tokens?.total_tokens||'?'} tokens</div></div>`;
+    } else {
+      msgs.innerHTML+=`<div class="ai-msg ai" style="border-color:var(--red)">⚠️ ${r.error||'Failed'}</div>`;
+    }
+  }catch(e){
+    document.getElementById('ai-typ')?.remove();
+    msgs.innerHTML+=`<div class="ai-msg ai" style="border-color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+  aiSending=false;
+  document.getElementById('ai-send').disabled=false;
+}
+
+/* ── MISSION CONTROL ──────────────────────────────────────────────────── */
+async function runMission(missionType, customText){
+  if(aiSending)return;
+  aiSending=true;
+  document.getElementById('ai-send').disabled=true;
+  document.getElementById('ai-sugs').style.display='none';
+  const state=document.getElementById('mission-state')?.value||'';
+  const missionLabels={emergency_audit:'🚑 Emergency Care Audit',ghost_investigation:'👻 Ghost Facility Investigation',scheme_eligibility:'🏛️ Govt Scheme Eligibility',nicu_referral:'👶 NICU Referral Safety'};
+  const label=missionLabels[missionType]||'🎯 Custom Mission';
+
+  const msgs=document.getElementById('ai-msgs');
+  msgs.innerHTML+=`<div class="ai-msg user">${label}${state?' — '+state:''}${customText?'<br><em>'+customText.replace(/</g,'&lt;')+'</em>':''}</div>`;
+  msgs.innerHTML+=`<div class="ai-msg ai" id="mission-loading" style="max-width:98%">
+    <div style="font-weight:700;margin-bottom:8px">🎯 Mission Control — Agent Executing...</div>
+    <div class="agent-steps">
+      <div class="ag-step running"><span class="ag-ic">🗄️</span> Scanning infrastructure</div>
+      <span class="ag-arrow">→</span>
+      <div class="ag-step"><span class="ag-ic">🔗</span> Gathering intelligence</div>
+      <span class="ag-arrow">→</span>
+      <div class="ag-step"><span class="ag-ic">🧠</span> Generating brief</div>
+      <span class="ag-arrow">→</span>
+      <div class="ag-step"><span class="ag-ic">📋</span> Policy report</div>
+    </div>
+    <div class="loading"><div class="spinner"></div>Autonomous agent querying Databricks...</div>
+  </div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+
+  try{
+    const body={mission:missionType,state};
+    if(customText) body.customMission=customText;
+    const r=await fetch(`${API}/api/ai/mission`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
+    document.getElementById('mission-loading')?.remove();
+    if(r.ok) renderBrief(r.data, msgs);
+    else msgs.innerHTML+=`<div class="ai-msg ai" style="border-color:var(--red)">⚠️ ${r.error}</div>`;
+  }catch(e){
+    document.getElementById('mission-loading')?.remove();
+    msgs.innerHTML+=`<div class="ai-msg ai" style="border-color:var(--red)">⚠️ ${e.message}</div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+  aiSending=false;
+  document.getElementById('ai-send').disabled=false;
+}
+
+function renderBrief(data, container){
+  const b=data.brief||{};
+  const steps=data.steps||[];
+  const toolIcons={'databricks_sql':'🗄️','foundation_model':'🧠','policy_synthesizer':'📋'};
+  const classColors={'FOR OFFICIAL USE':'#6366f1','PRIORITY':'#ef4444','ROUTINE':'#10b981'};
+  const sevColors={'CRITICAL':'var(--red)','HIGH':'var(--amb)','MEDIUM':'#6366f1','LOW':'var(--grn)'};
+
+  const stepsHtml=steps.map((s,i)=>`<div class="ag-step ${s.status}"><span class="ag-ic">${toolIcons[s.tool]||'🔧'}</span>${s.action}<span class="ag-t">${s.duration}ms</span></div>${i<steps.length-1?'<span class="ag-arrow">→</span>':''}`).join('');
+
+  const findingsHtml=(b.key_findings||[]).map(f=>`<div class="risk-item"><span class="risk-sev sev-${f.severity}">${f.severity}</span><strong>${f.finding}</strong><div style="margin-top:2px;color:var(--t3);font-size:11px">${f.evidence||''}</div></div>`).join('');
+
+  const alertsHtml=(b.risk_alerts||[]).map(a=>`<div style="padding:8px;background:rgba(239,68,68,.06);border-radius:6px;margin-bottom:6px;font-size:12px"><strong style="color:var(--red)">⚠️ ${a.risk}</strong><br><span style="color:var(--t3)">Affected: ${a.affected_population||'—'}</span><br><strong>Action:</strong> ${a.immediate_action||'—'}</div>`).join('');
+
+  const recsHtml=(b.recommended_actions||[]).map(r=>`<div class="risk-item"><span class="risk-sev sev-${r.priority==='IMMEDIATE'?'CRITICAL':r.priority==='30_DAYS'?'HIGH':'MEDIUM'}">${(r.priority||'').replace(/_/g,' ')}</span><strong>${r.action}</strong><div style="margin-top:2px;color:var(--t3);font-size:11px">Impact: ${r.impact||'—'} · Authority: ${r.responsible_authority||'—'}</div></div>`).join('');
+
+  const concernHtml=(b.facilities_of_concern||[]).map(f=>`<span style="display:inline-block;padding:2px 8px;background:rgba(239,68,68,.1);border-radius:4px;font-size:11px;color:var(--red);margin:2px">❌ ${f}</span>`).join('');
+  const recFacHtml=(b.facilities_recommended||[]).map(f=>`<span style="display:inline-block;padding:2px 8px;background:rgba(16,185,129,.1);border-radius:4px;font-size:11px;color:var(--grn);margin:2px">✅ ${f}</span>`).join('');
+
+  container.innerHTML+=`<div class="ai-msg ai" style="max-width:98%;padding:0;overflow:hidden;border:none">
+    <div style="padding:14px 16px;background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px">📋 ${b.brief_title||data.mission}</div>
+          <div style="font-size:10px;opacity:.7;margin-top:2px">${data.total_duration_ms}ms · ${data.tokens?.total_tokens||'?'} tokens · ${data.data_sources?.length||0} data sources · ${data.model||'LLM'}</div>
+        </div>
+        <span style="padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;background:${classColors[b.classification]||'#6366f1'}30;color:${classColors[b.classification]||'#6366f1'}">${b.classification||'INTELLIGENCE BRIEF'}</span>
+      </div>
+    </div>
+    <div style="padding:14px 16px">
+      <div class="agent-steps" style="margin-bottom:12px">${stepsHtml}</div>
+      <div class="audit-exec">${b.executive_summary||'No summary.'}</div>
+      ${b.situation_assessment?`<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:12px;padding:10px;background:var(--bg3);border-radius:6px">${b.situation_assessment}</div>`:''}
+      <div class="audit-grid">
+        <div class="audit-section"><h4>🔍 Key Findings</h4>${findingsHtml||'<span style="color:var(--t4);font-size:12px">No findings</span>'}</div>
+        <div class="audit-section"><h4>🚨 Risk Alerts</h4>${alertsHtml||'<span style="color:var(--t4);font-size:12px">No alerts</span>'}</div>
+        <div class="audit-section"><h4>📋 Recommended Actions</h4>${recsHtml||'<span style="color:var(--t4);font-size:12px">No actions</span>'}</div>
+        <div class="audit-section">
+          <h4>🏥 Facilities</h4>
+          ${concernHtml?'<div style="margin-bottom:6px"><strong style="font-size:10px;color:var(--t4)">OF CONCERN:</strong><br>'+concernHtml+'</div>':''}
+          ${recFacHtml?'<div><strong style="font-size:10px;color:var(--t4)">RECOMMENDED:</strong><br>'+recFacHtml+'</div>':''}
+        </div>
+      </div>
+      ${b.data_limitations?`<div style="margin-top:10px;font-size:11px;color:var(--t4);padding:8px;background:var(--bg3);border-radius:6px">📝 <strong>Data Limitations:</strong> ${b.data_limitations}</div>`:''}
+      ${b.next_steps?`<div style="margin-top:8px;font-size:12px;padding:10px;background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.2);border-radius:6px"><strong>Next Steps:</strong> ${b.next_steps}</div>`:''}
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>
+

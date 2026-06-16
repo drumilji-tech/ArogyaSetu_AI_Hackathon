@@ -207,6 +207,7 @@ ARCHETYPE = """CASE
     WHEN COALESCE(followers,0)>500 AND specialty_count>20 AND COALESCE(num_doctors,0)<5
       THEN 'Confident Claimer'
     WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors,0)>50 AND equipment_count>20
+      AND pinocchio_score <= 20
       THEN 'Hidden Gem'
     WHEN is_stale THEN 'Ghost Facility'
     ELSE 'Verified Pillar'
@@ -288,13 +289,19 @@ def get_archetype_counts():
         {CLEAN_FOLLOWERS} AS followers,
         COALESCE(SIZE(FROM_JSON(specialties,'array<string>')),0) AS specialty_count,
         COALESCE(SIZE(FROM_JSON(equipment,'array<string>')),0)   AS equipment_count,
+        {FLAGS},
         {IS_STALE} AS is_stale
       FROM {FAC}
+    ),
+    scored AS (
+      SELECT *,
+        {PINOCCHIO} AS pinocchio_score
+      FROM cleaned
     )
     SELECT
       {ARCHETYPE} AS archetype,
       COUNT(*) AS count
-    FROM cleaned
+    FROM scored
     GROUP BY 1 ORDER BY count DESC
     """)
 
@@ -507,6 +514,7 @@ def get_hidden_gems():
     WHERE COALESCE(followers,0) < 100
       AND COALESCE(num_doctors,0) > 50
       AND equipment_count > 20
+      AND pinocchio_score <= 20
     ORDER BY num_doctors DESC
     LIMIT 30
     """)

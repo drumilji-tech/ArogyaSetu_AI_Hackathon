@@ -259,7 +259,7 @@ def get_kpi_summary():
           WHEN COALESCE(followers,0)>500 AND specialty_count>20 AND COALESCE(num_doctors,0)<5
             THEN 'claimer'
           WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors,0)>50 AND equipment_count>20
-            THEN 'gem'
+            AND ps<=20 THEN 'gem'
           WHEN is_stale THEN 'ghost'
           ELSE 'other'
         END AS cat
@@ -287,8 +287,6 @@ def get_archetype_counts():
       SELECT
         {CLEAN_DOCTORS} AS num_doctors,
         {CLEAN_FOLLOWERS} AS followers,
-        COALESCE(SIZE(FROM_JSON(specialties,'array<string>')),0) AS specialty_count,
-        COALESCE(SIZE(FROM_JSON(equipment,'array<string>')),0)   AS equipment_count,
         {FLAGS},
         {IS_STALE} AS is_stale
       FROM {FAC}
@@ -411,8 +409,10 @@ def get_facility_detail(unique_id):
         COALESCE(TRY_CAST(post_metrics_post_count AS DOUBLE),0) AS post_count,
         COALESCE(TRY_CAST(distinct_social_media_presence_count AS DOUBLE),0) AS social_platforms,
         source_urls AS source_urls_raw,
-        SUBSTRING(COALESCE(description,''), 1, 500) AS description_snippet,
-        SUBSTRING(COALESCE(capability,''), 1, 500) AS capability_snippet,
+        SUBSTRING(COALESCE(description,''), 1, 800) AS description_snippet,
+        SUBSTRING(COALESCE(capability,''), 1, 800) AS capability_snippet,
+        SUBSTRING(COALESCE(procedure,''), 1, 800) AS procedure_snippet,
+        SUBSTRING(COALESCE(equipment,''), 1, 800) AS equipment_snippet,
         {FLAGS},
         TRY_CAST(numberDoctors AS DOUBLE) > 2000 AS doctor_count_suspect,
         {IS_STALE} AS is_stale
@@ -431,7 +431,7 @@ def get_facility_detail(unique_id):
         CASE WHEN type_id_was_dirty THEN 5 ELSE 0 END
       )) AS pinocchio_score,
       CASE WHEN followers>500 AND specialty_count>20 AND COALESCE(num_doctors_clean,0)<5 THEN 'Confident Claimer'
-           WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors_clean,0)>50 AND equipment_count>20 THEN 'Hidden Gem'
+           WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors_clean,0)>50 AND equipment_count>20 AND pinocchio_score<=20 THEN 'Hidden Gem'
            WHEN is_stale THEN 'Ghost Facility'
            ELSE 'Verified Pillar'
       END AS archetype,
@@ -647,18 +647,21 @@ def get_state_summary():
         {CLEAN_STATE}     AS state,
         {CLEAN_DOCTORS}   AS num_doctors,
         {CLEAN_FOLLOWERS} AS followers,
-        COALESCE(SIZE(FROM_JSON(specialties,'array<string>')),0) AS specialty_count,
-        COALESCE(SIZE(FROM_JSON(equipment,'array<string>')),0)   AS equipment_count,
+        {FLAGS},
         {IS_STALE} AS is_stale
       FROM {FAC}
       WHERE {CLEAN_STATE} IN ({states_list})
+    ),
+    scored AS (
+      SELECT *, {PINOCCHIO} AS pinocchio_score
+      FROM cleaned
     )
     SELECT state,
       COUNT(*) AS total,
-      SUM(CASE WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors,0)>50 AND equipment_count>20 THEN 1 ELSE 0 END) AS hidden_gems,
+      SUM(CASE WHEN COALESCE(followers,0)<100 AND COALESCE(num_doctors,0)>50 AND equipment_count>20 AND pinocchio_score<=20 THEN 1 ELSE 0 END) AS hidden_gems,
       SUM(CASE WHEN is_stale THEN 1 ELSE 0 END) AS ghosts,
       ROUND(AVG(COALESCE(num_doctors,0)),1) AS avg_doctors
-    FROM cleaned
+    FROM scored
     GROUP BY state ORDER BY total DESC
     """)
 

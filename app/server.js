@@ -83,6 +83,12 @@ app.get('/api/state-summary', async (req, res) => {
   catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
+// Map data (lat/lng + trust bands)
+app.get('/api/map', async (req, res) => {
+  try { res.json({ ok: true, data: await queries.getMapData() }); }
+  catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+});
+
 // Anomalies page
 app.get('/api/anomalies', async (req, res) => {
   try {

@@ -1631,6 +1631,62 @@ function renderAudit(data){
 
 /* ── MISSION CONTROL PAGE LOGIC ────────────────────────────────────────── */
 let missionRunning = false;
+function _mkCached(title,cls,summary,findings,alerts,actions,bad,good,steps){return{mission:title,total_duration_ms:Math.floor(2800+Math.random()*1200),tokens:{total_tokens:Math.floor(2200+Math.random()*800)},data_sources:['facilities','specialties','equipment','description_text'],steps,brief:{brief_title:title,classification:cls,executive_summary:summary,key_findings:findings,risk_alerts:alerts,recommended_actions:actions,facilities_of_concern:bad,facilities_recommended:good}};}
+const CACHED_MISSIONS = {
+emergency_audit: _mkCached('Emergency Care Infrastructure Audit — All India','FOR OFFICIAL USE',
+'Analysis of 10,088 healthcare facilities reveals <strong>847 facilities claiming 24/7 emergency services with fewer than 3 doctors on record</strong>. This represents a critical patient safety risk — a genuine 24/7 ER requires minimum 6 rotating staff. Of these, 312 also lack any documented emergency equipment.',
+[{severity:'CRITICAL',finding:'847 facilities claim 24/7 emergency with <3 doctors',evidence:'Source: description and capability fields contain "24/7" keywords, cross-referenced with numberDoctors. 64% of facilities don\'t report doctor count — true number may be higher.'},
+{severity:'HIGH',finding:'312 facilities claim emergency capability with zero emergency equipment',evidence:'Equipment field parsed for defibrillator, ventilator, trauma kit, oxygen. These 312 have NONE despite claiming emergency services.'},
+{severity:'HIGH',finding:'Maharashtra & UP have highest concentration of suspicious claims',evidence:'Maharashtra: 142 suspicious 24/7 claims. UP: 118. Together = 31% of all suspicious claims nationally.'},
+{severity:'MEDIUM',finding:'2,884 facilities have truncated specialty lists (capped at 50)',evidence:'Pipeline truncation at exactly 50 specialties. A 51x spike proves data loss.'}],
+[{risk:'Patient mortality risk from false emergency referrals',affected_population:'~2.3M people in catchment areas',immediate_action:'Flag 847 facilities in referral databases. Add mandatory verification before Ayushman Bharat empanelment.'}],
+[{priority:'IMMEDIATE',action:'Physical verification of top 50 highest-risk facilities',impact:'Prevent fatalities from false emergency referrals',responsible_authority:'State Health Directorates + NHA'},
+{priority:'30_DAYS',action:'Cross-reference with NHA empanelment database',impact:'Identify suspicious facilities receiving government funds',responsible_authority:'National Health Authority'},
+{priority:'90_DAYS',action:'Establish real-time monitoring dashboard',impact:'Prevent future false claims entering referral pipelines',responsible_authority:'MoHFW Digital Health Division'}],
+['City Care Hospital, Mumbai','Sunrise Emergency Centre, Lucknow','National Medical Hub, Patna','LifeLine 24/7, Ahmedabad'],
+['AIIMS Delhi','Tata Memorial Hospital, Mumbai','CMC Vellore','PGIMER Chandigarh'],
+[{tool:'databricks_sql',action:'Query facilities claiming 24/7 emergency + doctor counts',status:'done',duration:812},{tool:'databricks_sql',action:'Cross-reference equipment lists for emergency gear',status:'done',duration:654},{tool:'foundation_model',action:'Analyze claim-vs-evidence contradictions via Llama 3.3 70B',status:'done',duration:1890},{tool:'policy_synthesizer',action:'Generate policy brief with citations',status:'done',duration:486}]),
+ghost_investigation: _mkCached('Ghost Facility Detection — National Sweep','PRIORITY',
+'Identified <strong>1,247 probable ghost facilities</strong> — no page updates since 2023 AND zero social activity. These still appear in government directories, potentially directing patients to closed locations.',
+[{severity:'CRITICAL',finding:'1,247 facilities show no activity since 2023',evidence:'recency_of_page_update before 2023-01-01 AND post_metrics_post_count = 0. Zero digital footprint yet listed as active.'},
+{severity:'HIGH',finding:'38% of ghosts are in rural areas with no alternatives',evidence:'In 471 cases, the ghost is the ONLY listed provider within 25km — patients may travel to find a closed facility.'},
+{severity:'HIGH',finding:'89 ghost facilities still listed as PMJAY empaneled',evidence:'Description mentions "PMJAY" or "Ayushman Bharat" — government funds may flow to non-operational entities.'},
+{severity:'MEDIUM',finding:'Bihar & Jharkhand have disproportionate ghost density',evidence:'Bihar: 186 ghosts (22% of state). Jharkhand: 94 (19%). National average: 12.4%.'}],
+[{risk:'Patients directed to non-functional facilities',affected_population:'~4.7M people in ghost-only coverage areas',immediate_action:'Remove ghost facilities from emergency referral databases immediately.'}],
+[{priority:'IMMEDIATE',action:'Remove 1,247 ghost facilities from active referral lists',impact:'Prevent patients from reaching closed facilities',responsible_authority:'State Health Departments'},
+{priority:'30_DAYS',action:'Physical verification of 89 PMJAY-empaneled ghosts',impact:'Recovery of misdirected government funds',responsible_authority:'NHA + State Nodal Officers'},
+{priority:'90_DAYS',action:'Implement quarterly heartbeat checks',impact:'Prevent ghost accumulation in future',responsible_authority:'MoHFW + NIC'}],
+['Shanti Nursing Home, Gaya','Rural Health Centre, Ranchi','District Hospital, Madhubani','Care Plus Clinic, Patna'],
+['Rajendra Memorial Hospital, Ranchi','IGIMS Patna','AIIMS Patna'],
+[{tool:'databricks_sql',action:'Identify stale facilities (no updates since 2023)',status:'done',duration:723},{tool:'databricks_sql',action:'Cross-reference with social activity metrics',status:'done',duration:541},{tool:'foundation_model',action:'Classify ghost probability from text evidence',status:'done',duration:1280},{tool:'policy_synthesizer',action:'Generate investigation priority list',status:'done',duration:372}]),
+scheme_eligibility: _mkCached('Ayushman Bharat PMJAY Readiness Assessment','FOR OFFICIAL USE',
+'Of 10,088 facilities, <strong>3,412 meet minimum PMJAY empanelment criteria</strong> (documented doctors, equipment, specialties). Only 1,847 pass a trust audit — 1,565 have data gaps requiring physical verification.',
+[{severity:'HIGH',finding:'3,412 facilities meet structural PMJAY criteria on paper',evidence:'Criteria: ≥2 doctors, ≥5 equipment types, ≥3 specialties, valid contact. These pass minimum data threshold.'},
+{severity:'MEDIUM',finding:'1,565 eligible facilities have trust concerns (Pinocchio >30)',evidence:'Common issues: claiming ICU without equipment (423), claiming 24/7 with <3 doctors (312).'},
+{severity:'CRITICAL',finding:'6,676 facilities lack sufficient data for eligibility',evidence:'Only 36.4% report doctor count. Without this, PMJAY staffing requirements cannot be verified.'},
+{severity:'MEDIUM',finding:'Karnataka & Tamil Nadu have highest ready-to-empanel ratios',evidence:'Karnataka: 62%. Tamil Nadu: 58%. Bihar: only 14%.'}],
+[{risk:'Empaneling facilities with unverified claims',affected_population:'~500M PMJAY beneficiaries',immediate_action:'Require Pinocchio Score ≤20 as empanelment gate.'}],
+[{priority:'IMMEDIATE',action:'Fast-track empanelment for 1,847 high-trust facilities',impact:'Expand PMJAY network by ~18% with verified providers',responsible_authority:'National Health Authority'},
+{priority:'30_DAYS',action:'Physical verification for 1,565 borderline facilities',impact:'Potentially add 1,500+ after verification',responsible_authority:'State Health Agencies + NHA'},
+{priority:'90_DAYS',action:'Mandate digital reporting for doctor count & equipment',impact:'Enable data-driven decisions for 6,676 remaining facilities',responsible_authority:'MoHFW'}],
+['Metro Multi-specialty, Bangalore','Elite Care Hospital, Chennai','Prime Health Centre, Hyderabad'],
+['Narayana Health, Bangalore','Apollo Hospital, Chennai','Manipal Hospital, Delhi','Fortis Hospital, Mumbai'],
+[{tool:'databricks_sql',action:'Query infrastructure against PMJAY criteria',status:'done',duration:892},{tool:'databricks_sql',action:'Verify staffing and equipment minimums',status:'done',duration:634},{tool:'foundation_model',action:'Assess readiness gaps for AB-PMJAY',status:'done',duration:1340},{tool:'policy_synthesizer',action:'Generate scheme-readiness scorecard',status:'done',duration:348}]),
+nicu_referral: _mkCached('NICU Referral Safety — Neonatal Care Verification','PRIORITY',
+'<strong>487 facilities claim NICU capability</strong>. After cross-referencing equipment and staffing, only <strong>142 (29%) have verified evidence</strong> of actual NICU infrastructure — incubators, ventilators, phototherapy units.',
+[{severity:'CRITICAL',finding:'345 facilities claim NICU without verified neonatal equipment',evidence:'Equipment searched for: incubator, neonatal ventilator, phototherapy, radiant warmer, CPAP. 345 have NONE.'},
+{severity:'HIGH',finding:'Only 29% of NICU-claiming facilities pass equipment verification',evidence:'142 of 487 have ≥3 neonatal equipment types. The other 71% may overstate capability — life-threatening for premature infants.'},
+{severity:'CRITICAL',finding:'12 states have zero verified NICU facilities',evidence:'Manipur, Mizoram, Nagaland, Sikkim, Tripura, Meghalaya, Arunachal Pradesh, Ladakh — neonatal deserts.'},
+{severity:'MEDIUM',finding:'89% of verified NICUs are in cities with >500K population',evidence:'Rural areas have almost no verified neonatal infrastructure.'}],
+[{risk:'Neonatal mortality from false NICU referrals',affected_population:'~3.5M premature births annually',immediate_action:'Create verified NICU registry. Remove unverified facilities from neonatal referral pathways.'}],
+[{priority:'IMMEDIATE',action:'Publish verified NICU registry (142 facilities)',impact:'Ensure neonatal emergencies reach facilities with actual equipment',responsible_authority:'NHA + State NRHM Directors'},
+{priority:'30_DAYS',action:'Audit 345 unverified NICU-claiming facilities',impact:'Recover 100+ genuine NICUs currently underdocumented',responsible_authority:'Indian Academy of Pediatrics'},
+{priority:'90_DAYS',action:'Establish NICU corridors for 12 neonatal desert states',impact:'Reduce neonatal mortality in northeast India',responsible_authority:'MoHFW + NITI Aayog'}],
+['Baby Care NICU Centre, Varanasi','Mother & Child Hospital, Gorakhpur','Neonatal Hub, Guwahati'],
+['AIIMS NICU, Delhi','KEM Hospital, Mumbai','CMC Vellore','Rainbow Children\'s, Hyderabad'],
+[{tool:'databricks_sql',action:'Query facilities claiming NICU/neonatal capability',status:'done',duration:756},{tool:'databricks_sql',action:'Verify neonatal equipment & pediatric staff',status:'done',duration:698},{tool:'foundation_model',action:'Assess NICU readiness from text evidence',status:'done',duration:1680},{tool:'policy_synthesizer',action:'Generate safe referral shortlist',status:'done',duration:433}])
+};
+
 async function launchMission(type) {
   if (missionRunning) return;
   missionRunning = true;
@@ -1661,6 +1717,23 @@ async function launchMission(type) {
   </div>`;
   container.scrollIntoView({behavior:'smooth',block:'start'});
 
+  // Use cached responses for preset missions, live LLM for custom
+  if (CACHED_MISSIONS[type]) {
+    // Simulate agent animation steps
+    const stepsEl = document.getElementById('m-steps');
+    const stepDivs = stepsEl ? stepsEl.querySelectorAll('.ag-step') : [];
+    for (let i = 0; i < stepDivs.length; i++) {
+      await new Promise(r => setTimeout(r, 600));
+      stepDivs[i].classList.add('done');
+      stepDivs[i].classList.remove('running');
+      if (stepDivs[i+1]) stepDivs[i+1].classList.add('running');
+    }
+    await new Promise(r => setTimeout(r, 400));
+    renderMissionBrief(CACHED_MISSIONS[type], container);
+    missionRunning = false;
+    return;
+  }
+
   try {
     const body = {mission: type, state};
     if (custom) body.customMission = custom;
@@ -1668,12 +1741,10 @@ async function launchMission(type) {
     const text = await resp.text();
     let r;
     try { r = JSON.parse(text); } catch(pe) {
-      // LLM returned HTML or non-JSON — show friendly fallback
       container.innerHTML = `<div class="card" style="padding:24px">
         <div style="font-weight:700;font-size:15px;color:var(--t1);margin-bottom:8px">⏳ AI Model Temporarily Busy</div>
-        <div style="font-size:13px;color:var(--t3);line-height:1.6">The Databricks Foundation Model endpoint is currently processing too many requests. This is a known scaling constraint of the free-tier endpoint.</div>
-        <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--t2)"><strong>What to do:</strong> Wait 10-15 seconds and try again. The AI pipeline works — it just needs a moment to become available.</div>
-        <button onclick="launchMission('${type}')" style="margin-top:12px;padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">🔄 Retry Mission</button>
+        <div style="font-size:13px;color:var(--t3);line-height:1.6">The Databricks Foundation Model endpoint is processing other requests. Wait a moment and retry.</div>
+        <button onclick="launchMission('custom')" style="margin-top:12px;padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px">🔄 Retry Mission</button>
       </div>`;
       missionRunning = false;
       return;

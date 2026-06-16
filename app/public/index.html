@@ -432,6 +432,7 @@
     <button class="nav-btn"        id="nav-ref"     onclick="showPage('ref')">Referrals</button>
     <button class="nav-btn"        id="nav-planner" onclick="showPage('planner')">Planner</button>
     <button class="nav-btn"        id="nav-mission" onclick="showPage('mission')" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:600">🎯 AI Advisor</button>
+    <button class="nav-btn"        id="nav-arch"    onclick="showPage('arch')">🏗️ Architecture</button>
   </div>
   <div class="nav-right">
     <button class="tour-start-btn" onclick="startTour()">▶ Guided Demo</button>
@@ -690,6 +691,165 @@
 
   <!-- Results -->
   <div id="mission-results"></div>
+</div>
+</section>
+
+<section class="page" id="page-arch">
+<div class="wrap-md" style="max-width:900px">
+  <div style="text-align:center;padding:40px 0 32px">
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.15);border-radius:100px;font-size:11px;font-weight:600;color:#6366f1;margin-bottom:16px">
+      <span style="width:6px;height:6px;border-radius:50%;background:#6366f1;animation:pulse 2s infinite"></span>
+      100% Databricks Stack
+    </div>
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:28px;font-weight:800;color:var(--t1);margin-bottom:8px">System Architecture</h1>
+    <p style="font-size:14px;color:var(--t3);max-width:520px;margin:0 auto 24px;line-height:1.6">End-to-end trust verification pipeline built entirely on Databricks</p>
+  </div>
+
+  <!-- Architecture Flow -->
+  <div style="display:flex;flex-direction:column;gap:16px;align-items:center">
+
+    <!-- Layer 1: Data Source -->
+    <div style="width:100%;background:linear-gradient(135deg,#1e293b,#334155);border:1px solid #475569;border-radius:16px;padding:20px 24px;text-align:center">
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:1px;margin-bottom:8px">📦 DATA SOURCE</div>
+      <div style="font-size:16px;font-weight:700;color:#f1f5f9">Virtue Foundation Dataset</div>
+      <div style="font-size:12px;color:#94a3b8;margin-top:4px">10,088 Healthcare Facilities across India</div>
+    </div>
+
+    <div style="font-size:20px;color:var(--t4)">↓</div>
+
+    <!-- Layer 2: Databricks Platform -->
+    <div style="width:100%;background:linear-gradient(135deg,#7c2d12,#9a3412);border:1px solid #ea580c;border-radius:16px;padding:20px 24px">
+      <div style="font-size:11px;font-weight:700;color:#fed7aa;letter-spacing:1px;margin-bottom:14px;text-align:center">🔶 DATABRICKS PLATFORM</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(251,146,60,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">🔐</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Unity Catalog</div>
+          <div style="font-size:10px;color:#fdba74;margin-top:2px">Data Governance</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(251,146,60,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">⚡</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">SQL Warehouse</div>
+          <div style="font-size:10px;color:#fdba74;margin-top:2px">Serverless Compute</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(251,146,60,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">🧠</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Foundation Model API</div>
+          <div style="font-size:10px;color:#fdba74;margin-top:2px">Llama 3.3 70B Instruct</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:20px;color:var(--t4)">↓</div>
+
+    <!-- Layer 3: Agent Bricks -->
+    <div style="width:100%;background:linear-gradient(135deg,#4c1d95,#5b21b6);border:1px solid #8b5cf6;border-radius:16px;padding:20px 24px">
+      <div style="font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:1px;margin-bottom:14px;text-align:center">🟣 AGENT BRICKS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">📊</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">MLflow Tracing</div>
+          <div style="font-size:10px;color:#c4b5fd;margin-top:2px">Agent Observability & Evaluation</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">🤖</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">3-Step Agent Pipeline</div>
+          <div style="font-size:10px;color:#c4b5fd;margin-top:2px">SQL Retrieval → LLM Analysis → Policy Brief</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:20px;color:var(--t4)">↓</div>
+
+    <!-- Layer 4: Application -->
+    <div style="width:100%;background:linear-gradient(135deg,#14532d,#166534);border:1px solid #22c55e;border-radius:16px;padding:20px 24px">
+      <div style="font-size:11px;font-weight:700;color:#86efac;letter-spacing:1px;margin-bottom:14px;text-align:center">🟢 APPLICATION LAYER</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(74,222,128,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">🐍</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Flask + Gunicorn</div>
+          <div style="font-size:10px;color:#86efac;margin-top:2px">Python Backend</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(74,222,128,.3);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">☁️</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">Databricks Apps</div>
+          <div style="font-size:10px;color:#86efac;margin-top:2px">Live Production Deployment</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:20px;color:var(--t4)">↓</div>
+
+    <!-- Layer 5: User Features -->
+    <div style="width:100%;background:linear-gradient(135deg,#164e63,#155e75);border:1px solid #06b6d4;border-radius:16px;padding:20px 24px">
+      <div style="font-size:11px;font-weight:700;color:#67e8f9;letter-spacing:1px;margin-bottom:14px;text-align:center">🔵 USER-FACING FEATURES</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:12px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🤥</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">Pinocchio Score™</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:12px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🔍</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">Evidence Triangulation</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:12px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">📊</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">Uncertainty Comm.</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:12px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🎯</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">AI Policy Advisor</div>
+        </div>
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:12px 8px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🎙️</div>
+          <div style="font-size:11px;font-weight:700;color:#fff">Voice Input (6 Lang)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pinocchio Score Formula -->
+  <div style="margin-top:32px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px">
+    <h3 style="font-size:16px;font-weight:700;color:var(--t1);margin-bottom:16px;text-align:center">🤥 Pinocchio Score™ — 8-Factor Overclaiming Penalty</h3>
+    <div style="text-align:center;font-family:'Fira Code',monospace;font-size:14px;color:var(--t2);margin-bottom:16px">Score = Σ Pᵢ (capped at 100)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims 24/7, doctors &lt; 3</span><span style="color:#ef4444;font-weight:700">+15</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims ICU, doctors &lt; 2</span><span style="color:#ef4444;font-weight:700">+25</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims multispecialty, doctors &lt; 3</span><span style="color:#ef4444;font-weight:700">+20</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims cardiology, no cardiac equip</span><span style="color:#ef4444;font-weight:700">+10</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims oncology, no onco equip</span><span style="color:#ef4444;font-weight:700">+10</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Claims NICU, no ventilator</span><span style="color:#ef4444;font-weight:700">+15</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Specialty list truncated at 50</span><span style="color:#f59e0b;font-weight:700">+5</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg1);border-radius:8px;font-size:12px"><span style="color:var(--t2)">Corrupted facilityTypeId</span><span style="color:#f59e0b;font-weight:700">+5</span></div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <div style="margin-top:32px;text-align:center;padding-bottom:40px">
+    <div style="font-size:11px;font-weight:700;color:var(--t4);letter-spacing:1px;margin-bottom:16px">BUILT BY</div>
+    <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 8px">DJ</div>
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">Drumil Joshi</div>
+        <div style="font-size:11px;color:var(--t4)">Lead Developer</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 8px">AR</div>
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">Andrew Riley</div>
+        <div style="font-size:11px;color:var(--t4)">Manager / Director</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#d97706,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 8px">IA</div>
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">Ishtiza Azad</div>
+        <div style="font-size:11px;color:var(--t4)">Operations Data Manager</div>
+      </div>
+      <div style="text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#dc2626,#ef4444);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 8px">T</div>
+        <div style="font-size:13px;font-weight:700;color:var(--t1)">Terhemba</div>
+        <div style="font-size:11px;color:var(--t4)">Data Visualization Engineer</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;font-size:12px;color:var(--t4)">DAIS 2026 · Databricks Apps & Agents for Good Hackathon</div>
+  </div>
 </div>
 </section>
 
